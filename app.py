@@ -15,8 +15,8 @@ def mostrar_login(page):
     page.controls.clear()
     page.add(ft.Text("Tela de Login", size=24))
 
-    username_input = ft.TextField(label="Usuário")
-    password_input = ft.TextField(label="Senha", password=True)
+    username_input = ft.TextField(label="Usuário",width=200)
+    password_input = ft.TextField(label="Senha", password=True,width=200)
 
     login_button = ft.ElevatedButton(text="Login", on_click=lambda e: fazer_login(page, username_input.value, password_input.value))
     page.add(username_input, password_input, login_button)
