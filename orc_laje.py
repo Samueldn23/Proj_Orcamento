@@ -10,7 +10,9 @@ def mostrar_laje(page):
     altura_input = ft.TextField(label="Altura (mm)", keyboard_type=ft.KeyboardType.NUMBER)
     valor_m3_input = ft.TextField(label="Valor por m³", keyboard_type=ft.KeyboardType.NUMBER)
 
+
     resultado_text = ft.Text("Custo Total: R$0.00", size=18)
+
 
     def calcular(e):
 
