@@ -38,7 +38,7 @@ def mostrar_laje(page):
 
 
 
-    resultado_text = ft.Text("Custo Total: R$0.00", size=18)
+    resultado_text = ft.Text("Custo Total: R$0.00", size=19)
 
 
 
