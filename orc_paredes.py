@@ -8,7 +8,7 @@ def mostrar_parede(page):
     largura_input = ft.TextField(label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER)
     valor_m2_input = ft.TextField(label="Valor por m²", keyboard_type=ft.KeyboardType.NUMBER)
 
-    resultado_text = ft.Text("Custo Total: R$0.00", size=18)
+    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     def calcular(e):
         try:
@@ -16,7 +16,7 @@ def mostrar_parede(page):
             largura = float(largura_input.value)
             valor_m2 = float(valor_m2_input.value)
             custo_total = altura * largura * valor_m2
-            resultado_text.value = f"Custo Total: R${custo_total:.2f}"
+            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
         except ValueError:
             resultado_text.value = "Por favor, insira valores válidos."

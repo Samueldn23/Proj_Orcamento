@@ -11,7 +11,7 @@ def mostrar_laje(page):
     valor_m3_input = ft.TextField(label="Valor por m³", keyboard_type=ft.KeyboardType.NUMBER)
 
 
-    resultado_text = ft.Text("Custo Total: R$0.00", size=18)
+    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
 
     def calcular(e):
@@ -23,7 +23,7 @@ def mostrar_laje(page):
 
             volor_m3 = float(valor_m3_input.value)
             custo_total = comprimento * largura * altura * volor_m3
-            resultado_text.value = f"Custo Total: R${custo_total:.2f}"
+            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
 
         except ValueError:

@@ -8,7 +8,7 @@ def mostrar_eletrica(page):
     largura_input = ft.TextField(label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER)
     valor_m2_input = ft.TextField(label="Valor por m²", keyboard_type=ft.KeyboardType.NUMBER)
 
-    resultado_text = ft.Text("Custo Total: R$0.00", size=18)
+    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     def calcular(e):
         try:
