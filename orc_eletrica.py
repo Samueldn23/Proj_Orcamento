@@ -16,7 +16,7 @@ def mostrar_eletrica(page):
             largura = float(largura_input.value)
             valor_m2 = float(valor_m2_input.value)
             custo_total = altura * largura * valor_m2
-            resultado_text.value = f"Custo Total: R${custo_total:.2f}"
+            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
         except ValueError:
             resultado_text.value = "Por favor, insira valores válidos."
