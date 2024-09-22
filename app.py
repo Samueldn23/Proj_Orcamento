@@ -3,7 +3,8 @@ from mn_orcamento import orcamento
 
 def main(page: ft.Page):
     page.title = "Aplicativo de Orçamento"
-    #page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     mostrar_login(page)
 
 # Variável global para armazenar a mensagem de erro
