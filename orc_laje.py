@@ -33,8 +33,8 @@ def mostrar_laje(page):
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, width=200)
     voltar_button = ft.ElevatedButton(text="Voltar", 
-                                       on_click=lambda e: voltar(page), 
-                                       width=200, bgcolor=ft.colors.RED, color=ft.colors.WHITE)
+                                        on_click=lambda e: voltar(page), 
+                                        width=200, bgcolor=ft.colors.RED, color=ft.colors.WHITE)
 
     page.add(comprimento_input, largura_input,altura_input, valor_m3_input, calcular_button, resultado_text, voltar_button)
     page.update()

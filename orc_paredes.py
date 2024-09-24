@@ -24,8 +24,8 @@ def mostrar_parede(page):
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, width=200)
     voltar_button = ft.ElevatedButton(text="Voltar", 
-                                       on_click=lambda e: voltar(page), 
-                                       width=200, bgcolor=ft.colors.RED, color=ft.colors.WHITE)
+                                        on_click=lambda e: voltar(page), 
+                                        width=200, bgcolor=ft.colors.RED, color=ft.colors.WHITE)
 
     page.add(altura_input, largura_input, valor_m2_input, calcular_button, resultado_text, voltar_button)
     page.update()

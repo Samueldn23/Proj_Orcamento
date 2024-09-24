@@ -11,7 +11,6 @@ def main(page: ft.Page):
     # Definindo um tema
     page.theme = ft.Theme(
         primary_color=ft.colors.BLUE,
-        #accent_color=ft.colors.LIGHT_BLUE,
         font_family="Arial",
     )
 
@@ -25,9 +24,6 @@ def mostrar_login(page):
     page.controls.clear()
     page.bgcolor = ft.colors.SHADOW # Definindo a cor de fundo
     page.add(ft.Text("Tela de Login", size=24, color=ft.colors.BLUE, weight=ft.FontWeight.BOLD))
-
-    # Tela de login com estilo CSS
-    #page.add(ft.Text("Tela de Login", size=24, style="font-weight: bold; color: blue;"))
 
     username_input = ft.TextField(label="Usuário", width=300, bgcolor=ft.colors.GREY_900)
     password_input = ft.TextField(label="Senha", password=True, width=300, bgcolor=ft.colors.GREY_900)

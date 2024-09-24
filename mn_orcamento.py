@@ -10,7 +10,7 @@ def orcamento(page):
     btn_eletrica = ft.ElevatedButton(text="Elétrica", on_click=lambda e: mostrar_eletrica(page), width=200)
     btn_laje = ft.ElevatedButton(text="Laje", on_click=lambda e: mostrar_laje(page), width=200)
     
-   
+    
     page.add(btn_eletrica,btn_parede,btn_laje)
     
     
