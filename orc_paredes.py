@@ -1,5 +1,7 @@
 import flet as ft
 
+
+
 def mostrar_parede(page):
     page.controls.clear()
     page.add(ft.Text("Tela de Parede", size=24))
@@ -36,6 +38,6 @@ def mostrar_parede(page):
     page.update()
 
 def voltar(page):
-    page.controls.clear()
+    page.controls.clear()    
     from mn_orcamento import orcamento  # Importa a função orcamento
     orcamento(page)  # Retorna à tela de Orçamento
