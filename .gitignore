@@ -1,2 +1,6 @@
-VENV/
 __pycache__/
+*.pyc
+venv/
+.env
+*.db
+readme2.md

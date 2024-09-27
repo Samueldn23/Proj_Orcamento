@@ -1,19 +1,11 @@
 import flet as ft
 from mn_orcamento import orcamento
+from styles import aplicar_tema
 
 def main(page: ft.Page):
+    page.adaptive = True
     page.title = "Aplicativo de Orçamento"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.window_width = 400  # Largura da janela
-    page.window_height = 600  # Altura da janela
-
-    # Definindo um tema
-    page.theme = ft.Theme(
-        primary_color=ft.colors.BLUE,
-        font_family="Arial",
-    )
-
+    aplicar_tema(page)  # Aplica o tema
     mostrar_login(page)
 
 # Variável global para armazenar a mensagem de erro
