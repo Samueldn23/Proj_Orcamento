@@ -5,6 +5,7 @@ from styles import aplicar_tema
 def main(page: ft.Page):
     page.adaptive = True
     page.title = "Aplicativo de Orçamento"
+    
     aplicar_tema(page)  # Aplica o tema
     mostrar_login(page)
 
