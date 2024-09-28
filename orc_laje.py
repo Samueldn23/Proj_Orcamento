@@ -8,11 +8,28 @@ def mostrar_laje(page):
     comprimento_input = ft.TextField(label="Comprimento (m)", keyboard_type=ft.KeyboardType.NUMBER)
     largura_input = ft.TextField(label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER)
     altura_input = ft.TextField(label="Espessura (cm)", keyboard_type=ft.KeyboardType.NUMBER)
-    valor_m3_input = ft.TextField(label="Valor por m³", keyboard_type=ft.KeyboardType.NUMBER)
+    valor_m3_input = ft.TextField(label="Valor por (m³)", keyboard_type=ft.KeyboardType.NUMBER)
 
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
+    switch =  ft.Switch(
+            label="cm para mm",
+            on_change=lambda e: atualizar(page),
+            value=False,
+        
+        )
+
+    def atualizar(e):
+        if switch.value ==False:
+            altura_input.label="Espessura (cm)"
+        else:
+            altura_input.label="Espessura (mm)"
+        
+            
+        page.update()
+
+        
 
     def calcular(e):
 
@@ -20,9 +37,13 @@ def mostrar_laje(page):
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
             espessura = float(altura_input.value)
-
             volor_m3 = float(valor_m3_input.value)
-            custo_total = comprimento * largura * (espessura / 100) * volor_m3
+
+            if switch.value == False:
+                espessura = espessura/100
+            
+
+            custo_total = comprimento * largura * espessura  * volor_m3
             resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
 
@@ -31,20 +52,14 @@ def mostrar_laje(page):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    switch =  ft.Switch(
-            #adaptive=True,
-            label="Adaptive Switch",
-            value=True,
-        )
-
-    c1 = ft.Switch(label="Unchecked switch", value=False)
+    
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, width=200)
     voltar_button = ft.ElevatedButton(text="Voltar", 
                                         on_click=lambda e: voltar(page), 
                                         width=200, bgcolor=ft.colors.RED, color=ft.colors.WHITE)
 
-    page.add(comprimento_input, largura_input,altura_input, valor_m3_input, switch,c1, calcular_button, resultado_text, voltar_button)
+    page.add(comprimento_input, largura_input,altura_input, valor_m3_input, switch, calcular_button, resultado_text, voltar_button)
     page.update()
 
 def voltar(page):
