@@ -29,10 +29,28 @@ def mostrar_parede(page):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style)
-    voltar_button = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar(page),**stl.button_style_voltar)
+    calcular_btn = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style)
+    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar(page),**stl.button_style_voltar)
 
-    page.add(altura_input, comprimento_input, valor_m2_input, calcular_button, resultado_text, voltar_button)
+    page.add(
+        ft.Container(            
+                    content=ft.Column(
+                        [
+                            altura_input, comprimento_input, valor_m2_input
+                        ],
+                        alignment="center",
+                        spacing=10  # Espaçamento entre os botões
+                    ),
+                    margin=10,
+                    padding=10,
+                    alignment=ft.alignment.center,
+                    bgcolor=ft.colors.BLACK12,
+                    width=300,
+                    border_radius=10,
+                ),
+    )
+
+    page.add(calcular_btn, resultado_text, voltar_btn)
     page.update()
 
 def voltar(page):

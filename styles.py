@@ -23,7 +23,8 @@ def aplicar_tema(page):
 
 input_style = {
     "keyboard_type": ft.KeyboardType.NUMBER,
-    "bgcolor": ft.colors.with_opacity(0.4, ft.colors.GREY_900),
+    "width": 300,
+    "bgcolor": ft.colors.with_opacity(0.8, ft.colors.GREY_900),
 }
 
 button_style = {
