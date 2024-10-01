@@ -16,10 +16,10 @@ def mostrar_laje(page):
     switch =  ft.Switch(label="cm para mm",on_change=lambda e: atualizar(page),value=False)
 
     def atualizar(e):
-        if switch.value ==False:
-            espessura_input.label="Espessura (cm)"
-        else:
+        if switch.value:
             espessura_input.label="Espessura (mm)"
+        else:
+            espessura_input.label="Espessura (cm)"
 
         page.update()
 
