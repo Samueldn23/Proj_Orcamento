@@ -22,7 +22,6 @@ def mostrar_parede(page):
 
             custo_total = altura * comprimento * valor_m2
 
-
             resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
         except ValueError:
@@ -44,9 +43,16 @@ def mostrar_parede(page):
                     margin=10,
                     padding=10,
                     alignment=ft.alignment.center,
-                    bgcolor=ft.colors.BLACK12,
+                    bgcolor=ft.colors.with_opacity(0.8, ft.colors.GREY_900),
                     width=300,
                     border_radius=10,
+                    shadow=ft.BoxShadow(
+                        spread_radius=1,
+                        blur_radius=15,
+                        color=ft.colors.BLUE_GREY_400,
+                        offset=ft.Offset(0, 0),
+                        blur_style=ft.ShadowBlurStyle.OUTER,
+                    )
                 ),
     )
 
