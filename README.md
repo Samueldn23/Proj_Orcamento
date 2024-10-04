@@ -8,8 +8,8 @@ Este aplicativo permite que os usuários gerenciem orçamentos.
 
 1. Clone o repositório.
 2. Instale as dependências:
-   pip install flet
 
+   pip install flet
 
 ## Uso
 
