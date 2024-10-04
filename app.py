@@ -15,7 +15,6 @@ error_message = None
 def mostrar_login(page):
     global error_message
     page.controls.clear()
-    page.bgcolor = ft.colors.SHADOW # Definindo a cor de fundo
     page.add(ft.Text("Tela de Login", size=24, color=ft.colors.BLUE, weight=ft.FontWeight.BOLD))
 
     username_input = ft.TextField(label="Usuário", width=300, bgcolor=ft.colors.GREY_900)

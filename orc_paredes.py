@@ -1,6 +1,9 @@
 import flet as ft
 import styles as stl
+import locale
 
+# Define a localidade para pt_BR
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 def mostrar_parede(page):
     page.controls.clear()
@@ -15,14 +18,12 @@ def mostrar_parede(page):
     def calcular(e):
         try:
             altura = float(altura_input.value)
-
             comprimento = float(comprimento_input.value)
-
             valor_m2 = float(valor_m2_input.value)
 
             custo_total = altura * comprimento * valor_m2
 
-            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
+            resultado_text.value = f"Custo Total: {locale.currency(custo_total, grouping=True)}"
             page.update()
         except ValueError:
             resultado_text.value = "Por favor, insira valores válidos."
@@ -40,19 +41,7 @@ def mostrar_parede(page):
                         alignment="center",
                         spacing=10  # Espaçamento entre os botões
                     ),
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    bgcolor=ft.colors.with_opacity(0.8, ft.colors.GREY_900),
-                    width=300,
-                    border_radius=10,
-                    shadow=ft.BoxShadow(
-                        spread_radius=1,
-                        blur_radius=15,
-                        color=ft.colors.BLUE_GREY_400,
-                        offset=ft.Offset(0, 0),
-                        blur_style=ft.ShadowBlurStyle.OUTER,
-                    )
+                    **stl.container_style
                 ),
     )
 
