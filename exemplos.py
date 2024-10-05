@@ -1,4 +1,5 @@
 import flet as ft
+import styles as stl
 
 def exemplo(page: ft.Page):
     page.controls.clear()
@@ -11,21 +12,13 @@ def exemplo(page: ft.Page):
                 ft.Icon(name=ft.icons.AUDIOTRACK, color="green"),
                 ft.Icon(name=ft.icons.BEACH_ACCESS, color="blue"),
             ],
-            #alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            spacing=10,
         ),
-        bgcolor=ft.colors.CYAN,
-        padding=ft.padding.all(16),
-        border_radius=ft.border_radius.all(8),
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=15,
-            color=ft.colors.BLUE_GREY_300,
-            offset=ft.Offset(0, 0),
-            blur_style=ft.ShadowBlurStyle.OUTER,
-        )
+        **stl.container_style,
     )
-    
-    page.add(shadow_container)
+    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar(page),**stl.button_style_voltar)
+    page.add(shadow_container, voltar_btn)
     page.update()
 # Exemplo de execução
 #ft.app(target=exemplo)

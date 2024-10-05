@@ -1,12 +1,13 @@
 import flet as ft
+import styles as stl
 from mn_orcamento import orcamento
-from styles import aplicar_tema
+
 
 def main(page: ft.Page):
     page.adaptive = True
     page.title = "Aplicativo de Orçamento"
     
-    aplicar_tema(page)  # Aplica o tema
+    stl.aplicar_tema(page)
     mostrar_login(page)
 
 # Variável global para armazenar a mensagem de erro
@@ -17,8 +18,8 @@ def mostrar_login(page):
     page.controls.clear()
     page.add(ft.Text("Tela de Login", size=24, color=ft.colors.BLUE, weight=ft.FontWeight.BOLD))
 
-    username_input = ft.TextField(label="Usuário", width=300, bgcolor=ft.colors.GREY_900)
-    password_input = ft.TextField(label="Senha", password=True, width=300, bgcolor=ft.colors.GREY_900)
+    username_input = ft.TextField(label="Usuário", **stl.input_style)
+    password_input = ft.TextField(label="Senha", password=True, **stl.input_style)
 
     login_button = ft.ElevatedButton(
         text="Login",

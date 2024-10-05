@@ -62,6 +62,6 @@ container_style = {
         blur_radius=15,                       # Raio de desfoque da sombra
         color=ft.colors.BLUE_GREY_400,        # Cor da sombra
         offset=ft.Offset(0, 0),               # Deslocamento da sombra
-        blur_style=ft.ShadowBlurStyle.INNER,  # Estilo de desfoque da sombra
+        blur_style=ft.ShadowBlurStyle.NORMAL,  # Estilo de desfoque da sombra
     )
 }
