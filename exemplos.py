@@ -32,7 +32,10 @@ def exemplo(page: ft.Page):
 
     # Configuração da imagem
     img = ft.Image(
-        src="C:\\Users\\Samuel\\OneDrive\\Imagens\\Projeto\\pngwing.com (1).png",
+        src="static\\img\\pngwing.com (1).png",
+        height=150,
+        width=150,
+        fit=ft.ImageFit.CONTAIN,
         offset=ft.Offset(y=0, x=0),
         scale=ft.Scale(scale=1),  # Começa com escala normal
         opacity=1,
