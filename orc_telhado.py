@@ -4,11 +4,15 @@ import locale
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
 def mostrar_telhado(page):
     page.controls.clear()
 
     page.add(ft.Text("Telhado", size=24))
+<<<<<<< HEAD
 
     comprimento_input = ft.TextField(
         label="Comprimento (m)", keyboard_type=ft.KeyboardType.NUMBER
@@ -20,6 +24,13 @@ def mostrar_telhado(page):
         label="Valor do Metro (R$)", keyboard_type=ft.KeyboardType.NUMBER
     )
 
+=======
+
+    comprimento_input = ft.TextField(label="Comprimento (m)", keyboard_type=ft.KeyboardType.NUMBER)
+    largura_input = ft.TextField(label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER)
+    valor_input = ft.TextField(label="Valor do Metro (R$)", keyboard_type=ft.KeyboardType.NUMBER)
+    
+>>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     def calcular(e):
@@ -28,8 +39,13 @@ def mostrar_telhado(page):
             largura = float(largura_input.value)
             ValorM2 = float(valor_input.value)
 
+<<<<<<< HEAD
             calculo = largura * comprimento
             custo_total = calculo * ValorM2
+=======
+                calculo_m2 = largura * comprimento * (espessura / 100) 
+                custo_total = calculo_m3 * ValorM2
+>>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
 
             resultado_text.value = (
                 f"Custo Total: {locale.currency(custo_total, grouping=True)}"
