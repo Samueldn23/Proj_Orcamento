@@ -15,3 +15,13 @@ Este aplicativo permite que os usuários gerenciem orçamentos.
 
 Execute o aplicativo:
 flet run app.py
+
+# A main Flet app
+
+An example of a minimal Flet app.
+
+To run the app:
+
+```
+flet run [app_directory]
+```

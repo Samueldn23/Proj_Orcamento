@@ -6,9 +6,9 @@ def aplicar_tema(page):
     # Centraliza o conteúdo horizontalmente na página
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     # Define a largura da janela do aplicativo
-    page.window_width = 400  
+    page.window.width = 400 
     # Define a altura da janela do aplicativo
-    page.window_height = 600  
+    page.window.height = 600  
     
     # Define se a barra de título da janela deve ser oculta
     page.window.title_bar_hidden = False 

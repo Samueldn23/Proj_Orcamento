@@ -55,12 +55,7 @@ def mostrar_laje(page):
                         alignment="center",
                         spacing=10  # Espaçamento entre os botões
                     ),
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    bgcolor=ft.colors.BLACK12,
-                    width=300,
-                    border_radius=10,
+                    **stl.container_style
                 ),
     )
 
