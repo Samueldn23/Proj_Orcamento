@@ -1,51 +1,53 @@
 import flet as ft
+import styles as stl
 import locale
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
 def mostrar_telhado(page):
     page.controls.clear()
 
     page.add(ft.Text("Telhado", size=24))
-<<<<<<< HEAD
 
     comprimento_input = ft.TextField(
-        label="Comprimento (m)", keyboard_type=ft.KeyboardType.NUMBER
+        label="Comprimento (m)",
+        keyboard_type=ft.KeyboardType.NUMBER,
+        **stl.input_style,
     )
     largura_input = ft.TextField(
-        label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER
+        label="Largura (m)",
+        keyboard_type=ft.KeyboardType.NUMBER,
+        **stl.input_style,
     )
     valor_input = ft.TextField(
-        label="Valor do Metro (R$)", keyboard_type=ft.KeyboardType.NUMBER
+        label="Valor do Metro (R$)",
+        keyboard_type=ft.KeyboardType.NUMBER,
+        **stl.input_style,
     )
-
-=======
-
-    comprimento_input = ft.TextField(label="Comprimento (m)", keyboard_type=ft.KeyboardType.NUMBER)
-    largura_input = ft.TextField(label="Largura (m)", keyboard_type=ft.KeyboardType.NUMBER)
-    valor_input = ft.TextField(label="Valor do Metro (R$)", keyboard_type=ft.KeyboardType.NUMBER)
-    
->>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
+    valor_material_input = ft.TextField(
+        label="Valor do material (R$) ",
+        keyboard_type=ft.KeyboardType.NUMBER,
+        visible=False,
+        **stl.input_style,
+    )
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
+    # Função para calcular o custo
     def calcular(e):
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
-            ValorM2 = float(valor_input.value)
+            valor_m2 = float(valor_input.value)
 
-<<<<<<< HEAD
-            calculo = largura * comprimento
-            custo_total = calculo * ValorM2
-=======
-                calculo_m2 = largura * comprimento * (espessura / 100) 
-                custo_total = calculo_m3 * ValorM2
->>>>>>> 19127529344d02f89bee3e04899dc7212127f40c
+            if switch.value:  # switch para adicionar valor do material
+                valor_material = float(valor_material_input.value)
+                calculo_m3 = largura * comprimento  # cálculo de área (m²)
+                custo_total = calculo_m3 * valor_material
+            else:  # cálculo com valor por metro quadrado
+                calculo_m2 = largura * comprimento
+                custo_total = calculo_m2 * valor_m2
 
             resultado_text.value = (
                 f"Custo Total: {locale.currency(custo_total, grouping=True)}"
@@ -54,22 +56,43 @@ def mostrar_telhado(page):
             resultado_text.value = "Por favor, insira valores válidos."
         page.update()
 
-    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, width=200)
-    voltar_button = ft.ElevatedButton(
-        text="Voltar",
-        on_click=lambda e: voltar(page),
-        width=200,
-        bgcolor=ft.colors.RED,
-        color=ft.colors.WHITE,
+    # Função para atualizar visibilidade do campo de valor material
+    def atualizar(e):
+        valor_material_input.visible = switch.value
+        page.update()
+
+    switch = ft.Switch(
+        label="Adicionar valor do material", on_change=atualizar, value=False
+    )
+
+    calcular_btn = ft.ElevatedButton(
+        text="Calcular",
+        on_click=calcular,
+        **stl.button_style,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+    )
+    voltar_btn = ft.ElevatedButton(
+        text="Voltar", on_click=lambda e: voltar(page), **stl.button_style_voltar
     )
 
     page.add(
-        comprimento_input,
-        largura_input,
-        valor_input,
-        calcular_button,
-        resultado_text,
-        voltar_button,
+        ft.Container(
+            content=ft.Column(
+                [
+                    comprimento_input,
+                    largura_input,
+                    valor_input,
+                    valor_material_input,
+                    switch,
+                    calcular_btn,
+                    resultado_text,
+                    voltar_btn,
+                ],
+                alignment="center",
+                spacing=10,  # Espaçamento entre os controles
+            ),
+            **stl.container_style,
+        ),
     )
     page.update()
 
