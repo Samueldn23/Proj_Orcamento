@@ -1,6 +1,7 @@
 import flet as ft
 import styles as stl
 import locale
+from utils import voltar
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
@@ -43,12 +44,8 @@ def mostrar_parede(page):
     )
 
     calcular_btn = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)))
-    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar(page),**stl.button_style_voltar)
+    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar.orcamento(page), **stl.button_style_voltar)
 
     page.add(calcular_btn, resultado_text, voltar_btn)
     page.update()
 
-def voltar(page):
-    page.controls.clear()    
-    from mn_orcamento import orcamento  # Importa a função orcamento
-    orcamento(page)  # Retorna à tela de Orçamento

@@ -1,5 +1,5 @@
-import App.login
-from App.models import criar_tabelas
+import App.user.login
+from App.models import criar_tabelas, cadastrar_usuario
 import flet as ft
 import App
 import styles as stl
@@ -9,22 +9,25 @@ tabelas_criadas = False
 
 def main(page):
     global tabelas_criadas
-    
+
     print("Inicializando a aplicação...")  # Mensagem de depuração
     
-    if not tabelas_criadas:  # Verifica se as tabelas já foram criadas
-        print("Criando as tabelas...")
-        criar_tabelas()  # Garante que as tabelas sejam criadas uma única vez
-        tabelas_criadas = True  # Define como True para não repetir a criação
+    # Garante que as tabelas sejam criadas uma única vez
+    if not tabelas_criadas:
+        print("Criando as tabelas se necessário...")
+        criar_tabelas()
+        tabelas_criadas = True
 
     # Exemplo de interface mínima do Flet
     stl.aplicar_tema(page)
     page.title = "App de Orçamento"
-    App.login.mostrar_login(page)
     page.add(ft.Text("Bem-vindo ao sistema de orçamento!"))
+    App.user.login.mostrar_login(page)  # Chamada direta para a tela de login
+
     
     page.update()
     print("Aplicação iniciada com sucesso!")
+
 # Inicializa a aplicação Flet
 if __name__ == "__main__":
     try:

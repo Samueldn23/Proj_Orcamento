@@ -1,5 +1,6 @@
 import flet as ft
 import styles as stl
+from utils import voltar
 
 def mostrar_laje(page):
 
@@ -44,7 +45,7 @@ def mostrar_laje(page):
             page.update()
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style)
-    voltar_button = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar(page),**stl.button_style_voltar)
+    voltar_button = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar.orcamento(page),**stl.button_style_voltar)
 
     page.add(
         ft.Container(            
@@ -62,8 +63,3 @@ def mostrar_laje(page):
     page.add(calcular_button, resultado_text, voltar_button)
     page.update()
 
-def voltar(page):
-    
-    page.controls.clear()
-    from mn_orcamento import orcamento  # Importa a função orcamento
-    orcamento(page)  # Retorna à tela de Orçamento 

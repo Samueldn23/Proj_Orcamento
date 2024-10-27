@@ -1,6 +1,7 @@
 import flet as ft
 import styles as stl
-from mn_orcamento import orcamento
+from orcamentos import *
+from orcamentos import menu_orc
 
 
 def main(page: ft.Page):
@@ -48,7 +49,7 @@ def fazer_login(page, username, password):
 
     # Aqui você pode adicionar lógica de autenticação
     if username == "" and password == "":  # Exemplo de autenticação
-        orcamento(page)  # Se o login for bem-sucedido, vai para a tela de orçamento
+        menu_orc.orcamento(page)  # Se o login for bem-sucedido, vai para a tela de orçamento
     else:
         error_message = "Usuário ou senha incorretos!"  # Atualiza a mensagem de erro
         mostrar_login(page)  # Atualiza a tela de login para mostrar a nova mensagem

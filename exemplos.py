@@ -2,6 +2,7 @@ import flet as ft
 import styles as stl
 import locale
 import asyncio
+from utils import voltar
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
@@ -79,11 +80,7 @@ def exemplo(page: ft.Page):
     container.on_mouse_leave = on_mouse_leave
 
     # Botão Voltar com animação de hover
-    voltar_btn = ft.ElevatedButton(
-        text="Voltar", 
-        on_click=lambda e: voltar(page), 
-        **stl.button_style_voltar
-    )
+    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar.orcamento(page), **stl.button_style_voltar)
 
     # Animação de hover no botão
     voltar_btn.on_hover = lambda e: setattr(voltar_btn, "bgcolor", ft.colors.RED if e.data == "enter" else ft.colors.WHITE)
@@ -96,10 +93,6 @@ def exemplo(page: ft.Page):
     page.run_task(animate_image)
     page.update()
 
-def voltar(page):
-    page.controls.clear()    
-    from mn_orcamento import orcamento  # Importa a função orcamento
-    orcamento(page)  # Retorna à tela de Orçamento
 
 # Exemplo de execução
 # ft.app(target=exemplo)
