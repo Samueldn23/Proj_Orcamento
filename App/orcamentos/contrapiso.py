@@ -1,7 +1,7 @@
 import flet as ft
-import styles as stl
+import custom.styles as stl
+import custom.button as btn
 import locale
-from utils import voltar
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -12,10 +12,23 @@ def mostrar_contrapiso(page):
 
     page.add(ft.Text("Contrapiso", size=24))
 
-    comprimento_input = ft.TextField(label="Comprimento (m)",**stl.input_style,)
-    largura_input = ft.TextField(label="Largura (m)",**stl.input_style,)
-    valor_input = ft.TextField(label="Valor do Metro (R$)",**stl.input_style,)
-    espessura_input = ft.TextField(label="Espessura (Cm)",visible=False,**stl.input_style,)
+    comprimento_input = ft.TextField(
+        label="Comprimento (m)",
+        **stl.input_style,
+    )
+    largura_input = ft.TextField(
+        label="Largura (m)",
+        **stl.input_style,
+    )
+    valor_input = ft.TextField(
+        label="Valor do Metro (R$)",
+        **stl.input_style,
+    )
+    espessura_input = ft.TextField(
+        label="Espessura (Cm)",
+        visible=False,
+        **stl.input_style,
+    )
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     # Função para calcular o custo
@@ -58,7 +71,9 @@ def mostrar_contrapiso(page):
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
     )
     voltar_btn = ft.ElevatedButton(
-        text="Voltar", on_click=lambda e: voltar.orcamento(page), **stl.button_style_voltar
+        text="Voltar",
+        on_click=lambda e: btn.voltar.orcamento(page),
+        **stl.button_style_voltar,
     )
 
     page.add(
@@ -81,6 +96,3 @@ def mostrar_contrapiso(page):
         )
     )
     page.update()
-
-
-

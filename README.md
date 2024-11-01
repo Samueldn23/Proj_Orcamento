@@ -9,19 +9,17 @@ Este aplicativo permite que os usuários gerenciem orçamentos.
 1. Clone o repositório.
 2. Instale as dependências:
 
-   pip install flet
+```
+   pip install -r requirements.txt
+
+```
 
 ## Uso
 
 Execute o aplicativo:
+flet run main.py
 flet run app.py
 
-# A main Flet app
-
-An example of a minimal Flet app.
-
-To run the app:
-
 ```
-flet run [app_directory]
+
 ```

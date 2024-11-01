@@ -1,10 +1,11 @@
 import flet as ft
-import styles as stl
+import custom.styles as stl
+import custom.button as btn
 import locale
-from utils import voltar
 
 # Define a localidade para pt_BR
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+
 
 def mostrar_parede(page):
     page.controls.clear()
@@ -24,28 +25,36 @@ def mostrar_parede(page):
 
             custo_total = altura * comprimento * valor_m2
 
-            resultado_text.value = f"Custo Total: {locale.currency(custo_total, grouping=True)}"
+            resultado_text.value = (
+                f"Custo Total: {locale.currency(custo_total, grouping=True)}"
+            )
             page.update()
         except ValueError:
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
     page.add(
-        ft.Container(            
-                    content=ft.Column(
-                        [
-                            altura_input, comprimento_input, valor_m2_input
-                        ],
-                        alignment="center",
-                        spacing=10  # Espaçamento entre os botões
-                    ),
-                    **stl.container_style
-                ),
+        ft.Container(
+            content=ft.Column(
+                [altura_input, comprimento_input, valor_m2_input],
+                alignment="center",
+                spacing=10,  # Espaçamento entre os botões
+            ),
+            **stl.container_style,
+        ),
     )
 
-    calcular_btn = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)))
-    voltar_btn = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar.orcamento(page), **stl.button_style_voltar)
+    calcular_btn = ft.ElevatedButton(
+        text="Calcular",
+        on_click=calcular,
+        **stl.button_style,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+    )
+    voltar_btn = ft.ElevatedButton(
+        text="Voltar",
+        on_click=lambda e: btn.voltar.orcamento(page),
+        **stl.button_style_voltar,
+    )
 
     page.add(calcular_btn, resultado_text, voltar_btn)
     page.update()
-

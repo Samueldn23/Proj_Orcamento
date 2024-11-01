@@ -1,9 +1,9 @@
 import flet as ft
-import styles as stl
-from utils import voltar
+import custom.styles as stl
+import custom.button as btn
+
 
 def mostrar_laje(page):
-
     page.controls.clear()
     page.add(ft.Text("orçamento da laje", size=24))
 
@@ -14,52 +14,61 @@ def mostrar_laje(page):
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
-    switch =  ft.Switch(label="cm para mm",on_change=lambda e: atualizar(page),value=False)
+    switch = ft.Switch(
+        label="cm para mm", on_change=lambda e: atualizar(page), value=False
+    )
 
     def atualizar(e):
         if switch.value:
-            espessura_input.label="Espessura (mm)"
+            espessura_input.label = "Espessura (mm)"
         else:
-            espessura_input.label="Espessura (cm)"
+            espessura_input.label = "Espessura (cm)"
 
         page.update()
 
     def calcular(e):
-
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
             espessura = float(espessura_input.value)
             volor_m3 = float(valor_m3_input.value)
 
-            if switch.value == False:
-                espessura = espessura/100
-            
+            if not switch.value:
+                espessura = espessura / 100
+
             custo_total = comprimento * largura * espessura * volor_m3
             resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
             page.update()
 
         except ValueError:
-
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular, **stl.button_style)
-    voltar_button = ft.ElevatedButton(text="Voltar", on_click=lambda e: voltar.orcamento(page),**stl.button_style_voltar)
+    calcular_button = ft.ElevatedButton(
+        text="Calcular", on_click=calcular, **stl.button_style
+    )
+    voltar_button = ft.ElevatedButton(
+        text="Voltar",
+        on_click=lambda e: btn.voltar.orcamento(page),
+        **stl.button_style_voltar,
+    )
 
     page.add(
-        ft.Container(            
-                    content=ft.Column(
-                        [
-                            comprimento_input, largura_input,espessura_input, valor_m3_input,switch
-                        ],
-                        alignment="center",
-                        spacing=10  # Espaçamento entre os botões
-                    ),
-                    **stl.container_style
-                ),
+        ft.Container(
+            content=ft.Column(
+                [
+                    comprimento_input,
+                    largura_input,
+                    espessura_input,
+                    valor_m3_input,
+                    switch,
+                ],
+                alignment="center",
+                spacing=10,  # Espaçamento entre os botões
+            ),
+            **stl.container_style,
+        ),
     )
 
     page.add(calcular_button, resultado_text, voltar_button)
     page.update()
-
