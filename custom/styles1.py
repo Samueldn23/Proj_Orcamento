@@ -192,56 +192,6 @@ class BtnController:
         e.control.update()
 
 
-
-
-class MenuButton(ft.ElevatedButton):
-    """Classe personalizada para botões do menu principal"""
-
-    def __init__(self, text: str, on_click: Callable, width: int = 200):
-        super().__init__(
-            text=text,
-            on_click=on_click,
-            width=width,
-            on_hover=self.hover_effect,
-        )
-
-    def hover_effect(self, e):
-        """Gerencia o efeito hover do botão"""
-        if e.data == "true":  # Mouse entrou
-            self.scale = 1.05
-            self.shadow = ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=15,
-                color=ft.colors.PURPLE_500,
-                offset=ft.Offset(0, 0),
-            )
-        else:  # Mouse saiu
-            self.scale = 1.0
-            self.shadow = None
-        self.update()
-
-def create_menu_button(text: str, action: Callable, page: ft.Page) -> ft.Container:
-    """Cria um botão de menu estilizado"""
-    return ft.Container(
-        content=ft.Column(
-            controls=[
-                MenuButton(
-                    text=text,
-                    on_click=lambda _: action(page),
-                ),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        ),
-        padding=2,
-        border_radius=25,
-        animate=ft.animation.Animation(300, ft.AnimationCurve.EASE_IN_OUT),
-    )
-
-
-
-
-
-
 # Funções de utilidade para uso externo
 def apply_theme(page: ft.Page):
     """Aplica o tema à página"""
