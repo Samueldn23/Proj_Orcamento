@@ -1,2 +1,2 @@
-flet==0.22.*
+flet
 SQLAlchemy

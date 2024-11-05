@@ -3,7 +3,7 @@ from typing import Optional
 import user
 import custom.styles as stl
 from models.db import cadastrar_usuario
-
+import time
 
 class SignupPage:
     """Classe para gerenciar a página de cadastro"""
@@ -101,7 +101,7 @@ class SignupPage:
             self.error_text.visible = False
         self.page.update()
 
-    async def _handle_signup(self, _):
+    def _handle_signup(self, _):
         """Processa o cadastro do usuário"""
         valid, message = self._validate_inputs()
         if not valid:
@@ -109,14 +109,15 @@ class SignupPage:
             return
 
         try:
-            await cadastrar_usuario(
+            cadastrar_usuario(
                 self.nome_input.value, self.email_input.value, self.senha_input.value
             )
             self._show_message(
                 f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
             )
+            time.sleep(2)
             # Redireciona após 2 segundos
-            self.page.window_destroy()
+            #self.page.window.destroy()
             user.login.mostrar_login(self.page)
         except Exception as e:
             self._show_message(f"Erro ao cadastrar usuário: {str(e)}")
