@@ -1,76 +1,114 @@
 import os
-
 import flet as ft
 from dotenv import load_dotenv
-
+import menu
 import custom.styles as stl
 from models.db import autenticar_usuario
-
-from . import signup  # Importa a função de cadastro
+from .signup import mostrar_cadastro
 
 load_dotenv()
 
-# Variável global para armazenar a mensagem de erro
-error_message = None
 
+class LoginPage:
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.error_message = None
+        self._init_controls()
 
-def mostrar_login(page):
-    global error_message
-    page.controls.clear()
-    page.add(
-        ft.Text(
-            "Tela de Login", size=24, color=ft.colors.BLUE, weight=ft.FontWeight.BOLD
+    def _init_controls(self):
+        """Inicializa os controles da página de login"""
+        self.username_input = ft.TextField(
+            label="Email",
+            autofocus=True,
+            value=os.getenv("USERNAME2", ""),  # Valor padrão vazio se não existir
+            **stl.input_style,
         )
-    )
 
-    username_input = ft.TextField(label="Email", **stl.input_style)
-    password_input = ft.TextField(label="Senha", password=True, **stl.input_style)
+        self.password_input = ft.TextField(
+            label="Senha",
+            password=True,
+            can_reveal_password=True,
+            value=os.getenv("PASSWORD", ""),  # Valor padrão vazio se não existir
+            **stl.input_style,
+        )
 
-    username_input.value = os.getenv("USERNAME2")
-    password_input.value = os.getenv("PASSWORD")
+        self.login_button = ft.ElevatedButton(
+            text="Entrar",
+            width=300,
+            on_click=self.fazer_login,
+            style=ft.ButtonStyle(
+                color=ft.colors.WHITE,
+                bgcolor=ft.colors.BLUE,
+                shape=ft.RoundedRectangleBorder(radius=10),
+                elevation=5,
+            ),
+        )
 
-    login_button = ft.ElevatedButton(
-        text="Login",
-        on_click=lambda e: fazer_login(
-            page, username_input.value, password_input.value
-        ),
-        width=300,
-        color=ft.colors.WHITE,
-        bgcolor=ft.colors.BLUE,
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=8),
-            elevation=5,
-        ),
-    )
+        self.signup_button = ft.TextButton(
+            text="Não tem uma conta? Cadastre-se",
+            on_click=lambda _: mostrar_cadastro(self.page),
+        )
 
-    cadastrar_button = ft.TextButton(
-        text="Não tem uma conta? Cadastre-se",
-        on_click=lambda e: signup.mostrar_cadastro(page),
-    )
+        self.error_text = ft.Text(color=ft.colors.RED, visible=False)
 
+    def mostrar_erro(self, mensagem: str):
+        """Exibe uma mensagem de erro na tela"""
+        self.error_text.value = mensagem
+        self.error_text.visible = True
+        self.page.update()
+
+    async def fazer_login(self, _):
+        """Processa a tentativa de login"""
+        if not self.username_input.value or not self.password_input.value:
+            self.mostrar_erro("Preencha todos os campos!")
+            return
+
+        self.page.show_loading = True
+        self.error_text.visible = False
+        self.page.update()
+
+        try:
+            if autenticar_usuario(self.username_input.value, self.password_input.value):
+                self.page.open(
+                    ft.SnackBar(
+                        content=ft.Text("Login realizado com sucesso!"),
+                        bgcolor=ft.colors.GREEN,
+                    ),
+                )
+                menu.mostrar_menu(self.page)
+            else:
+                self.mostrar_erro("Usuário ou senha inválidos")
+        except Exception as e:
+            self.mostrar_erro(f"Erro ao fazer login: {str(e)}")
+            print(f"Erro ao fazer login: {str(e)}")
+        finally:
+            self.page.show_loading = False
+            self.page.update()
+
+    def build(self):
+        """Constrói a interface da página de login"""
+        return ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Text("Bem-vindo", size=32, weight=ft.FontWeight.BOLD),
+                    self.username_input,
+                    self.password_input,
+                    self.login_button,
+                    self.error_text,
+                    ft.Divider(height=20),
+                    self.signup_button,
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
+            ),
+            padding=40,
+            alignment=ft.alignment.center,
+        )
+
+
+def mostrar_login(page: ft.Page):
+    """Função helper para mostrar a página de login"""
+    page.controls.clear()
+    login_page = LoginPage(page)
+    page.add(login_page.build())
     page.update()
-    page.add(username_input, password_input, login_button, cadastrar_button)
-
-    # Adiciona a mensagem de erro, se existir
-    if error_message:
-        page.add(ft.Text(error_message, color=ft.colors.RED))
-
-    page.update()
-
-
-def fazer_login(page, username, password):
-    import menu  # Importa a função de autenticação
-
-    global error_message
-
-    # Limpa a mensagem de erro anterior
-    error_message = None
-
-    # Verifica se o usuário e a senha estão corretos
-    if autenticar_usuario(username, password):
-        menu.mostrar_menu(
-            page
-        )  # Se o login for bem-sucedido, navega para a tela de orçamento
-    else:
-        error_message = "Usuário ou senha incorretos!"  # Atualiza a mensagem de erro
-        mostrar_login(page)  # Atualiza a tela de login para mostrar a nova mensagem

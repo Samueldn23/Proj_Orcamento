@@ -1,71 +1,87 @@
 import flet as ft
+from typing import Optional
 import custom.styles as stl
+from menu import mostrar_menu
+from models.db import criar_tabelas
 
 
-def main(page: ft.Page):
-    page.adaptive = True
-    page.title = "Aplicativo de Orçamento"
+class OrcamentoApp:
+    """Classe principal do aplicativo de orçamentos"""
 
-    stl.aplicar_tema(page)
-    mostrar_login(page)
+    def __init__(self):
+        self.tabelas_criadas: bool = False
+        self.page: Optional[ft.Page] = None
 
+    def initialize_database(self):
+        """Inicializa o banco de dados se necessário"""
+        if not self.tabelas_criadas:
+            try:
+                criar_tabelas()
+                self.tabelas_criadas = True
+            except Exception as e:
+                print(f"Erro ao criar tabelas: {e}")
+                raise
 
-# Variável global para armazenar a mensagem de erro
-error_message = None
+    def configure_page(self, page: ft.Page):
+        """Configura a página principal do aplicativo"""
+        self.page = page
+        stl.aplicar_tema(page)
+        page.title = "App de Orçamento"
+        page.window.width = 400  # Largura inicial da janela
+        page.window.height = 700  # Altura inicial da janela
+        page.window.min_width = 400  # Largura mínima para responsividade
+        page.theme_mode = ft.ThemeMode.SYSTEM  # Usa o tema do sistema
+        page.update()
 
-
-def mostrar_login(page):
-    global error_message
-    page.controls.clear()
-    page.add(
-        ft.Text(
-            "Tela de Login", size=24, color=ft.colors.BLUE, weight=ft.FontWeight.BOLD
+    def show_welcome_message(self):
+        """Exibe a mensagem de boas-vindas"""
+        self.page.add(
+            ft.Container(
+                content=ft.Column(
+                    controls=[
+                        ft.Text(
+                            "Bem-vindo ao Sistema de Orçamento",
+                            size=28,
+                            weight=ft.FontWeight.BOLD,
+                            color=ft.colors.BLUE,
+                        ),
+                        ft.Text(
+                            "Faça login para continuar",
+                            size=16,
+                            color=ft.colors.GREY_700,
+                        ),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=10,
+                ),
+                padding=20,
+                alignment=ft.alignment.center,
+            )
         )
-    )
 
-    username_input = ft.TextField(label="Usuário", **stl.input_style)
-    password_input = ft.TextField(label="Senha", password=True, **stl.input_style)
-
-    login_button = ft.ElevatedButton(
-        text="Login",
-        on_click=lambda e: fazer_login(
-            page, username_input.value, password_input.value
-        ),
-        width=300,
-        color=ft.colors.WHITE,
-        bgcolor=ft.colors.BLUE,
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=8),
-            elevation=5,
-        ),
-    )
-    page.add(username_input, password_input, login_button)
-
-    # Adiciona a mensagem de erro, se existir
-    if error_message:
-        page.add(ft.Text(error_message, color=ft.colors.RED))
-
-    page.update()
+    def main(self, page: ft.Page):
+        """Função principal do aplicativo"""
+        try:
+            self.initialize_database()
+            self.configure_page(page)
+            self.show_welcome_message()
+            mostrar_menu(page)
+            page.update()
+        except Exception as e:
+            error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
+            page.add(ft.Text(error_message, color=ft.colors.RED_600))
+            page.update()
+            print(error_message)
 
 
-def fazer_login(page, username, password):
-    import menu  # Importa a função de autenticação
-
-    global error_message
-
-    # Limpa a mensagem de erro anterior
-    error_message = None
-
-    # Aqui você pode adicionar lógica de autenticação
-    if username == "" and password == "":  # Exemplo de autenticação
-        menu.mostrar_menu(
-            page
-        )  # Se o login for bem-sucedido, navega para a tela de orçamento
-
-    else:
-        error_message = "Usuário ou senha incorretos!"  # Atualiza a mensagem de erro
-        mostrar_login(page)  # Atualiza a tela de login para mostrar a nova mensagem
+def start_app():
+    """Função para iniciar o aplicativo"""
+    try:
+        app = OrcamentoApp()
+        ft.app(target=app.main)
+    except Exception as e:
+        print(f"Erro fatal ao iniciar o aplicativo: {e}")
 
 
-# Iniciando o aplicativo
-ft.app(target=main)
+if __name__ == "__main__":
+    start_app()

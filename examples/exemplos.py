@@ -5,78 +5,157 @@ import locale
 import asyncio
 import random
 
+
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
-def exemplo(page: ft.Page):
-    page.controls.clear()
+class ExemploPage:
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.animation_running = True
+        self.setup_page()
+        self.create_components()
+        self.setup_layout()
+        self.start_animation()
 
-    # Título da tela
-    page.add(
-        ft.Text(
-            "Tela de Exemplo", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE
+    def setup_page(self) -> None:
+        """Configura as propriedades iniciais da página"""
+        self.page.controls.clear()
+        self.page.padding = 20
+        self.page.spacing = 20
+        self.page.window.center()
+
+    def create_components(self) -> None:
+        """Cria todos os componentes da página"""
+        self.create_title()
+        self.create_image()
+        self.create_container()
+        self.create_buttons()
+
+    def create_title(self) -> None:
+        """Cria o título da página"""
+        self.title = ft.Text(
+            "Tela de Exemplo",
+            size=24,
+            weight=ft.FontWeight.BOLD,
+            color=ft.colors.BLUE,
+            text_align=ft.TextAlign.CENTER,
         )
-    )
 
-    # Configuração da imagem com animação
-    img = ft.Image(
-        src="assets/img/pngwing.com (1).png",
-        height=150,
-        width=150,
-        fit=ft.ImageFit.CONTAIN,
-        offset=ft.Offset(y=0, x=0),
-        scale=ft.Scale(scale=1),
-        opacity=1,
-        animate_offset=ft.Animation(duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT),
-        animate_scale=ft.Animation(duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT),
-        animate_opacity=ft.Animation(
-            duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT
-        ),
-    )
+    def create_image(self) -> None:
+        """Cria e configura o componente de imagem"""
+        self.img = ft.Image(
+            src="assets/img/pngwing.com (1).png",
+            height=150,
+            width=150,
+            fit=ft.ImageFit.CONTAIN,
+            offset=ft.Offset(y=0, x=0),
+            scale=ft.Scale(scale=1),
+            opacity=1,
+            animate_offset=self._create_animation(),
+            animate_scale=self._create_animation(),
+            animate_opacity=self._create_animation(),
+        )
 
-    # Configuração do container
-    container = ft.Container(
-        content=ft.Column([img], alignment=ft.MainAxisAlignment.CENTER),
-        alignment=ft.alignment.center,
-        bgcolor=ft.colors.BLACK,
-        border_radius=10,
-        width=300,
-        height=300,
-    )
+    def _create_animation(self) -> ft.Animation:
+        """Cria uma animação padrão"""
+        return ft.Animation(duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT)
 
-    # Função para animações da imagem
-    async def animate_image():
+    def create_container(self) -> None:
+        """Cria e configura o container principal"""
+        self.container = ft.Container(
+            content=ft.Column(
+                [self.img],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            alignment=ft.alignment.center,
+            bgcolor=ft.colors.BLACK,
+            border_radius=10,
+            width=300,
+            height=300,
+            shadow=ft.BoxShadow(
+                spread_radius=1,
+                blur_radius=10,
+                color=ft.colors.WHITE,
+            ),
+        )
+        self.container.on_hover = self._on_container_hover
+
+    def create_buttons(self) -> None:
+        """Cria os botões da interface"""
+        self.voltar_btn = ft.ElevatedButton(
+            text="Voltar",
+            on_click=lambda e: btn.voltar.principal(self.page),
+            width=100,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=8),
+            ),
+        )
+        self.voltar_btn.on_hover = stl.hover_effect_voltar
+
+        self.toggle_btn = ft.ElevatedButton(
+            text="Pausar Animação",
+            on_click=self._toggle_animation,
+            width=150,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=8),
+            ),
+        )
+
+    def setup_layout(self) -> None:
+        """Organiza os componentes na página"""
+        self.page.add(
+            ft.Column(
+                [
+                    self.title,
+                    self.container,
+                    ft.Row(
+                        [self.voltar_btn, self.toggle_btn],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=20,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
+            )
+        )
+
+    def _on_container_hover(self, e: ft.HoverEvent) -> None:
+        """Gerencia o efeito hover do container"""
+        self.container.bgcolor = (
+            ft.colors.GREY_900 if e.data == "true" else ft.colors.BLACK
+        )
+        self.container.scale = 1.05 if e.data == "true" else 1.0
+        self.container.update()
+
+    def _toggle_animation(self, e) -> None:
+        """Alterna o estado da animação"""
+        self.animation_running = not self.animation_running
+        self.toggle_btn.text = (
+            "Continuar Animação" if not self.animation_running else "Pausar Animação"
+        )
+        self.toggle_btn.update()
+
+    async def animate_image(self) -> None:
+        """Executa a animação da imagem"""
         while True:
-            img.offset = ft.Offset(random.uniform(-1, 1), random.uniform(-1, 1))
-            img.scale = ft.Scale(scale=random.uniform(0.5, 1.5))
-            img.opacity = random.uniform(0.3, 1.0)
-            page.update()  # Atualiza a página de forma assíncrona
+            if self.animation_running:
+                self.img.offset = ft.Offset(
+                    random.uniform(-0.8, 0.8), random.uniform(-0.8, 0.8)
+                )
+                self.img.scale = ft.Scale(scale=random.uniform(0.5, 1.5))
+                self.img.opacity = random.uniform(0.3, 1.0)
+                self.page.update()
             await asyncio.sleep(1)
 
-    # Eventos de sombra ao passar o mouse sobre o container
-    def on_mouse_enter(e):
-        if e.data == "true":  # Mouse sobre o botão
-            container.bgcolor = ft.colors.GREY_900
-            container.update()
-        else:  # Mouse saiu do botão
-            container.bgcolor = ft.colors.BLACK
-            container.update()
+    def start_animation(self) -> None:
+        """Inicia a tarefa de animação"""
+        self.page.run_task(self.animate_image)
+        self.page.update()
 
-    # Adiciona eventos ao container
-    container.on_hover = on_mouse_enter
 
-    # Botão Voltar com efeito de hover
-    voltar_btn = ft.ElevatedButton(
-        text="Voltar",
-        on_click=lambda e: btn.voltar.principal(page),
-        width=100,
-    )
-    voltar_btn.on_hover = stl.hover_effect_voltar
-
-    # Adiciona os elementos à página
-    page.add(container, voltar_btn)
-
-    # Inicia a tarefa de animação assíncrona
-    page.run_task(animate_image)
-    page.update()
+def exemplo(page: ft.Page) -> None:
+    ExemploPage(page)

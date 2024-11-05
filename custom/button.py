@@ -6,7 +6,7 @@ import menu
 class voltar:
     def orcamento(page):
         page.controls.clear()
-        menu_orc.orcamento(page)
+        menu_orc.mostrar_orcamento(page)
 
     def principal(page):
         page.controls.clear()
