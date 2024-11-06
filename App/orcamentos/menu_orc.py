@@ -53,6 +53,11 @@ class OrcamentoPage:
                 "icon": ft.icons.FOUNDATION,
             },
             {
+                "text": "Fundação",
+                "action": lambda _: orc.fundacao.mostrar_fundacao(self.page),
+                "icon": ft.icons.SQUARE,  # Ícone sugerido
+            },
+            {
                 "text": "Telhado",
                 "action": lambda _: orc.telhado.mostrar_telhado(self.page),
                 "icon": ft.icons.ROOFING,
