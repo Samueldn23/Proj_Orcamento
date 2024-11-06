@@ -61,6 +61,8 @@ class MenuPrincipalPage:
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             ),
+            padding=2,
+            border_radius=25,
             animate=ft.animation.Animation(300, ft.AnimationCurve.EASE_IN_OUT),
             on_hover=lambda e: self._handle_button_hover(e),
         )
@@ -70,7 +72,7 @@ class MenuPrincipalPage:
         if e.data == "true":  # Mouse entrou
             e.control.scale = 1.05
             e.control.shadow = ft.BoxShadow(
-                spread_radius=1,
+                #spread_radius=1,
                 blur_radius=15,
                 color=ft.colors.PURPLE_500,
                 offset=ft.Offset(0, 0),
@@ -97,6 +99,7 @@ class MenuPrincipalPage:
                         alignment=ft.MainAxisAlignment.CENTER,
                         wrap=True,
                     ),
+                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,
