@@ -41,7 +41,7 @@ class OrcamentoPage:
             {
                 "text": "Parede",
                 "action": lambda _: paredes.mostrar_parede(self.page),
-                "icon": "icones/parede.png", 
+                "icon": "icons/parede.png", 
             },
             {
                 "text": "Elétrica",
@@ -51,12 +51,12 @@ class OrcamentoPage:
             {
                 "text": "Laje",
                 "action": lambda _: orc.laje.mostrar_laje(self.page),
-                "icon": ft.icons.LAYERS,
+                "icon": "icons/laje.png",
             },
             {
                 "text": "Contrapiso",
                 "action": lambda _: orc.contrapiso.mostrar_contrapiso(self.page),
-                "icon": ft.icons.FOUNDATION_SHARP,
+                "icon": "icons/contrapiso.png",
             },
             {
                 "text": "Fundação",
