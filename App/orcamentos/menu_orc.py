@@ -3,6 +3,7 @@ from typing import Callable
 import App.orcamentos as orc
 import custom.styles as stl
 import custom.button as btn
+from App.orcamentos import paredes
 
 
 class MenuButton(ft.ElevatedButton):
@@ -10,14 +11,19 @@ class MenuButton(ft.ElevatedButton):
 
     def __init__(self, text: str, on_click: Callable, icon: str, width: int = 200):
         super().__init__(
-            text=text,
-            icon=icon,
+            content=ft.Row(
+                [
+                    ft.Image(
+                        src=icon,
+                        width=22,
+                        height=22,
+                        color=ft.colors.WHITE,
+                    ),
+                    ft.Text(text)
+                ]
+            ),
             on_click=on_click,
             width=width,
-            style=ft.ButtonStyle(
-                # shape=ft.RoundedRectangleBorder(radius=8),
-                # elevation=5,
-            ),
             on_hover=stl.hover_effect,
         )
 
@@ -34,8 +40,8 @@ class OrcamentoPage:
         self.menu_items = [
             {
                 "text": "Parede",
-                "action": lambda _: orc.paredes.mostrar_parede(self.page),
-                "icon": ft.icons.SQUARE,  # Ícone sugerido
+                "action": lambda _: paredes.mostrar_parede(self.page),
+                "icon": "icones/parede.png", 
             },
             {
                 "text": "Elétrica",
@@ -50,12 +56,12 @@ class OrcamentoPage:
             {
                 "text": "Contrapiso",
                 "action": lambda _: orc.contrapiso.mostrar_contrapiso(self.page),
-                "icon": ft.icons.FOUNDATION,
+                "icon": ft.icons.FOUNDATION_SHARP,
             },
             {
                 "text": "Fundação",
                 "action": lambda _: orc.fundacao.mostrar_fundacao(self.page),
-                "icon": ft.icons.SQUARE,  # Ícone sugerido
+                "icon": 'assets/img/iconFundacao.png',  
             },
             {
                 "text": "Telhado",
@@ -75,8 +81,6 @@ class OrcamentoPage:
             on_hover=stl.hover_effect_voltar,
             style=ft.ButtonStyle(
                 color=ft.colors.BLUE_900,
-                # bgcolor=ft.colors.BLUE_GREY_400,
-                # shape=ft.RoundedRectangleBorder(radius=8),
             ),
         )
 
@@ -87,8 +91,9 @@ class OrcamentoPage:
                 controls=[
                     MenuButton(
                         text=item["text"],
-                        on_click=item["action"],
                         icon=item["icon"],
+                        on_click=lambda _: item["action"](self.page),
+                        width=150,
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -130,7 +135,7 @@ class OrcamentoPage:
                         controls=self.menu_buttons,
                         alignment=ft.MainAxisAlignment.CENTER,
                         wrap=True,
-                    ),
+                    ),                    
                     ft.Divider(height=20),
                     self.voltar_button,
                 ],

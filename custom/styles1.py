@@ -4,34 +4,34 @@ from typing import Dict, Any, Callable
 
 
 @dataclass
-class ThemeColors:
+class CoresPrincipais:
     """Define as cores principais do tema"""
 
-    PRIMARY = ft.colors.BLUE
-    SECONDARY = ft.colors.PURPLE
-    WARNING = ft.colors.RED
-    BACKGROUND = ft.colors.BLACK
-    SURFACE = ft.colors.GREY_900
-    TEXT = ft.colors.WHITE
+    PRIMARIA = ft.colors.BLUE
+    SECUNDARIA = ft.colors.PURPLE
+    AVISO = ft.colors.RED
+    FUNDO = ft.colors.BLACK
+    SUPERFICIE = ft.colors.GREY_900
+    TEXTO = ft.colors.WHITE
 
 
-class ThemeManager:
+class GerenciadorTema:
     """Gerenciador de tema da aplicação"""
 
-    def __init__(self, page: ft.Page):
-        self.page = page
-        self.style_manager = StyleManager()
+    def __init__(self, pagina: ft.Page):
+        self.pagina = pagina
+        self.gerenciador_estilos = GerenciadorEstilos()
 
-    def apply_theme(self):
+    def aplicar_tema(self):
         """Aplica o tema à página"""
-        self._configure_window()
-        self._configure_layout()
-        self._configure_theme()
-        self._configure_background()
+        self._configurar_janela()
+        self._configurar_layout()
+        self._configurar_tema()
+        self._configurar_fundo()
 
-    def _configure_window(self):
+    def _configurar_janela(self):
         """Configura as propriedades da janela"""
-        window_config = {
+        configuracao_janela = {
             "width": 400,
             "height": 700,
             "title_bar_hidden": False,
@@ -39,91 +39,84 @@ class ThemeManager:
             "opacity": 1.0,
         }
 
-        for prop, value in window_config.items():
-            setattr(self.page.window, prop, value)
+        for prop, valor in configuracao_janela.items():
+            setattr(self.pagina.window, prop, valor)
 
-        self.page.window.center()
+        self.pagina.window.center()
 
-    def _configure_layout(self):
+    def _configurar_layout(self):
         """Configura o layout da página"""
-        self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
-        self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.page.padding = 20
-        self.page.spacing = 20
+        self.pagina.vertical_alignment = ft.MainAxisAlignment.CENTER
+        self.pagina.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        self.pagina.padding = 20
+        self.pagina.spacing = 20
 
-    def _configure_theme(self):
+    def _configurar_tema(self):
         """Configura o tema da aplicação"""
-        self.page.theme = ft.Theme(
+        self.pagina.theme = ft.Theme(
             color_scheme=ft.ColorScheme(
-                primary=self.style_manager.colors.PRIMARY,
-                secondary=self.style_manager.colors.SECONDARY,
+                primary=self.gerenciador_estilos.cores.PRIMARIA,
+                secondary=self.gerenciador_estilos.cores.SECUNDARIA,
             ),
             font_family="Arial",
         )
 
-    def _configure_background(self):
+    def _configurar_fundo(self):
         """Configura o fundo da página"""
-        self.page.bgcolor = ft.colors.with_opacity(
-            0.1, self.style_manager.colors.BACKGROUND
+        self.pagina.bgcolor = ft.colors.with_opacity(
+            0.1, self.gerenciador_estilos.cores.FUNDO
         )
-        self.page.gradient = ft.LinearGradient(
+        self.pagina.gradient = ft.LinearGradient(
             colors=[
-                self.style_manager.colors.BACKGROUND,
-                self.style_manager.colors.SURFACE,
+                self.gerenciador_estilos.cores.FUNDO,
+                self.gerenciador_estilos.cores.SUPERFICIE,
             ],
             begin=ft.alignment.top_center,
             end=ft.alignment.bottom_center,
         )
 
 
-class StyleManager:
+class GerenciadorEstilos:
     """Gerenciador de estilos da aplicação"""
 
     def __init__(self):
-        self.colors = ThemeColors()
+        self.cores = CoresPrincipais()
 
     @property
-    def input_style(self) -> Dict[str, Any]:
+    def estilo_input(self) -> Dict[str, Any]:
         """Estilo padrão para campos de entrada"""
         return {
             "keyboard_type": ft.KeyboardType.NUMBER,
             "width": 300,
-            "bgcolor": ft.colors.with_opacity(0.8, self.colors.SURFACE),
+            "bgcolor": ft.colors.with_opacity(0.8, self.cores.SUPERFICIE),
             "border_radius": 10,
             "text_size": 16,
-            # "text_align": ft.TextAlign.CENTER,
             "border": ft.InputBorder.UNDERLINE,
-            "color": self.colors.TEXT,
+            "color": self.cores.TEXTO,
         }
 
     @property
-    def button_base_style(self) -> ft.ButtonStyle:
+    def estilo_botao_base(self) -> ft.ButtonStyle:
         """Estilo base para botões"""
-        return ft.ButtonStyle(
-            animation_duration=500,
-            # shape=ft.RoundedRectangleBorder(radius=10),
-            # padding=20,
-        )
+        return ft.ButtonStyle(animation_duration=500)
 
-    def create_hover_style(self, color: str) -> ft.ButtonStyle:
+    def criar_estilo_hover(self, cor: str) -> ft.ButtonStyle:
         """Cria um estilo de hover personalizado"""
         return ft.ButtonStyle(
             animation_duration=500,
-            color=self.colors.TEXT,
-            # bgcolor=color,
-            # shape=ft.RoundedRectangleBorder(radius=10),
-            overlay_color=ft.colors.with_opacity(0.2, color),
+            color=self.cores.TEXTO,
+            overlay_color=ft.colors.with_opacity(0.2, cor),
             side={
-                ft.ControlState.DEFAULT: ft.BorderSide(1, color),
-                ft.ControlState.HOVERED: ft.BorderSide(2, color),
+                ft.ControlState.DEFAULT: ft.BorderSide(1, cor),
+                ft.ControlState.HOVERED: ft.BorderSide(2, cor),
             },
         )
 
     @property
-    def container_style(self) -> Dict[str, Any]:
+    def estilo_container(self) -> Dict[str, Any]:
         """Estilo padrão para containers"""
         return {
-            "bgcolor": ft.colors.with_opacity(0.9, self.colors.SURFACE),
+            "bgcolor": ft.colors.with_opacity(0.9, self.cores.SUPERFICIE),
             "margin": 15,
             "padding": 20,
             "alignment": ft.alignment.center,
@@ -132,52 +125,48 @@ class StyleManager:
             "shadow": ft.BoxShadow(
                 spread_radius=2,
                 blur_radius=20,
-                color=ft.colors.with_opacity(0.2, self.colors.TEXT),
+                color=ft.colors.with_opacity(0.2, self.cores.TEXTO),
                 offset=ft.Offset(0, 4),
                 blur_style=ft.ShadowBlurStyle.NORMAL,
             ),
         }
 
 
-class HoverEffectManager:
+class GerenciadorEfeitoHover:
     """Gerenciador de efeitos hover"""
 
     def __init__(self):
-        self.style_manager = StyleManager()
+        self.gerenciador_estilos = GerenciadorEstilos()
 
-    def create_hover_handler(self, color: str):
+    def criar_handler_hover(self, cor: str):
         """Cria um handler para efeito hover"""
-
-        def hover_handler(e):
-            if e.data == "true":
-                e.control.style = self.style_manager.create_hover_style(color)
-            else:
-                e.control.style = self.style_manager.button_base_style
+        def handler_hover(e):
+            e.control.style = self.gerenciador_estilos.criar_estilo_hover(cor) if e.data == "true" else self.gerenciador_estilos.estilo_botao_base
             e.control.update()
 
-        return hover_handler
+        return handler_hover
 
     @property
-    def default_hover(self):
-        return self.create_hover_handler(self.style_manager.colors.PRIMARY)
+    def hover_padrao(self):
+        return self.criar_handler_hover(self.gerenciador_estilos.cores.PRIMARIA)
 
     @property
-    def warning_hover(self):
-        return self.create_hover_handler(self.style_manager.colors.WARNING)
+    def hover_aviso(self):
+        return self.criar_handler_hover(self.gerenciador_estilos.cores.AVISO)
 
     @property
-    def secondary_hover(self):
-        return self.create_hover_handler(self.style_manager.colors.SECONDARY)
+    def hover_secundario(self):
+        return self.criar_handler_hover(self.gerenciador_estilos.cores.SECUNDARIA)
 
 
-class BtnController:
+class ControleBotao:
     """Classe para controle de botões"""
 
     @staticmethod
-    def handle_button_hover(e, cor):
+    def gerenciar_hover_botao(e, cor):
         """Gerencia o efeito hover nos botões"""
         if e.data == "true":  # Mouse entrou
-            e.control.scale = 1.05
+            e.control.scale = 1.00
             e.control.shadow = ft.BoxShadow(
                 spread_radius=1,
                 blur_radius=15,
@@ -193,32 +182,33 @@ class BtnController:
 
 
 # Funções de utilidade para uso externo
-def apply_theme(page: ft.Page):
+def aplicar_tema(pagina: ft.Page):
     """Aplica o tema à página"""
-    theme_manager = ThemeManager(page)
-    theme_manager.apply_theme()
+    gerenciador_tema = GerenciadorTema(pagina)
+    gerenciador_tema.aplicar_tema()
 
 
-def get_btn_hover_effects():
+def obter_efeitos_hover_botao():
     """Retorna os efeitos hover"""
-    hover_manager = HoverEffectManager()
+    gerenciador_hover = GerenciadorEfeitoHover()
     return {
-        "default": hover_manager.default_hover,
-        "warning": hover_manager.warning_hover,
-        "secondary": hover_manager.secondary_hover,
+        "padrao": gerenciador_hover.hover_padrao,
+        "aviso": gerenciador_hover.hover_aviso,
+        "secundario": gerenciador_hover.hover_secundario,
     }
 
 
-def get_styles():
+def obter_estilos():
     """Retorna os estilos padrão"""
-    style_manager = StyleManager()
+    gerenciador_estilos = GerenciadorEstilos()
     return {
-        "input": style_manager.input_style,
-        "container": style_manager.container_style,
-        "button_base": style_manager.button_base_style,
+        "input": gerenciador_estilos.estilo_input,
+        "container": gerenciador_estilos.estilo_container,
+        "botao_base": gerenciador_estilos.estilo_botao_base,
     }
 
 
-def get_btn_container(e, cor):
-    """Retorna o container padrão para botões"""
-    return BtnController.handle_button_hover(e, cor)
+def obter_efeito_container(e, cor):
+    '''Efeito de hover para container'''
+
+    return ControleBotao.gerenciar_hover_botao(e, cor)

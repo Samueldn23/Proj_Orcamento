@@ -1,14 +1,15 @@
 # Exemplo de uso com a nova estrutura
 import flet as ft
-from custom.styles1 import get_styles, get_btn_hover_effects, get_btn_container  # , apply_theme
+from custom.styles1 import obter_efeitos_hover_botao, obter_efeito_container , obter_estilos # 
 from custom.button import voltar
+import custom.menu_button as mbt
 
 
 class CalculoParedeView:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.styles = get_styles()
-        self.hover_effects = get_btn_hover_effects()
+        self.styles = obter_estilos()
+        self.hover_effects = obter_efeitos_hover_botao()
 
         # Criando os inputs
         self.comprimento_input = ft.TextField(
@@ -57,24 +58,33 @@ class CalculoParedeView:
                         ),
                         **self.styles["container"],
                     ),
-                    ft.ElevatedButton(
-                        text="Calcular",
-                        icon=ft.icons.CALCULATE,
-                        # on_click=self.calcular,
-                        style=self.styles["button_base"],
-                        on_hover=self.hover_effects["default"],
+                    ft.Container(
+                        content=ft.ElevatedButton(
+                            text="Calcular",
+                            icon=ft.icons.CALCULATE,
+                            # on_click=self.calcular,
+                            style=self.styles["botao_base"],
+                            on_hover=self.hover_effects["padrao"],
+                        ),
+                        on_hover=lambda e: obter_efeito_container(e, ft.colors.BLUE_500),
                     ),
+                    mbt.MenuButton(
+                        text="Voltar",
+                        on_click=lambda _: voltar.principal(self.page),
+                        icon=ft.icons.ARROW_BACK,
+                    ),
+                    mbt.btn_voltar(self.page),
                     self.area_text,
                     self.resultado_text,
                     ft.Container(
                         content=ft.ElevatedButton(
                             text="Voltar",
                             icon=ft.icons.ARROW_BACK,
-                            style=self.styles["button_base"],
+                            style=self.styles["botao_base"],
                             on_click=lambda _: voltar.principal(self.page),
-                            on_hover=self.hover_effects["warning"],
+                            on_hover=self.hover_effects["aviso"],
                         ),
-                        on_hover=lambda e: get_btn_container(e, ft.colors.RED_500),
+                        on_hover=lambda e: obter_efeito_container(e, ft.colors.RED_500),
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

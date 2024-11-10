@@ -46,7 +46,7 @@ class ExemploPage:
     def create_image(self) -> None:
         """Cria e configura o componente de imagem"""
         self.img = ft.Image(
-            src="assets/img/pngwing.com (1).png",
+            src="assets/img/iconFundacao.ico",
             height=150,
             width=150,
             fit=ft.ImageFit.CONTAIN,
