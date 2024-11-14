@@ -1,74 +1,168 @@
 import flet as ft
 import custom.styles as stl
 import custom.button as btn
+from typing import Optional
+import locale
 
+#Configuração da localização
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
-def mostrar_fundacao(page):
-    page.controls.clear()
-    page.add(ft.Text("orçamento da fundação", size=24))
+class Fundacao:
 
-    comprimento_input = ft.TextField(label="Comprimento (m)", **stl.input_style)
-    largura_input = ft.TextField(label="Largura (m)", **stl.input_style)
-    espessura_input = ft.TextField(label="Espessura (cm)", **stl.input_style)
-    valor_m3_input = ft.TextField(label="Valor por (m³)", **stl.input_style)
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.resultado_text: Optional[ft.Text] = None
+        self._init_controls()
 
-    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
+    def _init_controls(self):
+        """Inicializa os controles da página"""
+        self.espessura_input = ft.TextField(
+            label="Espessura (cm)",
+            prefix_icon=ft.icons.SPACE_BAR_ROUNDED,
+            suffix_text="centimetros",
+            # keyboard_type=ft.KeyboardType.NUMBER,
+            **stl.input_style,
+        )
+        self.altura_input = ft.TextField(
+            label="Altura (m)",
+            prefix_icon=ft.icons.HEIGHT,
+            suffix_text="metros",
+            # keyboard_type=ft.KeyboardType.NUMBER,
+            **stl.input_style,
+        )
+        self.comprimento_input = ft.TextField(
+            label="Comprimento (m)",
+            prefix_icon=ft.icons.STRAIGHTEN,
+            suffix_text="metros",
+            # keyboard_type=ft.KeyboardType.NUMBER,
+            **stl.input_style,
+        )
 
-    switch = ft.Switch(
-        label="cm para mm", on_change=lambda e: atualizar(page), value=False
-    )
+        self.valor_m3_input = ft.TextField(
+            label="Valor por m³",
+            prefix_icon=ft.icons.ATTACH_MONEY,
+            suffix_text="R$",
+            # keyboard_type=ft.KeyboardType.NUMBER,
+            **stl.input_style,
+        )
 
-    def atualizar(e):
-        if switch.value:
-            espessura_input.label = "Espessura (mm)"
-        else:
-            espessura_input.label = "Espessura (cm)"
+        self.resultado_text = ft.Text(
+            size=18,
+            weight=ft.FontWeight.BOLD,
+            text_align=ft.TextAlign.CENTER,
+        )
 
-        page.update()
+        self.area_text = ft.Text(
+            size=16,
+            text_align=ft.TextAlign.CENTER,
+        )
+    
+    def _validate_inputs(self) -> tuple[bool,str]:
+        """valida os inputs do formulário"""
 
-    def calcular(e):
         try:
-            comprimento = float(comprimento_input.value)
-            largura = float(largura_input.value)
-            espessura = float(espessura_input.value)
-            volor_m3 = float(valor_m3_input.value)
+            altura = float(self.altura_input.value or 0)
+            comprimento = float(self.comprimento_input.value or 0)
+            espessura = float (self.espessura_input.value or 0)
+            valor_m3 = float(self.valor_m3_input.value or 0)
 
-            if not switch.value:
-                espessura = espessura / 100
+            if altura <= 0 or comprimento <= 0 or espessura <=0 or valor_m3 <= 0:
+                return False, "Todos os valores devem ser maiores que zero!"
 
-            custo_total = comprimento * largura * espessura * volor_m3
-            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
-            page.update()
-
+            return True, ""
         except ValueError:
-            resultado_text.value = "Por favor, insira valores válidos."
-            page.update()
+            return False, "Por favor, insira apenas números válidos!"
 
-    calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular, **stl.button_style
-    )
-    voltar_button = ft.ElevatedButton(
-        text="Voltar",
-        on_click=lambda e: btn.voltar.orcamento(page),
-        **stl.button_style_voltar,
-    )
+    def _calcular_orcamento(self) -> tuple[float,float]:
+        """calcula a area e os custo total"""
+        altura = float(self.altura_input.value)
+        espessura = float (self.espessura_input.value)
+        comprimento = float(self.comprimento_input.value)
+        valor_m3 = float(self.valor_m3_input.value)
 
-    page.add(
-        ft.Container(
+        area = altura * comprimento * espessura
+        custo_total = area * valor_m3
+
+        return area, custo_total
+    
+    def _update_resultado(self, area: float, custo_total: float):
+        """Atualiza o texto de resultado"""
+        self.area_text.value = f"Área total: {area:.2f} m²"
+        self.resultado_text.value = (
+            f"Custo Total: {locale.currency(custo_total, grouping=True)}"
+        )
+        self.page.update()
+
+    def calcular(self, _):
+        """manipula o evento de calculo"""
+        valid, message = self._validate_inputs()
+        if not valid:   
+            self.resultado_text.value = message
+            self.area_text.valeu = ""
+            self.page.update()
+            return
+        
+        try:
+            area, custo_total = self._calcular_orcamento()
+            self._update_resultado(area, custo_total)
+        except Exception as e:
+            self.resultado_text.value = f"Erro ao calcular: {str(e)}"
+            self.area_text.value = ""
+            self.page.update()
+
+
+    def build(self):
+        """Constrói a interface da página"""
+        return ft.Container(
             content=ft.Column(
-                [
-                    comprimento_input,
-                    largura_input,
-                    espessura_input,
-                    valor_m3_input,
-                    switch,
+                controls=[
+                    ft.Text(
+                        "Cálculo de Fundação",
+                        size=24,
+                        weight=ft.FontWeight.BOLD,
+                        color=ft.colors.BLUE,
+                    ),
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                self.altura_input,
+                                self.comprimento_input,
+                                self.espessura_input,
+                                self.valor_m3_input,
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=10,
+                        ),
+                        **stl.container_style,
+                    ),
+                    ft.ElevatedButton(
+                        text="Calcular",
+                        icon=ft.icons.CALCULATE,
+                        on_click=self.calcular,
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+                        **stl.button_style,
+                    ),
+                    self.area_text,
+                    self.resultado_text,
+                    ft.ElevatedButton(
+                        text="Voltar",
+                        icon=ft.icons.ARROW_BACK,
+                        on_click=lambda _: btn.voltar.orcamento(self.page),
+                        on_hover=stl.hover_effect_voltar,
+                    ),
                 ],
-                alignment="center",
-                spacing=10,  # Espaçamento entre os botões
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
             ),
-            **stl.container_style,
-        ),
-    )
+            padding=0,
+            alignment=ft.alignment.center,
+        )
 
-    page.add(calcular_button, resultado_text, voltar_button)
+
+def mostrar_fundacao(page: ft.Page):
+    """função helper para mostar a página de calculo de fundação"""
+
+    page.controls.clear()
+    fundacao_calculator = Fundacao(page)
+    page.add(fundacao_calculator.build())
     page.update()
