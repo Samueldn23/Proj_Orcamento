@@ -1,7 +1,9 @@
 import flet as ft
-import custom.styles as stl
-import custom.button as btn
+import custom.button as clk
+from custom.styles_utils import get_style_manager
 import locale
+
+gsm = get_style_manager()
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -14,20 +16,20 @@ def mostrar_contrapiso(page):
 
     comprimento_input = ft.TextField(
         label="Comprimento (m)",
-        **stl.input_style,
+        **gsm.input_style,
     )
     largura_input = ft.TextField(
         label="Largura (m)",
-        **stl.input_style,
+        **gsm.input_style,
     )
     valor_input = ft.TextField(
         label="Valor do Metro (R$)",
-        **stl.input_style,
+        **gsm.input_style,
     )
     espessura_input = ft.TextField(
         label="Espessura (Cm)",
         visible=False,
-        **stl.input_style,
+        **gsm.input_style,
     )
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
@@ -67,13 +69,13 @@ def mostrar_contrapiso(page):
     calcular_btn = ft.ElevatedButton(
         text="Calcular",
         on_click=calcular,
-        **stl.button_style,
+        **gsm.button_style,
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
     )
-    voltar_btn = ft.ElevatedButton(
+    voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: btn.voltar.orcamento(page),
-        **stl.button_style_voltar,
+        on_click=lambda e: clk.voltar.orcamento(page),
+        icon=ft.icons.ARROW_BACK,
     )
 
     page.add(
@@ -92,7 +94,7 @@ def mostrar_contrapiso(page):
                 alignment="center",
                 spacing=10,
             ),
-            **stl.container_style,
+            **gsm.container_style,
         )
     )
     page.update()

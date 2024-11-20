@@ -1,9 +1,11 @@
 import flet as ft
-import custom.styles as stl
 from App.orcamentos import menu_orc
-from tests.teste import pageteste
+from tests import teste
 from typing import Callable
-from examples import exemplos, exemplo1
+from examples import exemplos
+from custom.styles_utils import get_style_manager
+
+gsm = get_style_manager()
 
 
 class MenuButton(ft.ElevatedButton):
@@ -14,7 +16,6 @@ class MenuButton(ft.ElevatedButton):
             text=text,
             on_click=on_click,
             width=width,
-            on_hover=stl.hover_effect_prinicipal,
         )
 
 
@@ -33,16 +34,12 @@ class MenuPrincipalPage:
                 "action": menu_orc.mostrar_orcamento,
             },
             {
-                "text": "Exemplo 1",
-                "action": exemplos.exemplo,
-            },
-            {
-                "text": "Exemplo 2",
-                "action": exemplo1.mostrar_exemplo,
+                "text": "Exemplo",
+                "action": exemplos.main,
             },
             {
                 "text": "Teste",
-                "action": pageteste,
+                "action": teste.main,
             },
         ]
 
@@ -51,36 +48,13 @@ class MenuPrincipalPage:
 
     def _create_menu_button(self, item: dict) -> ft.Container:
         """Cria um botão de menu estilizado"""
-        return ft.Container(
-            content=ft.Column(
-                controls=[
-                    MenuButton(
-                        text=item["text"],
-                        on_click=lambda _: item["action"](self.page),
-                    ),
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            ),
-            padding=2,
-            border_radius=25,
-            animate=ft.animation.Animation(300, ft.AnimationCurve.EASE_IN_OUT),
-            on_hover=lambda e: self._handle_button_hover(e),
-        )
-
-    def _handle_button_hover(self, e):
-        """Gerencia o efeito hover nos botões"""
-        if e.data == "true":  # Mouse entrou
-            e.control.scale = 1.05
-            e.control.shadow = ft.BoxShadow(
-                #spread_radius=1,
-                blur_radius=15,
-                color=ft.colors.PURPLE_500,
-                offset=ft.Offset(0, 0),
-            )
-        else:  # Mouse saiu
-            e.control.scale = 1.0
-            e.control.shadow = None
-        e.control.update()
+        return gsm.create_button(
+            text=item["text"],           
+            on_click=lambda _: item["action"](self.page),
+            width=200,
+            hover_color=ft.colors.PURPLE_900,
+            text_color=ft.colors.ORANGE,
+        ) 
 
     def build(self):
         """Constrói a interface da página do menu principal"""

@@ -2,10 +2,11 @@ import os
 import flet as ft
 from dotenv import load_dotenv
 import menu
-import custom.styles as stl
 from models.db import autenticar_usuario
 from .signup import mostrar_cadastro
+from custom.styles_utils import get_style_manager
 
+gsm = get_style_manager()
 load_dotenv()
 
 
@@ -21,7 +22,7 @@ class LoginPage:
             label="Email",
             autofocus=True,
             value=os.getenv("USERNAME2", ""),  # Valor padrão vazio se não existir
-            **stl.input_style,
+            **gsm.input_style,
         )
 
         self.password_input = ft.TextField(
@@ -29,7 +30,7 @@ class LoginPage:
             password=True,
             can_reveal_password=True,
             value=os.getenv("PASSWORD", ""),  # Valor padrão vazio se não existir
-            **stl.input_style,
+            **gsm.input_style,
         )
 
         self.login_button = ft.ElevatedButton(

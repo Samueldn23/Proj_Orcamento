@@ -37,55 +37,9 @@ def aplicar_tema(page):
     )
 
 
-# Função para adicionar e remover o efeito de hover
-def hover_effect(e):
-    if e.data == "true":  # Mouse sobre o botão
-        e.control.style = ft.ButtonStyle(
-            animation_duration=500,
-            overlay_color=ft.colors.BLUE_500,
-            side={
-                ft.ControlState.DEFAULT: ft.BorderSide(1, ft.colors.BLUE),
-                ft.ControlState.HOVERED: ft.BorderSide(2, ft.colors.BLUE),
-            },
-        )
-    else:  # Mouse saiu do botão
-        e.control.style = ft.ButtonStyle(bgcolor=None, shadow_color=None)
-
-    e.control.update()  # Atualiza o controle
-
-def hover_effect_voltar(e):
-    if e.data == "true":  # Mouse sobre o botão
-        e.control.style = ft.ButtonStyle(
-            animation_duration=500,
-            overlay_color=ft.colors.RED_500,
-            side={
-                ft.ControlState.DEFAULT: ft.BorderSide(1, ft.colors.RED),
-                ft.ControlState.HOVERED: ft.BorderSide(2, ft.colors.RED),
-            },
-        )
-    else:  # Mouse saiu do botão
-        e.control.style = ft.ButtonStyle(bgcolor=None, shadow_color=None)
-
-    e.control.update()  # Atualiza o controle
-
-def hover_effect_prinicipal(e):
-    if e.data == "true":  # Mouse sobre o botão
-        e.control.style = ft.ButtonStyle(
-            animation_duration=500,
-            overlay_color=ft.colors.PURPLE_500,
-            side={
-                ft.ControlState.DEFAULT: ft.BorderSide(1, ft.colors.PURPLE),
-                ft.ControlState.HOVERED: ft.BorderSide(2, ft.colors.PURPLE),
-            },
-        )
-    else:  # Mouse saiu do botão
-        e.control.style = ft.ButtonStyle(bgcolor=None, shadow_color=None)
-
-    e.control.update()  # Atualiza o controle
-
 # Estilo para campos de entrada
 input_style = {
-    "keyboard_type": ft.KeyboardType.NUMBER,  # Define o tipo de teclado como numérico
+    #"keyboard_type": ft.KeyboardType.NUMBER,  # Define o tipo de teclado como numérico
     "width": 300,  # Largura do campo de entrada
     "bgcolor": ft.colors.with_opacity(
         0.8, ft.colors.GREY_900

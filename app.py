@@ -1,9 +1,10 @@
 import flet as ft
 from typing import Optional
-import custom.styles as stl
 from menu import mostrar_menu
 from models.db import criar_tabelas
+from custom.styles_utils import get_style_manager
 
+#gsm = get_style_manager()
 
 class OrcamentoApp:
     """Classe principal do aplicativo de orçamentos"""
@@ -11,6 +12,7 @@ class OrcamentoApp:
     def __init__(self):
         self.tabelas_criadas: bool = False
         self.page: Optional[ft.Page] = None
+        self.gsm = get_style_manager()
 
     def initialize_database(self):
         """Inicializa o banco de dados se necessário"""
@@ -25,12 +27,12 @@ class OrcamentoApp:
     def configure_page(self, page: ft.Page):
         """Configura a página principal do aplicativo"""
         self.page = page
-        stl.aplicar_tema(page)
+        self.gsm.apply_theme(page)
         page.title = "App de Orçamento"
-        page.window.width = 400  # Largura inicial da janela
-        page.window.height = 700  # Altura inicial da janela
-        page.window.min_width = 400  # Largura mínima para responsividade
-        page.theme_mode = ft.ThemeMode.SYSTEM  # Usa o tema do sistema
+        #page.window.width = 400  # Largura inicial da janela
+        #page.window.height = 700  # Altura inicial da janela
+        page.window.min_width = 450  # Largura mínima para responsividade
+        #page.theme_mode = ft.ThemeMode.SYSTEM  # Usa o tema do sistema
         page.update()
 
     def show_welcome_message(self):

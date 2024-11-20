@@ -1,16 +1,18 @@
 import flet as ft
-import custom.styles as stl
-import custom.button as btn
+import custom.button as clk
+from custom.styles_utils import get_style_manager
+
+gsm = get_style_manager()
 
 
 def mostrar_fundacao(page):
     page.controls.clear()
     page.add(ft.Text("orçamento da fundação", size=24))
 
-    comprimento_input = ft.TextField(label="Comprimento (m)", **stl.input_style)
-    largura_input = ft.TextField(label="Largura (m)", **stl.input_style)
-    espessura_input = ft.TextField(label="Espessura (cm)", **stl.input_style)
-    valor_m3_input = ft.TextField(label="Valor por (m³)", **stl.input_style)
+    comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
+    largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
+    espessura_input = ft.TextField(label="Espessura (cm)", **gsm.input_style)
+    valor_m3_input = ft.TextField(label="Valor por (m³)", **gsm.input_style)
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
@@ -45,12 +47,12 @@ def mostrar_fundacao(page):
             page.update()
 
     calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular, **stl.button_style
+        text="Calcular", on_click=calcular, **gsm.button_style
     )
-    voltar_button = ft.ElevatedButton(
+    voltar_button = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: btn.voltar.orcamento(page),
-        **stl.button_style_voltar,
+        on_click=lambda e: clk.voltar.orcamento(page),
+        icon=ft.icons.ARROW_BACK,
     )
 
     page.add(
@@ -66,7 +68,7 @@ def mostrar_fundacao(page):
                 alignment="center",
                 spacing=10,  # Espaçamento entre os botões
             ),
-            **stl.container_style,
+            **gsm.container_style,
         ),
     )
 

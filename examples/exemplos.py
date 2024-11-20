@@ -1,161 +1,127 @@
 import flet as ft
-import custom.styles as stl
-import custom.button as btn
-import locale
-import asyncio
-import random
+import custom.button as clk
+from custom.styles_utils import get_style_manager
 
+gsm = get_style_manager()
 
-# Define a localidade para pt_BR
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+def main(page):
+    page.controls.clear()
+    stl = get_style_manager()
+    page.add(ft.Text("orçamento da laje", size=24))
 
+    comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
+    largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
+    espessura_input = ft.TextField(label="Espessura (cm)", **gsm.input_style)
+    valor_m3_input = ft.TextField(label="Valor por (m³)", **gsm.input_style)
 
-class ExemploPage:
-    def __init__(self, page: ft.Page):
-        self.page = page
-        self.animation_running = True
-        self.setup_page()
-        self.create_components()
-        self.setup_layout()
-        self.start_animation()
+    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
-    def setup_page(self) -> None:
-        """Configura as propriedades iniciais da página"""
-        self.page.controls.clear()
-        self.page.padding = 20
-        self.page.spacing = 20
-        self.page.window.center()
+    switch = ft.Switch(
+        label="cm para mm",
+        on_change=lambda e: atualizar(page),
+        value=False,
+    )
+    dd = ft.Dropdown(
+        width=100,
+        height=50,
+        border_color="white",
+        text_size=15,
+        options=[
+            ft.dropdown.Option("cm"),
+            ft.dropdown.Option("mm"),            
+        ],
+        value="cm",
+    )
+    cg = ft.RadioGroup(
+        content=ft.Row(
+            controls=[
+                ft.Radio(
+                    value="cm",
+                    label="cm",
+                    label_position=ft.LabelPosition.LEFT,
+                    fill_color="white",
+                ),
+                ft.Radio(
+                    value="mm",
+                    label="mm",
+                    label_position=ft.LabelPosition.LEFT,
+                    fill_color="blue",
+                ),
+            ],            
+        ),
+        value="cm",
+        on_change=lambda e: atualizar(page),
+    )
 
-    def create_components(self) -> None:
-        """Cria todos os componentes da página"""
-        self.create_title()
-        self.create_image()
-        self.create_container()
-        self.create_buttons()
+    def atualizar(e):
+        if cg.value == "mm":
+            espessura_input.label = "Espessura (mm)"
+        else:
+            espessura_input.label = "Espessura (cm)"
 
-    def create_title(self) -> None:
-        """Cria o título da página"""
-        self.title = ft.Text(
-            "Tela de Exemplo",
-            size=24,
-            weight=ft.FontWeight.BOLD,
-            color=ft.colors.BLUE,
-            text_align=ft.TextAlign.CENTER,
-        )
+        page.update()
 
-    def create_image(self) -> None:
-        """Cria e configura o componente de imagem"""
-        self.img = ft.Image(
-            src="assets/img/iconFundacao.ico",
-            height=150,
-            width=150,
-            fit=ft.ImageFit.CONTAIN,
-            offset=ft.Offset(y=0, x=0),
-            scale=ft.Scale(scale=1),
-            opacity=1,
-            animate_offset=self._create_animation(),
-            animate_scale=self._create_animation(),
-            animate_opacity=self._create_animation(),
-        )
+    def calcular(e):
+        try:
+            comprimento = float(comprimento_input.value)
+            largura = float(largura_input.value)
+            espessura = float(espessura_input.value)
+            volor_m3 = float(valor_m3_input.value)
 
-    def _create_animation(self) -> ft.Animation:
-        """Cria uma animação padrão"""
-        return ft.Animation(duration=2000, curve=ft.AnimationCurve.EASE_IN_OUT)
+            if not switch.value:
+                espessura = espessura / 100
 
-    def create_container(self) -> None:
-        """Cria e configura o container principal"""
-        self.container = ft.Container(
+            custo_total = comprimento * largura * espessura * volor_m3
+            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
+            page.update()
+
+        except ValueError:
+            resultado_text.value = "Por favor, insira valores válidos."
+            page.update()
+
+    calcular_button = ft.ElevatedButton(
+        text="Calcular", on_click=calcular
+    )
+
+    btnVoltar = stl.create_button(
+        text="Voltar Orçamento",
+        icon=ft.icons.ARROW_BACK,
+        on_click=lambda e: clk.voltar.orcamento(page),
+        hover_color=stl.colors.VOLTAR,
+        width=200,
+    )
+    btnVoltar2 = stl.create_button(
+        text="Voltar Página Inicial",
+        icon=ft.icons.ARROW_BACK,
+        on_click=lambda e: clk.voltar.principal(page),
+        hover_color=stl.colors.VOLTAR,
+        width=220,
+    )
+
+    page.add(
+        ft.Container(
             content=ft.Column(
-                [self.img],
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            ),
-            alignment=ft.alignment.center,
-            bgcolor=ft.colors.BLACK,
-            border_radius=10,
-            width=300,
-            height=300,
-            shadow=ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=10,
-                color=ft.colors.WHITE,
-            ),
-        )
-        self.container.on_hover = self._on_container_hover
-
-    def create_buttons(self) -> None:
-        """Cria os botões da interface"""
-        self.voltar_btn = ft.ElevatedButton(
-            text="Voltar",
-            on_click=lambda e: btn.voltar.principal(self.page),
-            width=100,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=8),
-            ),
-        )
-        self.voltar_btn.on_hover = stl.hover_effect_voltar
-
-        self.toggle_btn = ft.ElevatedButton(
-            text="Pausar Animação",
-            on_click=self._toggle_animation,
-            width=150,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=8),
-            ),
-        )
-
-    def setup_layout(self) -> None:
-        """Organiza os componentes na página"""
-        self.page.add(
-            ft.Column(
                 [
-                    self.title,
-                    self.container,
-                    ft.Row(
-                        [self.voltar_btn, self.toggle_btn],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        spacing=20,
-                    ),
+                    comprimento_input,
+                    largura_input,
+                    espessura_input,
+                    valor_m3_input,
+                    #switch,
+                    #dd,
+                    cg,
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
-            )
-        )
+                alignment="center",
+                spacing=10,  # Espaçamento entre os botões
+            ),
+            **gsm.container_style,
+        ),
+    )
 
-    def _on_container_hover(self, e: ft.HoverEvent) -> None:
-        """Gerencia o efeito hover do container"""
-        self.container.bgcolor = (
-            ft.colors.GREY_900 if e.data == "true" else ft.colors.BLACK
-        )
-        self.container.scale = 1.05 if e.data == "true" else 1.0
-        self.container.update()
+    page.add(
+        calcular_button,
+        resultado_text,
+        btnVoltar,
+        btnVoltar2,
+    )
+    page.update()
 
-    def _toggle_animation(self, e) -> None:
-        """Alterna o estado da animação"""
-        self.animation_running = not self.animation_running
-        self.toggle_btn.text = (
-            "Continuar Animação" if not self.animation_running else "Pausar Animação"
-        )
-        self.toggle_btn.update()
-
-    async def animate_image(self) -> None:
-        """Executa a animação da imagem"""
-        while True:
-            if self.animation_running:
-                self.img.offset = ft.Offset(
-                    random.uniform(-0.8, 0.8), random.uniform(-0.8, 0.8)
-                )
-                self.img.scale = ft.Scale(scale=random.uniform(0.5, 1.5))
-                self.img.opacity = random.uniform(0.3, 1.0)
-                self.page.update()
-            await asyncio.sleep(1)
-
-    def start_animation(self) -> None:
-        """Inicia a tarefa de animação"""
-        self.page.run_task(self.animate_image)
-        self.page.update()
-
-
-def exemplo(page: ft.Page) -> None:
-    ExemploPage(page)
