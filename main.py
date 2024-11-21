@@ -1,6 +1,6 @@
 import flet as ft
 from typing import Optional
-import user.login
+from user.login import mostrar_login
 from models.db import criar_tabelas
 from custom.styles_utils import get_style_manager
 
@@ -28,10 +28,9 @@ class OrcamentoApp:
         self.page = page
         gsm.apply_theme(page)
         page.title = "App de Orçamento"
-        #page.window.width = 400  # Largura inicial da janela
-        #page.window.height = 700  # Altura inicial da janela
+
         page.window.min_width = 450  # Largura mínima para responsividade
-        #page.theme_mode = ft.ThemeMode.SYSTEM  # Usa o tema do sistema
+
         page.update()
 
     def show_welcome_message(self):
@@ -62,17 +61,17 @@ class OrcamentoApp:
 
     def main(self, page: ft.Page):
         """Função principal do aplicativo"""
-        #try:
-        self.initialize_database()
-        self.configure_page(page)
-        self.show_welcome_message()
-        user.login.mostrar_login(page)
-        page.update()
-        #except Exception as e:
-        #    error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
-        #    page.add(ft.Text(error_message, color=ft.colors.RED_600))
-        #    page.update()
-        #    print(error_message)
+        try:
+            self.initialize_database()
+            self.configure_page(page)
+            self.show_welcome_message()
+            mostrar_login(page)
+            page.update()
+        except Exception as e:
+            error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
+            page.add(ft.Text(error_message, color=ft.colors.RED_600))
+            page.update()
+            print(error_message)
 
 
 def start_app():

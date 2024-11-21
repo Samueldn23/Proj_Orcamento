@@ -10,21 +10,18 @@ def main(page: ft.Page):
     page.title = "Aplicativo de Orçamento para Construção"
     
     
-    btn_voltar = ft.ElevatedButton(
+    btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: clk.voltar.principal(page),
-    )
-    btn_voltar.on_hover = gsm.create_button_hover_effect(
-        button=btn_voltar,
-        text_color=ft.colors.WHITE,
-        hover_color=ft.colors.AMBER
+        on_click=lambda _: clk.voltar.principal(page),
+        icon=ft.icons.ARROW_BACK_IOS_NEW,
+        hover_color=gsm.colors.VOLTAR,
     )
 
     page.add(
         btn_voltar,
         ft.Divider(),  
 
-        get_style_manager().create_button_custom(
+        gsm.create_button_custom(
             text="teste 3",
             on_click=lambda _: print("teste 3"),
             icon="icons/eletrica.png",

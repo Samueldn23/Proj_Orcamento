@@ -10,7 +10,7 @@ class ThemeColors:
     PRIMARY = ft.colors.BLUE
     SECONDARY = ft.colors.WHITE
     VOLTAR = ft.colors.RED
-    SOMBRA_CTR = ft.colors.AMBER_900
+    SOMBRA_CTR = ft.colors.GREY_900
     CONTAINER = ft.colors.BLACK87
     TEXTO = ft.colors.WHITE
     IMPUT = ft.colors.GREY_900
@@ -112,6 +112,7 @@ class StyleManager:
         hover_icon_color: str = ThemeColors.SECONDARY,
         text_color: str = ThemeColors.SECONDARY,
         hover_color: str = ThemeColors.PRIMARY,
+        shape: str = ft.RoundedRectangleBorder(radius=0),
     ) -> ft.Container:
         """Cria um botão customizado com container""" 
 
@@ -132,6 +133,7 @@ class StyleManager:
             ),
             on_click=on_click,
             width=width,
+            
         )
 
         # Define a função de hover personalizada para o botão e o ícone
@@ -234,15 +236,23 @@ class StyleManager:
 
     @property
     def input_style(self) -> Dict[str, Any]:
-        """Estilo padrão para inputs"""
+        """Estilo padrão aprimorado para inputs"""
         return {
-            "width": 300,
-            "bgcolor": ft.colors.with_opacity(0.8, self.colors.IMPUT),
-            "border_radius": 10,
-            "text_size": 16,
-            "border": ft.InputBorder.UNDERLINE,
-            "color": self.colors.TEXTO,
-        }
+            "width": 350,  # Largura ligeiramente maior para destacar o campo
+            "bgcolor": ft.colors.with_opacity(0.9, self.colors.IMPUT),  # Fundo mais suave
+            "border_radius": 12,  # Cantos mais arredondados para suavidade
+            "text_size": 16,  # Tamanho de texto agradável para leitura
+            "border": ft.InputBorder.OUTLINE,  # Borda inferior apenas
+            "border_color": ft.colors.with_opacity(0.5, self.colors.PRIMARY),  # Cor da borda ao redor
+            "focused_border_color": self.colors.SECONDARY,  # Realce da borda ao focar
+            "content_padding": 12,  # Espaçamento interno para uma aparência mais espaçosa
+            "color": self.colors.TEXTO,  # Cor do texto padrão
+            #"error_color": ft.colors.RED,  # Cor para mensagens de erro
+            #"placeholder_color": ft.colors.with_opacity(0.6, self.colors.TEXTO),  # Texto do placeholder mais suave
+            #"animation": ft.animation.Animation(400, ft.AnimationCurve.EASE_IN_OUT),  # Suavidade ao foco
+            
+    }
+
     @property
     def button_style(self) -> Dict[str, Any]:
         """Estilo padrão para botões"""
@@ -253,22 +263,29 @@ class StyleManager:
         }
     @property
     def container_style(self) -> Dict[str, Any]:
-        """Estilo padrão para containers"""
+        """Estilo padrão aprimorado para containers"""
         return {
-            "bgcolor": ft.colors.with_opacity(0.9, self.colors.CONTAINER),
-            "margin": 15,
-            "padding": 20,
-            "alignment": ft.alignment.center,
-            "width": 350,
-            "border_radius": 15,
-            "shadow": ft.BoxShadow(
-                spread_radius=2,
-                blur_radius=20,
-                color=ft.colors.with_opacity(0.2, self.colors.TEXTO),
-                offset=ft.Offset(0, 4),
-                blur_style=ft.ShadowBlurStyle.NORMAL,
+            "bgcolor": ft.colors.with_opacity(0.20, self.colors.CONTAINER),  # Fundo com leve transparência
+            "margin": 20,  # Margem maior para melhor separação visual
+            "padding": 25,  # Espaçamento interno mais confortável
+            "alignment": ft.alignment.center,  # Centralização consistente
+            "width": 400,  # Largura mais expressiva para destacar o container
+            "border_radius": 20,  # Cantos mais arredondados para um visual elegante
+            "border": ft.Border(
+                bottom=ft.BorderSide(1, ft.colors.with_opacity(0.3, self.colors.VOLTAR)),  # Borda leve e discreta
+                #right=ft.BorderSide(1, ft.colors.with_opacity(0.3, self.colors.VOLTAR)),
             ),
-        }
+            "shadow": ft.BoxShadow(
+                spread_radius=3,  # Ampliação sutil do alcance da sombra
+                blur_radius=15,  # Redução do desfoque para uma sombra mais limpa
+                color=ft.colors.with_opacity(0.25, self.colors.TEXTO),  # Sombra com cor mais evidente
+                offset=ft.Offset(0, 5),  # Deslocamento da sombra para um efeito de elevação
+                blur_style=ft.ShadowBlurStyle.OUTER,  # Sombra externa mais suave
+            ),
+            "animate": ft.animation.Animation(400, ft.AnimationCurve.EASE_IN_OUT),  # Animação suave para alterações
+            "on_hover": self.create_container_hover_effect(self.colors.SOMBRA_CTR),  # Efeito de hover personalizado
+    }
+
 
 
 # Funções de utilidade para uso externo

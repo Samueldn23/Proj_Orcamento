@@ -1,6 +1,13 @@
 import flet as ft
+from custom.styles_utils import get_style_manager
+import custom.button as clk
+
+gsm = get_style_manager()
 
 def mostrar_inspecao(page):
+    page.controls.clear()
+    page.title = "Inspeção"
+    
     # Campos de entrada para dados da edificação
     razao_social = ft.TextField(label="Razão Social", width=300)
     endereco = ft.TextField(label="Endereço", width=300)
@@ -22,8 +29,15 @@ def mostrar_inspecao(page):
         on_click=lambda e: salvar_inspecao(razao_social.value, endereco.value, telefone.value, email.value, tecnico.value, observacoes.value, [item1.value, item2.value])
     )
 
+    btn_voltar = gsm.create_button(
+        text="Voltar",
+        on_click=lambda _: clk.voltar.principal(page),
+        icon=ft.icons.ARROW_BACK,
+        hover_color=gsm.colors.VOLTAR,
+    )
+
     page.add(
-        razao_social, endereco, telefone, email, tecnico, observacoes, item1, item2, salvar_button
+        razao_social, endereco, telefone, email, tecnico, observacoes, item1, item2, salvar_button, btn_voltar
     )
     page.update()
 

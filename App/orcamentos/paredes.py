@@ -133,8 +133,8 @@ class ParedeCalculator:
                         text="Calcular",
                         icon=ft.icons.CALCULATE,
                         on_click=self.calcular,
-                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
-                        #**gsm.button_style,
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),                        
+                        **gsm.button_style,
                     ),
                     self.area_text,
                     self.resultado_text,
@@ -143,6 +143,7 @@ class ParedeCalculator:
                         on_click=lambda _: clk.voltar.orcamento(self.page),
                         icon=ft.icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
+                        
                     ),                    
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

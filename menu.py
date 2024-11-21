@@ -1,5 +1,7 @@
 import flet as ft
+from base.SPDA.view import mostrar_inspecao
 from App.orcamentos import menu_orc
+from App.Clientes import cadastro
 from tests import teste
 from typing import Callable
 from examples import exemplos
@@ -32,6 +34,14 @@ class MenuPrincipalPage:
             {
                 "text": "Orçamentos",
                 "action": menu_orc.mostrar_orcamento,
+            },
+            {
+                "text": "Cadastro de Clientes",
+                "action": cadastro.TelaCadastroCliente,
+            },
+            {
+                "text": "Inspeção",
+                "action": mostrar_inspecao,
             },
             {
                 "text": "Exemplo",
