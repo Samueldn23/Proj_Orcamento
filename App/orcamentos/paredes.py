@@ -1,20 +1,23 @@
 import flet as ft
 from typing import Optional
 import locale
-import custom.styles as stl
-import custom.button as btn
+import custom.button as clk
+from custom.styles_utils import get_style_manager
+
+gsm = get_style_manager()
 
 # Configuração da localização
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
-
+gsm = get_style_manager()
 
 class ParedeCalculator:
     """Classe para cálculo de orçamento de paredes"""
-
+    
     def __init__(self, page: ft.Page):
         self.page = page
         self.resultado_text: Optional[ft.Text] = None
         self._init_controls()
+        
 
     def _init_controls(self):
         """Inicializa os controles da página"""
@@ -22,24 +25,24 @@ class ParedeCalculator:
             label="Altura (m)",
             prefix_icon=ft.icons.HEIGHT,
             suffix_text="metros",
-            # keyboard_type=ft.KeyboardType.NUMBER,
-            **stl.input_style,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            **gsm.input_style,
         )
 
         self.comprimento_input = ft.TextField(
             label="Comprimento (m)",
             prefix_icon=ft.icons.STRAIGHTEN,
             suffix_text="metros",
-            # keyboard_type=ft.KeyboardType.NUMBER,
-            **stl.input_style,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            **gsm.input_style,
         )
 
         self.valor_m2_input = ft.TextField(
             label="Valor por m²",
             prefix_icon=ft.icons.ATTACH_MONEY,
             suffix_text="R$",
-            # keyboard_type=ft.KeyboardType.NUMBER,
-            **stl.input_style,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            **gsm.input_style,
         )
 
         self.resultado_text = ft.Text(
@@ -124,23 +127,23 @@ class ParedeCalculator:
                             alignment=ft.MainAxisAlignment.CENTER,
                             spacing=10,
                         ),
-                        **stl.container_style,
+                        **gsm.container_style,
                     ),
                     ft.ElevatedButton(
                         text="Calcular",
                         icon=ft.icons.CALCULATE,
                         on_click=self.calcular,
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
-                        **stl.button_style,
+                        #**gsm.button_style,
                     ),
                     self.area_text,
                     self.resultado_text,
-                    ft.ElevatedButton(
+                    gsm.create_button(
                         text="Voltar",
+                        on_click=lambda _: clk.voltar.orcamento(self.page),
                         icon=ft.icons.ARROW_BACK,
-                        on_click=lambda _: btn.voltar.orcamento(self.page),
-                        on_hover=stl.hover_effect_voltar,
-                    ),
+                        hover_color=gsm.colors.VOLTAR,
+                    ),                    
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,

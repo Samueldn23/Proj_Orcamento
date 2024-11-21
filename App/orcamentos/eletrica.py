@@ -1,15 +1,16 @@
 import flet as ft
-import custom.styles as stl
-import custom.button as btn
+import custom.button as clk
+from custom.styles_utils import get_style_manager
 
+gsm = get_style_manager()
 
 def mostrar_eletrica(page):
     page.controls.clear()
     page.add(ft.Text("Tela de elétrica", size=24))
 
-    ponto_input = ft.TextField(label="pontos elétricos", **stl.input_style)
+    ponto_input = ft.TextField(label="pontos elétricos", keyboard_type=ft.KeyboardType.NUMBER ,**gsm.input_style)
 
-    valorPonto_input = ft.TextField(label="Valor cobrado por ponto", **stl.input_style)
+    valorPonto_input = ft.TextField(label="Valor cobrado por ponto", **gsm.input_style)
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
@@ -26,15 +27,20 @@ def mostrar_eletrica(page):
             page.update()
 
     calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular, **stl.button_style
+        text="Calcular", on_click=calcular, **gsm.button_style
     )
-    voltar_button = ft.ElevatedButton(
+    
+    btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: btn.voltar.orcamento(page),
-        **stl.button_style_voltar,
+        on_click=lambda e: clk.voltar.orcamento(page),
+        icon=ft.icons.ARROW_BACK
     )
 
     page.add(
-        ponto_input, valorPonto_input, calcular_button, resultado_text, voltar_button
+        ponto_input,
+        valorPonto_input,
+        calcular_button,
+        resultado_text,
+        btn_voltar,
     )
     page.update()

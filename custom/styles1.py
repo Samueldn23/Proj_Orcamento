@@ -1,18 +1,19 @@
-from dataclasses import dataclass
 import flet as ft
+from custom.hover_effects import efeito_hover_btn
+from dataclasses import dataclass
 from typing import Dict, Any, Callable
 
 
 @dataclass
 class CoresPrincipais:
     """Define as cores principais do tema"""
-
     PRIMARIA = ft.colors.BLUE
     SECUNDARIA = ft.colors.PURPLE
     AVISO = ft.colors.RED
     FUNDO = ft.colors.BLACK
-    SUPERFICIE = ft.colors.GREY_900
+    SUPERFICIE = ft.colors.BLACK12
     TEXTO = ft.colors.WHITE
+    BLOCO = ft.colors.ORANGE_900
 
 
 class GerenciadorTema:
@@ -38,10 +39,8 @@ class GerenciadorTema:
             "frameless": False,
             "opacity": 1.0,
         }
-
         for prop, valor in configuracao_janela.items():
             setattr(self.pagina.window, prop, valor)
-
         self.pagina.window.center()
 
     def _configurar_layout(self):
@@ -63,9 +62,7 @@ class GerenciadorTema:
 
     def _configurar_fundo(self):
         """Configura o fundo da página"""
-        self.pagina.bgcolor = ft.colors.with_opacity(
-            0.1, self.gerenciador_estilos.cores.FUNDO
-        )
+        self.pagina.bgcolor = ft.colors.with_opacity(0.1, self.gerenciador_estilos.cores.FUNDO)
         self.pagina.gradient = ft.LinearGradient(
             colors=[
                 self.gerenciador_estilos.cores.FUNDO,
@@ -143,13 +140,9 @@ class GerenciadorEfeitoHover:
         def handler_hover(e):
             e.control.style = self.gerenciador_estilos.criar_estilo_hover(cor) if e.data == "true" else self.gerenciador_estilos.estilo_botao_base
             e.control.update()
-
         return handler_hover
 
-    @property
-    def hover_padrao(self):
-        return self.criar_handler_hover(self.gerenciador_estilos.cores.PRIMARIA)
-
+    
     @property
     def hover_aviso(self):
         return self.criar_handler_hover(self.gerenciador_estilos.cores.AVISO)
@@ -165,27 +158,22 @@ class ControleBotao:
     @staticmethod
     def gerenciar_hover_botao(e, cor):
         """Gerencia o efeito hover nos botões"""
-        if e.data == "true":  # Mouse entrou
-            e.control.scale = 1.00
-            e.control.shadow = ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=15,
-                color=cor,
-                offset=ft.Offset(0, 0),
-            )
-            e.control.border_radius = 25
-            e.control.padding = 2
-        else:  # Mouse saiu
-            e.control.scale = 1.0
-            e.control.shadow = None
+        e.control.scale = 1.00 if e.data == "true" else 1.0
+        e.control.shadow = ft.BoxShadow(
+            spread_radius=1 if e.data == "true" else 0,
+            blur_radius=15,
+            color=cor,
+            offset=ft.Offset(0, 0),
+        ) if e.data == "true" else None
+        e.control.border_radius = 25 if e.data == "true" else 0
+        e.control.padding = 2 if e.data == "true" else 0
         e.control.update()
 
 
 # Funções de utilidade para uso externo
 def aplicar_tema(pagina: ft.Page):
     """Aplica o tema à página"""
-    gerenciador_tema = GerenciadorTema(pagina)
-    gerenciador_tema.aplicar_tema()
+    GerenciadorTema(pagina).aplicar_tema()
 
 
 def obter_efeitos_hover_botao():
@@ -208,7 +196,6 @@ def obter_estilos():
     }
 
 
-def obter_efeito_container(e, cor):
-    '''Efeito de hover para container'''
 
-    return ControleBotao.gerenciar_hover_botao(e, cor)
+
+

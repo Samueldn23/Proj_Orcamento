@@ -1,9 +1,11 @@
 import flet as ft
 from typing import Optional
 import user
-import custom.styles as stl
 from models.db import cadastrar_usuario
 import time
+from custom.styles_utils import get_style_manager
+
+gsm = get_style_manager()
 
 class SignupPage:
     """Classe para gerenciar a página de cadastro"""
@@ -20,14 +22,16 @@ class SignupPage:
             label="Nome",
             prefix_icon=ft.icons.PERSON,
             helper_text="Digite seu nome completo",
-            **stl.input_style,
+            keyboard_type=ft.KeyboardType.NAME,
+            **gsm.input_style,
         )
 
         self.email_input = ft.TextField(
             label="E-mail",
             prefix_icon=ft.icons.EMAIL,
             helper_text="Digite um e-mail válido",
-            **stl.input_style,
+            keyboard_type=ft.KeyboardType.EMAIL,
+            **gsm.input_style,
         )
 
         self.senha_input = ft.TextField(
@@ -35,8 +39,9 @@ class SignupPage:
             prefix_icon=ft.icons.LOCK,
             password=True,
             can_reveal_password=True,
+            keyboard_type=ft.KeyboardType.VISIBLE_PASSWORD,
             helper_text="Mínimo 6 caracteres",
-            **stl.input_style,
+            **gsm.input_style,
         )
 
         self.error_text = ft.Text(
@@ -66,12 +71,13 @@ class SignupPage:
                     elevation=5,
                 ),
             ),
-            ft.ElevatedButton(
-                text="Voltar ao Login",
+            gsm.create_button(
+                text="Voltar ao Menu Principal",
                 icon=ft.icons.ARROW_BACK,
                 on_click=lambda _: user.login.mostrar_login(self.page),
-                on_hover=stl.hover_effect_voltar,
-            ),
+                hover_color=gsm.colors.VOLTAR,
+                width=300,
+            )
         ]
 
     def _validate_inputs(self) -> tuple[bool, str]:

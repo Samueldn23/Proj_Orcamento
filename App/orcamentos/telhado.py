@@ -1,7 +1,9 @@
 import flet as ft
-import custom.styles as stl
-import custom.button as btn
+import custom.button as clk
 import locale
+from custom.styles_utils import get_style_manager
+
+gsm = get_style_manager()
 
 # Define a localidade para pt_BR
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -12,19 +14,19 @@ def mostrar_telhado(page):
 
     page.add(ft.Text("Telhado", size=24))
 
-    comprimento_input = ft.TextField(label="Comprimento (m)", **stl.input_style)
+    comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(
         label="Largura (m)",
-        **stl.input_style,
+        **gsm.input_style,
     )
     valor_input = ft.TextField(
         label="Valor do Metro (R$)",
-        **stl.input_style,
+        **gsm.input_style,
     )
     valor_material_input = ft.TextField(
         label="Valor do material (R$) ",
         visible=False,
-        **stl.input_style,
+        **gsm.input_style,
     )
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
@@ -62,13 +64,14 @@ def mostrar_telhado(page):
     calcular_btn = ft.ElevatedButton(
         text="Calcular",
         on_click=calcular,
-        **stl.button_style,
+        **gsm.button_style,
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
     )
-    voltar_btn = ft.ElevatedButton(
+    voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: btn.voltar.orcamento(page),
-        **stl.button_style_voltar,
+        on_click=lambda _: clk.voltar.orcamento(page),
+        icon=ft.icons.ARROW_BACK,
+        hover_color=gsm.colors.VOLTAR,        
     )
 
     page.add(
@@ -87,7 +90,7 @@ def mostrar_telhado(page):
                 alignment="center",
                 spacing=10,  # Espaçamento entre os controles
             ),
-            **stl.container_style,
+            **gsm.container_style,
         ),
     )
     page.update()
