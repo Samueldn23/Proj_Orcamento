@@ -82,16 +82,13 @@ def mostrar_laje(page):
     calcular_button = ft.ElevatedButton(
         text="Calcular", on_click=calcular
     )
-    voltar_button = ft.ElevatedButton(
-        text="Voltar",
-        on_click=lambda e: clk.voltar.orcamento(page),
-        
-    )
+    
 
     btnVoltar = gsm.create_button(
         text="Voltar",
         icon=ft.icons.ARROW_BACK,
         on_click=lambda e: clk.voltar.orcamento(page),
+        hover_color=gsm.colors.VOLTAR,
     )
 
     page.add(
@@ -102,8 +99,6 @@ def mostrar_laje(page):
                     largura_input,
                     espessura_input,
                     valor_m3_input,
-                    switch,
-                    dd,
                     cg,
                 ],
                 alignment="center",
@@ -116,7 +111,6 @@ def mostrar_laje(page):
     page.add(
         calcular_button,
         resultado_text,
-        voltar_button,
         btnVoltar,
     )
     page.update()

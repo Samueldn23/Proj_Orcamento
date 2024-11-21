@@ -90,7 +90,7 @@ class OrcamentoPage:
             text=item["text"],
             icon=item["icon"],
             on_click=lambda _: item["action"](self.page),
-            width=150,
+            width=200,
         )        
 
     def build(self):
