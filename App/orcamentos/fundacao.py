@@ -14,34 +14,30 @@ def mostrar_fundacao(page):
     espessura_input = ft.TextField(label="Espessura (cm)", **gsm.input_style)
     valor_m3_input = ft.TextField(label="Valor por (m³)", **gsm.input_style)
 
-    resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
+        self.resultado_text = ft.Text(
+            size=18,
+            weight=ft.FontWeight.BOLD,
+            text_align=ft.TextAlign.CENTER,
+        )
 
-    switch = ft.Switch(
-        label="cm para mm", on_change=lambda e: atualizar(page), value=False
-    )
+        self.area_text = ft.Text(
+            size=16,
+            text_align=ft.TextAlign.CENTER,
+        )
+    
+    def _validate_inputs(self) -> tuple[bool,str]:
+        """valida os inputs do formulário"""
 
-    def atualizar(e):
-        if switch.value:
-            espessura_input.label = "Espessura (mm)"
-        else:
-            espessura_input.label = "Espessura (cm)"
-
-        page.update()
-
-    def calcular(e):
         try:
-            comprimento = float(comprimento_input.value)
-            largura = float(largura_input.value)
-            espessura = float(espessura_input.value)
-            volor_m3 = float(valor_m3_input.value)
+            altura = float(self.altura_input.value or 0)
+            comprimento = float(self.comprimento_input.value or 0)
+            espessura = float (self.espessura_input.value or 0)
+            valor_m3 = float(self.valor_m3_input.value or 0)
 
-            if not switch.value:
-                espessura = espessura / 100
+            if altura <= 0 or comprimento <= 0 or espessura <=0 or valor_m3 <= 0:
+                return False, "Todos os valores devem ser maiores que zero!"
 
-            custo_total = comprimento * largura * espessura * volor_m3
-            resultado_text.value = f"Custo Total: R$ {custo_total:.2f}"
-            page.update()
-
+            return True, ""
         except ValueError:
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
