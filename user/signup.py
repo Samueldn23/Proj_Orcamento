@@ -1,11 +1,16 @@
-import flet as ft
-from typing import Optional
-import user
-from models.db import cadastrar_usuario
+"""Importações necessárias para a página de cadastro"""
+
 import time
+from typing import Optional
+
+import flet as ft
+
 from custom.styles_utils import get_style_manager
+from models import usuario
+from user import login
 
 gsm = get_style_manager()
+
 
 class SignupPage:
     """Classe para gerenciar a página de cadastro"""
@@ -74,10 +79,10 @@ class SignupPage:
             gsm.create_button(
                 text="Voltar ao Menu Principal",
                 icon=ft.icons.ARROW_BACK,
-                on_click=lambda _: user.login.mostrar_login(self.page),
+                on_click=lambda _: login.mostrar_tela(self.page),
                 hover_color=gsm.colors.VOLTAR,
                 width=300,
-            )
+            ),
         ]
 
     def _validate_inputs(self) -> tuple[bool, str]:
@@ -115,7 +120,7 @@ class SignupPage:
             return
 
         try:
-            cadastrar_usuario(
+            usuario.cadastro(
                 self.nome_input.value, self.email_input.value, self.senha_input.value
             )
             self._show_message(
@@ -123,9 +128,9 @@ class SignupPage:
             )
             time.sleep(2)
             # Redireciona após 2 segundos
-            #self.page.window.destroy()
-            user.login.mostrar_login(self.page)
-        except Exception as e:
+            # self.page.window.destroy()
+            login.mostrar_tela(self.page)
+        except ValueError as e:
             self._show_message(f"Erro ao cadastrar usuário: {str(e)}")
 
     def build(self):
@@ -154,7 +159,7 @@ class SignupPage:
         )
 
 
-def mostrar_cadastro(page: ft.Page):
+def tela_cadastro(page: ft.Page):
     """Função helper para mostrar a página de cadastro"""
     page.controls.clear()
     signup_page = SignupPage(page)

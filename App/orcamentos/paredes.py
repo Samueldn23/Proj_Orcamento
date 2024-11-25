@@ -1,6 +1,10 @@
-import flet as ft
-from typing import Optional
+"""Módulo para cálculo de orçamento de paredes. parede.py"""
+
 import locale
+from typing import Optional
+
+import flet as ft
+
 import custom.button as clk
 from custom.styles_utils import get_style_manager
 
@@ -10,14 +14,14 @@ gsm = get_style_manager()
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 gsm = get_style_manager()
 
+
 class ParedeCalculator:
     """Classe para cálculo de orçamento de paredes"""
-    
+
     def __init__(self, page: ft.Page):
         self.page = page
         self.resultado_text: Optional[ft.Text] = None
         self._init_controls()
-        
 
     def _init_controls(self):
         """Inicializa os controles da página"""
@@ -101,7 +105,7 @@ class ParedeCalculator:
         try:
             area, custo_total = self._calcular_orcamento()
             self._update_resultado(area, custo_total)
-        except Exception as e:
+        except ValueError as e:
             self.resultado_text.value = f"Erro ao calcular: {str(e)}"
             self.area_text.value = ""
             self.page.update()
@@ -133,18 +137,17 @@ class ParedeCalculator:
                         text="Calcular",
                         icon=ft.icons.CALCULATE,
                         on_click=self.calcular,
-                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),                        
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
                         **gsm.button_style,
                     ),
                     self.area_text,
                     self.resultado_text,
                     gsm.create_button(
                         text="Voltar",
-                        on_click=lambda _: clk.voltar.orcamento(self.page),
+                        on_click=lambda _: clk.Voltar.orcamento(self, self.page),
                         icon=ft.icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
-                        
-                    ),                    
+                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,

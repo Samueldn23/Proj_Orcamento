@@ -1,10 +1,14 @@
-import flet as ft
-from typing import Optional
-from menu import mostrar_menu
-from models.db import criar_tabelas
-from custom.styles_utils import get_style_manager
+"""Aplicativo de Orçamentos com Flet e SQLAlchemy, sem autenticação de usuários. app.py"""
 
-#gsm = get_style_manager()
+from typing import Optional
+
+import flet as ft
+
+from custom.styles_utils import get_style_manager
+from menu import mostrar_menu
+
+gsm = get_style_manager()
+
 
 class OrcamentoApp:
     """Classe principal do aplicativo de orçamentos"""
@@ -18,7 +22,7 @@ class OrcamentoApp:
         """Inicializa o banco de dados se necessário"""
         if not self.tabelas_criadas:
             try:
-                criar_tabelas()
+                # criar_tabelas()
                 self.tabelas_criadas = True
             except Exception as e:
                 print(f"Erro ao criar tabelas: {e}")
@@ -29,10 +33,7 @@ class OrcamentoApp:
         self.page = page
         self.gsm.apply_theme(page)
         page.title = "App de Orçamento"
-        #page.window.width = 400  # Largura inicial da janela
-        #page.window.height = 700  # Altura inicial da janela
         page.window.min_width = 450  # Largura mínima para responsividade
-        #page.theme_mode = ft.ThemeMode.SYSTEM  # Usa o tema do sistema
         page.update()
 
     def show_welcome_message(self):
@@ -69,7 +70,7 @@ class OrcamentoApp:
             self.show_welcome_message()
             mostrar_menu(page)
             page.update()
-        except Exception as e:
+        except ValueError as e:
             error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
             page.add(ft.Text(error_message, color=ft.colors.RED_600))
             page.update()
@@ -81,7 +82,7 @@ def start_app():
     try:
         app = OrcamentoApp()
         ft.app(target=app.main)
-    except Exception as e:
+    except ValueError as e:
         print(f"Erro fatal ao iniciar o aplicativo: {e}")
 
 

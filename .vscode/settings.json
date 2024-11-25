@@ -1,4 +1,9 @@
 {
+  "python.pythonPath": "venv/script/python",
+
+  "code-runner.executorMap": {
+    "python": "venv/script/python"
+  },
   "a-file-icon-vscode.arrowTheme": "plusMinus",
   "a-file-icon-vscode.folderColor": "#607d8b",
   "a-file-icon-vscode.activeIconPacks": [
@@ -9,5 +14,17 @@
   ],
   "a-file-icon-vscode.folderTheme": "specific",
   "a-file-icon-vscode.opacity": 1,
-  "a-file-icon-vscode.saturation": 1
+  "a-file-icon-vscode.saturation": 1,
+
+  "pylint.enabled": true,
+
+  "code-runner.ignoreSelection": false,
+  "code-runner.runInTerminal": true,
+
+  "python.testing.unittestEnabled": true,
+  "python.languageServer": "Pylance",
+
+  "[python]": {
+    "editor.formatOnSave": true
+  }
 }

@@ -1,2 +1,3 @@
 flet
 SQLAlchemy
+psycopg2

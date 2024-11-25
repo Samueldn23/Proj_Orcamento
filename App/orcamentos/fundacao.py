@@ -1,3 +1,5 @@
+"""Módulo para cálculo de orçamento de fundação. fundacao.py"""
+
 import flet as ft
 import custom.button as clk
 from custom.styles_utils import get_style_manager
@@ -6,6 +8,7 @@ gsm = get_style_manager()
 
 
 def mostrar_fundacao(page):
+    """Função para mostrar a página de cálculo de fundação"""
     page.controls.clear()
     page.add(ft.Text("orçamento da fundação", size=24))
 
@@ -16,11 +19,9 @@ def mostrar_fundacao(page):
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
-    switch = ft.Switch(
-        label="cm para mm", on_change=lambda e: atualizar(page), value=False
-    )
+    switch = ft.Switch(label="cm para mm", on_change=lambda e: atualizar(), value=False)
 
-    def atualizar(e):
+    def atualizar():
         if switch.value:
             espessura_input.label = "Espessura (mm)"
         else:
@@ -28,7 +29,7 @@ def mostrar_fundacao(page):
 
         page.update()
 
-    def calcular(e):
+    def calcular():
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
@@ -51,7 +52,7 @@ def mostrar_fundacao(page):
     )
     voltar_button = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: clk.voltar.orcamento(page),
+        on_click=lambda e: clk.Voltar.orcamento(e, page),
         icon=ft.icons.ARROW_BACK,
     )
 

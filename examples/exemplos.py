@@ -1,12 +1,16 @@
+"""Exemplos de uso do sistema. exemplos.py"""
+
 import flet as ft
+
 import custom.button as clk
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
+
 def main(page):
+    """Função principal do programa."""
     page.controls.clear()
-    stl = get_style_manager()
     page.add(ft.Text("orçamento da laje", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
@@ -28,7 +32,7 @@ def main(page):
         text_size=15,
         options=[
             ft.dropdown.Option("cm"),
-            ft.dropdown.Option("mm"),            
+            ft.dropdown.Option("mm"),
         ],
         value="cm",
     )
@@ -47,13 +51,13 @@ def main(page):
                     label_position=ft.LabelPosition.LEFT,
                     fill_color="blue",
                 ),
-            ],            
+            ],
         ),
         value="cm",
         on_change=lambda e: atualizar(page),
     )
 
-    def atualizar(e):
+    def atualizar(page):
         if cg.value == "mm":
             espessura_input.label = "Espessura (mm)"
         else:
@@ -61,7 +65,7 @@ def main(page):
 
         page.update()
 
-    def calcular(e):
+    def calcular():
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
@@ -79,22 +83,20 @@ def main(page):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular
-    )
+    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
 
-    btnVoltar = stl.create_button(
+    btn_voltar = gsm.create_button(
         text="Voltar Orçamento",
         icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.voltar.orcamento(page),
-        hover_color=stl.colors.VOLTAR,
+        on_click=lambda e: clk.Voltar.orcamento(page),
+        hover_color=gsm.colors.VOLTAR,
         width=200,
     )
-    btnVoltar2 = stl.create_button(
+    btn_voltar2 = gsm.create_button(
         text="Voltar Página Inicial",
         icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.voltar.principal(page),
-        hover_color=stl.colors.VOLTAR,
+        on_click=lambda e: clk.Voltar.principal(page),
+        hover_color=gsm.colors.VOLTAR,
         width=220,
     )
 
@@ -103,11 +105,11 @@ def main(page):
             content=ft.Column(
                 [
                     comprimento_input,
-                    largura_input,
-                    espessura_input,
-                    valor_m3_input,
-                    #switch,
-                    #dd,
+                    # largura_input,
+                    # espessura_input,
+                    # valor_m3_input,
+                    switch,
+                    dd,
                     cg,
                 ],
                 alignment="center",
@@ -120,8 +122,7 @@ def main(page):
     page.add(
         calcular_button,
         resultado_text,
-        btnVoltar,
-        btnVoltar2,
+        btn_voltar,
+        btn_voltar2,
     )
     page.update()
-

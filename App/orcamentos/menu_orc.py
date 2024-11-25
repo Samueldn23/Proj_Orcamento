@@ -1,10 +1,15 @@
-import flet as ft
+"""Módulo para o menu de orçamentos. menu_orc.py"""
+
 from typing import Callable
+
+import flet as ft
+
 import App.orcamentos as orc
 import custom.button as clk
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
+
 
 class MenuButton(ft.ElevatedButton):
     """Classe personalizada para botões do menu de orçamento"""
@@ -18,14 +23,12 @@ class MenuButton(ft.ElevatedButton):
                         width=22,
                         height=22,
                         color=gsm.colors.PRIMARY,
-                        
                     ),
-                    ft.Text(text)
-                    
+                    ft.Text(text),
                 ]
-            ),            
+            ),
             on_click=on_click,
-            width=width,            
+            width=width,
         )
 
 
@@ -35,15 +38,14 @@ class OrcamentoPage:
     def __init__(self, page: ft.Page):
         self.page = page
         self._init_buttons()
-        
 
     def _init_buttons(self):
         """Inicializa os botões do menu"""
         self.menu_items = [
             {
                 "text": "Parede",
-                "action": lambda _:  orc.paredes.mostrar_parede(self.page),
-                "icon": "icons/parede.png", 
+                "action": lambda _: orc.paredes.mostrar_parede(self.page),
+                "icon": "icons/parede.png",
             },
             {
                 "text": "Elétrica",
@@ -63,7 +65,7 @@ class OrcamentoPage:
             {
                 "text": "Fundação",
                 "action": lambda _: orc.fundacao.mostrar_fundacao(self.page),
-                "icon": 'assets/img/iconFundacao.png',  
+                "icon": "assets/img/iconFundacao.png",
             },
             {
                 "text": "Telhado",
@@ -73,14 +75,14 @@ class OrcamentoPage:
         ]
 
         # Cria os botões do menu
-        #self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
+        # self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
         self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
-        
+
         # Botão voltar
         self.voltar_button = gsm.create_button(
             text="Voltar",
             icon=ft.icons.ARROW_BACK,
-            on_click=lambda _: clk.voltar.principal(self.page),
+            on_click=lambda _: clk.Voltar.principal(self, self.page),
             hover_color=gsm.colors.VOLTAR,
         )
 
@@ -90,8 +92,8 @@ class OrcamentoPage:
             text=item["text"],
             icon=item["icon"],
             on_click=lambda _: item["action"](self.page),
-            width=150,
-        )        
+            width=200,
+        )
 
     def build(self):
         """Constrói a interface da página de orçamentos"""
@@ -109,7 +111,7 @@ class OrcamentoPage:
                         controls=self.menu_buttons,
                         alignment=ft.MainAxisAlignment.CENTER,
                         wrap=True,
-                    ),                    
+                    ),
                     ft.Divider(height=20),
                     self.voltar_button,
                 ],

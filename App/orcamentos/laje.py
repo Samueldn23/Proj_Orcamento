@@ -5,6 +5,7 @@ from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
+
 def mostrar_laje(page):
     page.controls.clear()
     page.add(ft.Text("orçamento da laje", size=24))
@@ -28,7 +29,7 @@ def mostrar_laje(page):
         text_size=15,
         options=[
             ft.dropdown.Option("cm"),
-            ft.dropdown.Option("mm"),            
+            ft.dropdown.Option("mm"),
         ],
         value="cm",
     )
@@ -47,7 +48,7 @@ def mostrar_laje(page):
                     label_position=ft.LabelPosition.LEFT,
                     fill_color="blue",
                 ),
-            ],            
+            ],
         ),
         value="cm",
         on_change=lambda e: atualizar(page),
@@ -79,19 +80,16 @@ def mostrar_laje(page):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular
-    )
+    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
     voltar_button = ft.ElevatedButton(
         text="Voltar",
-        on_click=lambda e: clk.voltar.orcamento(page),
-        
+        on_click=lambda e: clk.Voltar.orcamento(page),
     )
 
     btnVoltar = gsm.create_button(
         text="Voltar",
         icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.voltar.orcamento(page),
+        on_click=lambda e: clk.Voltar.orcamento(page),
     )
 
     page.add(

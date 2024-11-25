@@ -13,10 +13,10 @@ class MenuSuperior:
         self.config = MenuConfig()
 
     def require_login(self, page: ft.Page) -> bool:
-        from user.login import mostrar_login
+        from user.login import mostrar_tela
 
         if not self.config.logged_in:
-            mostrar_login(page)
+            mostrar_tela(page)
             return False
         return True
 

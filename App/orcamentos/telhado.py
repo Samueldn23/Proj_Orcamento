@@ -1,6 +1,10 @@
-import flet as ft
-import custom.button as clk
+"""Módulo para cálculo de orçamento de telhado. telhado.py"""
+
 import locale
+
+import flet as ft
+
+import custom.button as clk
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -10,6 +14,7 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 def mostrar_telhado(page):
+    """Função para mostrar a página de cálculo de telhado"""
     page.controls.clear()
 
     page.add(ft.Text("Telhado", size=24))
@@ -31,7 +36,7 @@ def mostrar_telhado(page):
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     # Função para calcular o custo
-    def calcular(e):
+    def calcular():
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
@@ -53,7 +58,7 @@ def mostrar_telhado(page):
         page.update()
 
     # Função para atualizar visibilidade do campo de valor material
-    def atualizar(e):
+    def atualizar():
         valor_material_input.visible = switch.value
         page.update()
 
@@ -69,9 +74,9 @@ def mostrar_telhado(page):
     )
     voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: clk.voltar.orcamento(page),
+        on_click=lambda _: clk.Voltar.orcamento(_, page),
         icon=ft.icons.ARROW_BACK,
-        hover_color=gsm.colors.VOLTAR,        
+        hover_color=gsm.colors.VOLTAR,
     )
 
     page.add(

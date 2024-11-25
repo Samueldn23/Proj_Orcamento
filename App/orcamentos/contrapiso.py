@@ -1,7 +1,11 @@
+"""Modulo para calcular o valor do contrapiso. contrapiso.py"""
+
+import locale
+
 import flet as ft
+
 import custom.button as clk
 from custom.styles_utils import get_style_manager
-import locale
 
 gsm = get_style_manager()
 
@@ -10,6 +14,7 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 def mostrar_contrapiso(page):
+    """Função para mostrar o calculo do contrapiso."""
     page.controls.clear()
 
     page.add(ft.Text("Contrapiso", size=24))
@@ -34,7 +39,7 @@ def mostrar_contrapiso(page):
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
     # Função para calcular o custo
-    def calcular(e):
+    def calcular():
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
@@ -58,7 +63,7 @@ def mostrar_contrapiso(page):
         page.update()
 
     # Função para atualizar visibilidade do campo de espessura
-    def atualizar(e):
+    def atualizar():
         espessura_input.visible = switch.value
         page.update()
 
@@ -74,7 +79,7 @@ def mostrar_contrapiso(page):
     )
     voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda e: clk.voltar.orcamento(page),
+        on_click=lambda _: clk.Voltar.orcamento(_, page),
         icon=ft.icons.ARROW_BACK,
     )
 

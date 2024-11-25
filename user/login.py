@@ -1,16 +1,23 @@
+"""Importando as bibliotecas necessárias"""
+
 import os
+
 import flet as ft
 from dotenv import load_dotenv
-import menu
-from models.db import autenticar_usuario
-from .signup import mostrar_cadastro
+
 from custom.styles_utils import get_style_manager
+from menu import mostrar_menu
+from models import usuario
+
+from .signup import tela_cadastro
 
 gsm = get_style_manager()
 load_dotenv()
 
 
 class LoginPage:
+    """Classe para representar a página de login"""
+
     def __init__(self, page: ft.Page):
         self.page = page
         self.error_message = None
@@ -21,7 +28,7 @@ class LoginPage:
         self.username_input = ft.TextField(
             label="Email",
             autofocus=True,
-            value=os.getenv("USERNAME2", ""),  # Valor padrão vazio se não existir
+            value=os.getenv("USER_NAME", ""),  # Valor padrão vazio se não existir
             **gsm.input_style,
         )
 
@@ -29,7 +36,7 @@ class LoginPage:
             label="Senha",
             password=True,
             can_reveal_password=True,
-            value=os.getenv("PASSWORD", ""),  # Valor padrão vazio se não existir
+            value=os.getenv("USER_PASS", ""),  # Valor padrão vazio se não existir
             **gsm.input_style,
         )
 
@@ -47,7 +54,7 @@ class LoginPage:
 
         self.signup_button = ft.TextButton(
             text="Não tem uma conta? Cadastre-se",
-            on_click=lambda _: mostrar_cadastro(self.page),
+            on_click=lambda _: tela_cadastro(self.page),
         )
 
         self.error_text = ft.Text(color=ft.colors.RED, visible=False)
@@ -69,17 +76,17 @@ class LoginPage:
         self.page.update()
 
         try:
-            if autenticar_usuario(self.username_input.value, self.password_input.value):
+            if usuario.autenticar(self.username_input.value, self.password_input.value):
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text("Login realizado com sucesso!"),
                         bgcolor=ft.colors.GREEN,
                     ),
                 )
-                menu.mostrar_menu(self.page)
+                mostrar_menu(self.page)
             else:
                 self.mostrar_erro("Usuário ou senha inválidos")
-        except Exception as e:
+        except ValueError as e:
             self.mostrar_erro(f"Erro ao fazer login: {str(e)}")
             print(f"Erro ao fazer login: {str(e)}")
         finally:
@@ -107,8 +114,8 @@ class LoginPage:
         )
 
 
-def mostrar_login(page: ft.Page):
-    """Função helper para mostrar a página de login"""
+def mostrar_tela(page: ft.Page):
+    """Função para mostrar a página de login"""
     page.controls.clear()
     login_page = LoginPage(page)
     page.add(login_page.build())

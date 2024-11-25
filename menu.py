@@ -1,11 +1,14 @@
-import flet as ft
-from base.SPDA.view import mostrar_inspecao
-from App.orcamentos import menu_orc
-from App.Clientes import cadastro
-from tests import teste
+"""Importações necessárias para o funcionamento do menu principal. menu.py"""
+
 from typing import Callable
-from examples import exemplos
+
+import flet as ft
+
+from App.Clientes import cadastro
+from App.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
+from examples import exemplos
+from tests import db_teste, teste
 
 gsm = get_style_manager()
 
@@ -37,11 +40,11 @@ class MenuPrincipalPage:
             },
             {
                 "text": "Cadastro de Clientes",
-                "action": cadastro.TelaCadastroCliente,
+                "action": cadastro.tela_cadastro_cliente,
             },
             {
-                "text": "Inspeção",
-                "action": mostrar_inspecao,
+                "text": "Teste DB",
+                "action": db_teste.testar_conecxao,
             },
             {
                 "text": "Exemplo",
@@ -59,12 +62,12 @@ class MenuPrincipalPage:
     def _create_menu_button(self, item: dict) -> ft.Container:
         """Cria um botão de menu estilizado"""
         return gsm.create_button(
-            text=item["text"],           
+            text=item["text"],
             on_click=lambda _: item["action"](self.page),
             width=200,
-            hover_color=ft.colors.PURPLE_900,
+            hover_color=ft.colors.PURPLE,
             text_color=ft.colors.ORANGE,
-        ) 
+        )
 
     def build(self):
         """Constrói a interface da página do menu principal"""

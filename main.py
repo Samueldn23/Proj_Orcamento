@@ -1,10 +1,15 @@
-import flet as ft
+"""Aplicativo de Orçamentos com Flet e SQLAlchemy, com autenticação de usuários. main.py"""
+
 from typing import Optional
-from user.login import mostrar_login
-from models.db import criar_tabelas
+
+import flet as ft
+
 from custom.styles_utils import get_style_manager
+from models.db import criar_tabelas
+from user.login import mostrar_tela
 
 gsm = get_style_manager()
+
 
 class OrcamentoApp:
     """Classe principal do aplicativo de orçamentos"""
@@ -65,9 +70,9 @@ class OrcamentoApp:
             self.initialize_database()
             self.configure_page(page)
             self.show_welcome_message()
-            mostrar_login(page)
+            mostrar_tela(page)
             page.update()
-        except Exception as e:
+        except ValueError as e:
             error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
             page.add(ft.Text(error_message, color=ft.colors.RED_600))
             page.update()
@@ -79,7 +84,7 @@ def start_app():
     try:
         app = OrcamentoApp()
         ft.app(target=app.main)
-    except Exception as e:
+    except ValueError as e:
         print(f"Erro fatal ao iniciar o aplicativo: {e}")
 
 
