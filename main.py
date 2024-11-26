@@ -5,7 +5,6 @@ from typing import Optional
 import flet as ft
 
 from custom.styles_utils import get_style_manager
-from models.db import criar_tabelas
 from user.login import mostrar_tela
 
 gsm = get_style_manager()
@@ -15,18 +14,7 @@ class OrcamentoApp:
     """Classe principal do aplicativo de orçamentos"""
 
     def __init__(self):
-        self.tabelas_criadas: bool = False
         self.page: Optional[ft.Page] = None
-
-    def initialize_database(self):
-        """Inicializa o banco de dados se necessário"""
-        if not self.tabelas_criadas:
-            try:
-                criar_tabelas()
-                self.tabelas_criadas = True
-            except Exception as e:
-                print(f"Erro ao criar tabelas: {e}")
-                raise
 
     def configure_page(self, page: ft.Page):
         """Configura a página principal do aplicativo"""
@@ -67,7 +55,6 @@ class OrcamentoApp:
     def main(self, page: ft.Page):
         """Função principal do aplicativo"""
         try:
-            self.initialize_database()
             self.configure_page(page)
             self.show_welcome_message()
             mostrar_tela(page)

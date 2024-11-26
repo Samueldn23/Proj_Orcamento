@@ -4,6 +4,7 @@ from typing import Callable
 
 import flet as ft
 
+from models.db import criar_tabelas
 from App.Clientes import cadastro
 from App.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
@@ -74,7 +75,7 @@ class MenuPrincipalPage:
         """Inicializa o banco de dados se necessário"""
         if not self.tabelas_criadas:
             try:
-                # criar_tabelas()
+                criar_tabelas()
                 self.tabelas_criadas = True
             except Exception as e:
                 print(f"Erro ao criar tabelas: {e}")
