@@ -49,6 +49,16 @@ class SignupPage:
             **gsm.input_style,
         )
 
+        self.senha_check_input = ft.TextField(
+            label="Confirma Senha",
+            prefix_icon=ft.icons.LOCK,
+            password=True,
+            can_reveal_password=True,
+            keyboard_type=ft.KeyboardType.VISIBLE_PASSWORD,
+            # helper_text="Mínimo 6 caracteres",
+            **gsm.input_style,
+        )
+
         self.error_text = ft.Text(
             color=ft.colors.RED_600,
             visible=False,
@@ -99,6 +109,12 @@ class SignupPage:
             return False, "E-mail inválido!"
 
         return True, ""
+
+    def _validate_password(self) -> bool:
+        """Valida a confirmação de senha"""
+        if self.senha_input.value != self.senha_check_input.value:
+            return False
+        return True
 
     def _show_message(self, message: str, is_error: bool = True):
         """Exibe mensagem de erro ou sucesso"""

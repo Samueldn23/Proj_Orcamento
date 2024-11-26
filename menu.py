@@ -28,6 +28,7 @@ class MenuPrincipalPage:
     """Classe para gerenciar a página do menu principal"""
 
     def __init__(self, page: ft.Page):
+        self.tabelas_criadas: bool = False
         self.page = page
         self._init_buttons()
 
@@ -69,6 +70,16 @@ class MenuPrincipalPage:
             text_color=ft.colors.ORANGE,
         )
 
+    def initialize_database(self):
+        """Inicializa o banco de dados se necessário"""
+        if not self.tabelas_criadas:
+            try:
+                # criar_tabelas()
+                self.tabelas_criadas = True
+            except Exception as e:
+                print(f"Erro ao criar tabelas: {e}")
+                raise
+
     def build(self):
         """Constrói a interface da página do menu principal"""
         return ft.Container(
@@ -104,5 +115,6 @@ def mostrar_menu(page: ft.Page):
     """Função para mostrar a página do menu principal"""
     page.controls.clear()
     menu_principal_page = MenuPrincipalPage(page)
+    menu_principal_page.initialize_database()
     page.add(menu_principal_page.build())
     page.update()
