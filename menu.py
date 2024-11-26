@@ -87,6 +87,10 @@ class MenuPrincipalPage:
                         wrap=True,
                     ),
                     ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    gsm.create_button(
+                        text="Sair",
+                        on_click=lambda _: print(f"Sair: {_}"),
+                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,

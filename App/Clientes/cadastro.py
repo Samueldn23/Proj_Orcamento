@@ -140,7 +140,7 @@ class Cadastro:
             gsm.create_button(
                 text="Voltar",
                 icon=ft.icons.ARROW_BACK,
-                on_click=lambda _: Voltar.principal(_, self.page),
+                on_click=lambda _: Voltar.principal(self.page),
                 hover_color=gsm.colors.VOLTAR,
             ),
         ]

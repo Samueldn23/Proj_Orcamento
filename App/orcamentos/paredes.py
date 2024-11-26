@@ -5,7 +5,7 @@ from typing import Optional
 
 import flet as ft
 
-import custom.button as clk
+from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -144,7 +144,7 @@ class ParedeCalculator:
                     self.resultado_text,
                     gsm.create_button(
                         text="Voltar",
-                        on_click=lambda _: clk.Voltar.orcamento(self, self.page),
+                        on_click=lambda _: Voltar.orcamento(self.page),
                         icon=ft.icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
                     ),

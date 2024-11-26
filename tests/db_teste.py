@@ -3,7 +3,7 @@
 import flet as ft
 from sqlalchemy.sql import text
 
-import custom.button as clk
+from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 from models.db import Session
 
@@ -44,7 +44,7 @@ def testar_conecxao(page: ft.Page):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: clk.Voltar.principal(page),
+        on_click=lambda _: Voltar.principal(page),
         icon=ft.icons.ARROW_BACK_IOS_NEW,
         hover_color=gsm.colors.VOLTAR,
     )

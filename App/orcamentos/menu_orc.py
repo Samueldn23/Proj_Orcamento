@@ -5,7 +5,7 @@ from typing import Callable
 import flet as ft
 
 import App.orcamentos as orc
-import custom.button as clk
+from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -82,7 +82,7 @@ class OrcamentoPage:
         self.voltar_button = gsm.create_button(
             text="Voltar",
             icon=ft.icons.ARROW_BACK,
-            on_click=lambda _: clk.Voltar.principal(self, self.page),
+            on_click=lambda _: Voltar.principal(self.page),
             hover_color=gsm.colors.VOLTAR,
         )
 

@@ -2,7 +2,7 @@
 
 import flet as ft
 
-import custom.button as clk
+from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -41,7 +41,7 @@ def mostrar_eletrica(page):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: clk.Voltar.orcamento(_, page),
+        on_click=lambda _: Voltar.orcamento(page),
         icon=ft.icons.ARROW_BACK,
     )
 

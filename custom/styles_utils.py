@@ -42,7 +42,7 @@ class StyleManager:
         }
         for prop, value in window_config.items():
             setattr(self.page.window, prop, value)
-        self.page.window.center()
+        # self.page.window.center()
 
         # Configuração do layout
         self.page.vertical_alignment = ft.MainAxisAlignment.CENTER

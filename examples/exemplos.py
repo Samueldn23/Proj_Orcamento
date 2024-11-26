@@ -2,7 +2,7 @@
 
 import flet as ft
 
-import custom.button as clk
+from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -88,14 +88,14 @@ def main(page):
     btn_voltar = gsm.create_button(
         text="Voltar Orçamento",
         icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.Voltar.orcamento(page),
+        on_click=lambda _: Voltar.orcamento(page),
         hover_color=gsm.colors.VOLTAR,
         width=200,
     )
     btn_voltar2 = gsm.create_button(
         text="Voltar Página Inicial",
         icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.Voltar.principal(page),
+        on_click=lambda _: Voltar.principal(page),
         hover_color=gsm.colors.VOLTAR,
         width=220,
     )

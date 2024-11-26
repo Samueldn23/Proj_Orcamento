@@ -1,12 +1,15 @@
+"""Modulo para o orçamento da laje. laje.py"""
+
 import flet as ft
+
 import custom.button as clk
 from custom.styles_utils import get_style_manager
-
 
 gsm = get_style_manager()
 
 
 def mostrar_laje(page):
+    """Função para mostrar a página do orçamento da laje"""
     page.controls.clear()
     page.add(ft.Text("orçamento da laje", size=24))
 
@@ -19,19 +22,8 @@ def mostrar_laje(page):
 
     switch = ft.Switch(
         label="cm para mm",
-        on_change=lambda e: atualizar(page),
+        on_change=lambda _: atualizar(),
         value=False,
-    )
-    dd = ft.Dropdown(
-        width=100,
-        height=50,
-        border_color="white",
-        text_size=15,
-        options=[
-            ft.dropdown.Option("cm"),
-            ft.dropdown.Option("mm"),
-        ],
-        value="cm",
     )
     cg = ft.RadioGroup(
         content=ft.Row(
@@ -51,10 +43,10 @@ def mostrar_laje(page):
             ],
         ),
         value="cm",
-        on_change=lambda e: atualizar(page),
+        on_change=lambda e: atualizar(),
     )
 
-    def atualizar(e):
+    def atualizar():
         if cg.value == "mm":
             espessura_input.label = "Espessura (mm)"
         else:
@@ -62,7 +54,7 @@ def mostrar_laje(page):
 
         page.update()
 
-    def calcular(e):
+    def calcular():
         try:
             comprimento = float(comprimento_input.value)
             largura = float(largura_input.value)
@@ -82,10 +74,10 @@ def mostrar_laje(page):
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
 
-    btnVoltar = gsm.create_button(
+    btn_voltar = gsm.create_button(
         text="Voltar",
-        icon=ft.icons.ARROW_BACK,
-        on_click=lambda e: clk.voltar.orcamento(page),
+        icon=ft.icons.ARROW_BACK_IOS_NEW,
+        on_click=lambda _: clk.Voltar.orcamento(page),
         hover_color=gsm.colors.VOLTAR,
     )
 
@@ -109,6 +101,6 @@ def mostrar_laje(page):
     page.add(
         calcular_button,
         resultado_text,
-        btnVoltar,
+        btn_voltar,
     )
     page.update()

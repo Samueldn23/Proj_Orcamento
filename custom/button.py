@@ -10,12 +10,12 @@ class Voltar:
     def __init__(self, controls):
         self.controls = controls  # Atribuindo controls ao objeto
 
-    def orcamento(self, page):
+    def orcamento(page):  # pylint: disable=E0213
         """Voltar para a página de orçamentos."""
         page.controls.clear()
         menu_orc.mostrar_orcamento(page)
 
-    def principal(self, page):
+    def principal(page):  # pylint: disable=E0213
         """ "Voltar para a página principal."""
         page.controls.clear()
         menu.mostrar_menu(page)
