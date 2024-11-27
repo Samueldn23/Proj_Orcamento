@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from custom.styles_utils import get_style_manager
 from menu import mostrar_menu
-from models.db import login_com_senha
+from models.db import Usuario
 
 from .signup import tela_cadastro
 
@@ -76,7 +76,9 @@ class LoginPage:
         self.page.update()
 
         try:
-            if login_com_senha(self.email_input.value, self.password_input.value):
+            if Usuario.login_com_senha(
+                self.email_input.value, self.password_input.value
+            ):
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text("Login realizado com sucesso!"),

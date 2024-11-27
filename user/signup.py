@@ -6,7 +6,7 @@ from typing import Optional
 import flet as ft
 
 from custom.styles_utils import get_style_manager
-from models.db import cadastro_usuario
+from models.db import Usuario
 from user import login
 
 gsm = get_style_manager()
@@ -97,24 +97,17 @@ class SignupPage:
 
     def _validate_inputs(self) -> tuple[bool, str]:
         """Valida os inputs do formulário"""
-        if not all(
-            [self.nome_input.value, self.email_input.value, self.senha_input.value]
-        ):
-            return False, "Todos os campos são obrigatórios!"
-
-        if len(self.senha_input.value) < 6:
-            return False, "A senha deve ter pelo menos 6 caracteres!"
 
         if "@" not in self.email_input.value:
             return False, "E-mail inválido!"
 
-        return True, ""
+        if len(self.senha_input.value) < 6:
+            return False, "A senha deve ter pelo menos 6 caracteres!"
 
-    def _validate_password(self) -> bool:
-        """Valida a confirmação de senha"""
-        if self.senha_input.value != self.senha_check_input.value:
-            return False
-        return True
+        if self.senha_input.value == self.senha_check_input.value:
+            return False, "Senhas não são iguais!"
+
+        return True, ""
 
     def _show_message(self, message: str, is_error: bool = True):
         """Exibe mensagem de erro ou sucesso"""
@@ -136,7 +129,7 @@ class SignupPage:
             return
 
         try:
-            cadastro_usuario(self.email_input.value, self.senha_input.value)
+            Usuario.cadastro_usuario(self.email_input.value, self.senha_input.value)
             self._show_message(
                 f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
             )
@@ -161,6 +154,7 @@ class SignupPage:
                     self.nome_input,
                     self.email_input,
                     self.senha_input,
+                    self.senha_check_input,
                     self.error_text,
                     self.success_text,
                     *self._create_buttons(),

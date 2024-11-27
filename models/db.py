@@ -21,51 +21,84 @@ def obter_supabase_client():
     return supabase
 
 
-def cadastro_usuario(email, senha):
-    """Método para cadastrar um novo usuário"""
-    try:
-        # Chamada para criar um novo usuário
-        response = supabase.auth.sign_up({"email": email, "password": senha})
+class Usuario:
+    """Classe para gerenciar operações relacionadas a usuários."""
 
-        # Verifica se houve erro
-        if response.error:
-            print(f"Erro ao cadastrar usuário: {response.error.message}")
+    def cadastro_usuario(email, senha):  # pylint: disable=E0213
+        """Método para cadastrar um novo usuário"""
+        try:
+            # Chamada para criar um novo usuário
+            response = supabase.auth.sign_up({"email": email, "password": senha})
+
+            # Verifica se houve erro
+            if response.get("error"):
+                print(f"Erro ao cadastrar usuário: {response['error']['message']}")
+                return False
+
+            print("Usuário cadastrado com sucesso!")
+            return True
+
+        except Exception as e:  # pylint: disable=W0718
+            print(f"Erro: {str(e)}")
             return False
 
-        print("Usuário cadastrado com sucesso!")
-        return True
+    def login_com_otp(email):  # pylint: disable=E0213
+        """Envia um e-mail de login com OTP para o usuário."""
+        try:
+            response = supabase.auth.sign_in_with_otp(credentials=email)
+            if response.error:
+                print(f"Erro ao enviar e-mail: {response.error.message}")
+                return None
 
-    except Exception as e:  # pylint: disable=W0718
-        print(f"Erro: {str(e)}")
-        return False
-
-
-def login_com_otp(email):
-    """Envia um e-mail de login com OTP para o usuário."""
-    try:
-        response = supabase.auth.sign_in_with_otp(credentials=email)
-        if response.error:
-            print(f"Erro ao enviar e-mail: {response.error.message}")
+            print("E-mail de login enviado com sucesso!")
+            return response
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"Erro ao enviar e-mail: {e}")
             return None
 
-        print("E-mail de login enviado com sucesso!")
-        return response
-    except Exception as e:  # pylint: disable=broad-except
-        print(f"Erro ao enviar e-mail: {e}")
-        return None
+    def login_com_senha(email, password):  # pylint: disable=E0213
+        """Faz login de um usuário com e-mail e senha."""
+        try:
+            response = supabase.auth.sign_in_with_password(
+                credentials={"email": email, "password": password}
+            )
+            print("Login bem-sucedido!")
+            return response  # Retorna os dados do usuário e o token
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"Erro ao fazer login: {e}")
+            return None
 
 
-def login_com_senha(email, password):
-    """Faz login de um usuário com e-mail e senha."""
-    try:
-        response = supabase.auth.sign_in_with_password(
-            credentials={"email": email, "password": password}
-        )
-        print("Login bem-sucedido!")
-        return response  # Retorna os dados do usuário e o token
-    except Exception as e:  # pylint: disable=broad-except
-        print(f"Erro ao fazer login: {e}")
-        return None
+class Cliente:
+    """Classe para gerenciar operações relacionadas a clientes."""
+
+    def adicionar_cliente(
+        nome, cpf, telefone, email, endereco, cidade, estado, cep, bairro, numero
+    ):  # pylint: disable=E0213
+        """Adiciona um novo cliente ao banco de dados."""
+        try:
+            response = (
+                supabase.table("clientes")
+                .insert(
+                    {
+                        "nome": nome,
+                        "cpf": cpf,
+                        "telefone": telefone,
+                        "email": email,
+                        "endereco": endereco,
+                        "cidade": cidade,
+                        "estado": estado,
+                        "cep": cep,
+                        "bairro": bairro,
+                        "numero": numero,
+                    }
+                )
+                .execute()
+            )
+            print("Cliente adicionado com sucesso!")
+            return response.data
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"Erro ao adicionar cliente: {e}")
 
 
 def acessar_dados_protegidos():

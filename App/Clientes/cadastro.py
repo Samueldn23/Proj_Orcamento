@@ -6,7 +6,7 @@ import flet as ft
 
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
-from models.tabelas import Cliente
+from models.db import Cliente
 
 gsm = get_style_manager()
 
@@ -177,7 +177,7 @@ class Cadastro:
             self.error_text.visible = False
         self.page.update()
 
-    def _salvar_cliente(self):
+    def _salvar_cliente(self, _):
         """Salva o cliente no banco de dados"""
         validar, message = self._validar_campos()
         if not validar:
@@ -219,10 +219,10 @@ class Cadastro:
                         content=ft.Column(
                             [
                                 self.nome_input,
-                                self.cpf_input,
+                                # self.cpf_input,
                                 # self.data_nascimento_input,
                                 # self.rg_input,
-                                self.email_input,
+                                # self.email_input,
                                 self.telefone_input,
                                 # self.endereco_input,
                                 # self.numero_input,
