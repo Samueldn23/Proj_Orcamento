@@ -4,7 +4,7 @@ from typing import Callable
 
 import flet as ft
 
-from models.db import criar_tabelas
+
 from App.Clientes import cadastro
 from App.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
@@ -29,7 +29,6 @@ class MenuPrincipalPage:
     """Classe para gerenciar a página do menu principal"""
 
     def __init__(self, page: ft.Page):
-        self.tabelas_criadas: bool = False
         self.page = page
         self._init_buttons()
 
@@ -71,16 +70,6 @@ class MenuPrincipalPage:
             text_color=ft.colors.ORANGE,
         )
 
-    def initialize_database(self):
-        """Inicializa o banco de dados se necessário"""
-        if not self.tabelas_criadas:
-            try:
-                criar_tabelas()
-                self.tabelas_criadas = True
-            except Exception as e:
-                print(f"Erro ao criar tabelas: {e}")
-                raise
-
     def build(self):
         """Constrói a interface da página do menu principal"""
         return ft.Container(
@@ -99,10 +88,6 @@ class MenuPrincipalPage:
                         wrap=True,
                     ),
                     ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
-                    gsm.create_button(
-                        text="Sair",
-                        on_click=lambda _: print(f"Sair: {_}"),
-                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,
@@ -116,6 +101,5 @@ def mostrar_menu(page: ft.Page):
     """Função para mostrar a página do menu principal"""
     page.controls.clear()
     menu_principal_page = MenuPrincipalPage(page)
-    menu_principal_page.initialize_database()
     page.add(menu_principal_page.build())
     page.update()

@@ -2,22 +2,7 @@
 
 from sqlalchemy import Column, Integer, String
 
-from models.db import Base
-
-
-# Modelo de usuário
-class Usuario(Base):
-    """tabela de usuário"""
-
-    __tablename__ = "usuarios"
-    id = Column(Integer, primary_key=True)
-    nome = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
-    senha = Column(String, nullable=False)
-
-    # Sobrescrevendo o __repr__ para exibir as informações de forma legível
-    def __repr__(self):
-        return f"Usuário(id={self.id}, nome={self.nome}, email={self.email})"
+from models.db_sql import Base
 
 
 class Cliente(Base):

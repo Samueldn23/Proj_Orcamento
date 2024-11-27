@@ -26,7 +26,3 @@ def testar_conexao(event=None):  # pylint: disable=unused-argument
         print(cliente)
 
     session.close()
-
-
-if __name__ == "__main__":
-    testar_conexao()

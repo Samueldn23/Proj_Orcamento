@@ -6,7 +6,7 @@ from typing import Optional
 import flet as ft
 
 from custom.styles_utils import get_style_manager
-from models import usuario
+from models.db import cadastro_usuario
 from user import login
 
 gsm = get_style_manager()
@@ -136,9 +136,7 @@ class SignupPage:
             return
 
         try:
-            usuario.cadastro(
-                self.nome_input.value, self.email_input.value, self.senha_input.value
-            )
+            cadastro_usuario(self.email_input.value, self.senha_input.value)
             self._show_message(
                 f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
             )

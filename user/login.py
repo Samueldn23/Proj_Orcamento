@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from custom.styles_utils import get_style_manager
 from menu import mostrar_menu
-from models import usuario
+from models.db import login_com_senha
 
 from .signup import tela_cadastro
 
@@ -25,7 +25,7 @@ class LoginPage:
 
     def _init_controls(self):
         """Inicializa os controles da página de login"""
-        self.username_input = ft.TextField(
+        self.email_input = ft.TextField(
             label="Email",
             autofocus=True,
             value=os.getenv("USER_NAME", ""),  # Valor padrão vazio se não existir
@@ -67,7 +67,7 @@ class LoginPage:
 
     async def fazer_login(self, _):
         """Processa a tentativa de login"""
-        if not self.username_input.value or not self.password_input.value:
+        if not self.email_input.value or not self.password_input.value:
             self.mostrar_erro("Preencha todos os campos!")
             return
 
@@ -76,7 +76,7 @@ class LoginPage:
         self.page.update()
 
         try:
-            if usuario.autenticar(self.username_input.value, self.password_input.value):
+            if login_com_senha(self.email_input.value, self.password_input.value):
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text("Login realizado com sucesso!"),
@@ -99,7 +99,7 @@ class LoginPage:
             content=ft.Column(
                 controls=[
                     ft.Text("Bem-vindo", size=32, weight=ft.FontWeight.BOLD),
-                    self.username_input,
+                    self.email_input,
                     self.password_input,
                     self.login_button,
                     self.error_text,
