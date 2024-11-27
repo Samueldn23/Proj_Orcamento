@@ -1,9 +1,9 @@
 """Modulo de cadastro de clientes. cadastro.py"""
 
 from typing import Optional
-
+import time
 import flet as ft
-
+from App.orcamentos import menu_orc
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 from models.db import Cliente
@@ -150,18 +150,11 @@ class Cadastro:
         if not self.nome_input.value:
             self._message("O campo nome é obrigatório", True)
             return False
-        if not self.cpf_input.value:
-            self._message("O campo CPF é obrigatório", True)
-            return False
+
         if not self.telefone_input.value:
             self._message("O campo telefone é obrigatório", True)
             return False
-        if not self.email_input.value:
-            self._message("O campo e-mail é obrigatório", True)
-            return False
-        if "@" not in self.email_input.value:
-            self._message("O campo e-mail é inválido", True)
-            return False
+
 
         return True, ""
 
@@ -201,6 +194,8 @@ class Cadastro:
             self._message(
                 f"Cliente {self.nome_input.value} cadastrado com sucesso!", False
             )
+            time.sleep(2)
+            menu_orc.mostrar_orcamento(self.page)
         except ValueError as ve:  # Exceção específica para problemas com os dados
             print(ve)
             self._message("Erro ao cadastrar cliente: dados inválidos.", True)

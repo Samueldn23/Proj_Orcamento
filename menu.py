@@ -5,7 +5,7 @@ from typing import Callable
 import flet as ft
 
 
-from App.Clientes import cadastro
+from App.Clientes import cadastro,empresa
 from App.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
 from examples import exemplos
@@ -42,6 +42,10 @@ class MenuPrincipalPage:
             {
                 "text": "Cadastro de Clientes",
                 "action": cadastro.tela_cadastro_cliente,
+            },
+            {
+                "text":"cadastrar empresa",
+                "action": empresa.tela_empresa,
             },
             {
                 "text": "Teste DB",
