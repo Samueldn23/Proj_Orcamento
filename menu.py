@@ -45,8 +45,12 @@ class MenuPrincipalPage:
                 "action": menu_orc.mostrar_orcamento,
             },
             {
+                "text": "Cadastro de Clientes",
+                "action": cadastro.tela_cadastro_cliente,
+            },
+            {
                 "text": "cadastrar empresa",
-                "action": empresa.tela_empresa,
+                "action": empresa.tela_cadastro_empresa,
             },
             {
                 "text": "Exemplo",
