@@ -45,7 +45,7 @@ class MenuPrincipalPage:
             },
             {
                 "text":"cadastrar empresa",
-                "action": empresa.tela_empresa,
+                "action":empresa.tela_cadastro_empresa,
             },
             {
                 "text": "Teste DB",
