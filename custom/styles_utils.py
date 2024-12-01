@@ -10,13 +10,13 @@ import flet as ft
 class ThemeColors:
     """Define as cores do tema da aplicação"""
 
-    PRIMARY = ft.colors.BLUE
-    SECONDARY = ft.colors.WHITE
-    VOLTAR = ft.colors.RED
-    SOMBRA_CTR = ft.colors.GREY_900
-    CONTAINER = ft.colors.BLACK87
-    TEXTO = ft.colors.WHITE
-    IMPUT = ft.colors.GREY_900
+    PRIMARY = ft.Colors.BLUE
+    SECONDARY = ft.Colors.WHITE
+    VOLTAR = ft.Colors.RED
+    SOMBRA_CTR = ft.Colors.GREY_900
+    CONTAINER = ft.Colors.BLACK87
+    TEXTO = ft.Colors.WHITE
+    IMPUT = ft.Colors.GREY_900
 
 
 class StyleManager:
@@ -60,7 +60,7 @@ class StyleManager:
         )
 
         # Configuração do fundo
-        self.page.bgcolor = ft.colors.with_opacity(0.1, self.colors.SOMBRA_CTR)
+        self.page.bgcolor = ft.Colors.with_opacity(0.1, self.colors.SOMBRA_CTR)
         self.page.gradient = ft.LinearGradient(
             colors=[self.colors.SOMBRA_CTR, self.colors.CONTAINER],
             begin=ft.alignment.top_center,
@@ -79,7 +79,7 @@ class StyleManager:
                     animation_duration=500,
                     color=text_color,
                     icon_color=ThemeColors.TEXTO,
-                    overlay_color=ft.colors.with_opacity(0.2, hover_color),
+                    overlay_color=ft.Colors.with_opacity(0.2, hover_color),
                     side={
                         ft.ControlState.DEFAULT: ft.BorderSide(1, hover_color),
                         ft.ControlState.HOVERED: ft.BorderSide(2, hover_color),
@@ -116,30 +116,25 @@ class StyleManager:
         text: str,
         on_click: Callable,
         icon: str = None,
-        width: int = 200,
+        width: int = None,  # Largura opcional
         icon_color: str = ThemeColors.PRIMARY,
         hover_icon_color: str = ThemeColors.SECONDARY,
         text_color: str = ThemeColors.SECONDARY,
         hover_color: str = ThemeColors.PRIMARY,  # Permite None explicitamente
         hover_color_button: str = None,  # Agora é opcional
-        # shape: str = ft.RoundedRectangleBorder(radius=0),
     ) -> ft.Container:
         """Cria um botão customizado com container"""
 
         # Define o hover_color_button com base em hover_color
         if hover_color_button is None:
-            hover_color_button = (
-                hover_color if hover_color is not None else ThemeColors.PRIMARY
-            )
+            hover_color_button = hover_color or ThemeColors.PRIMARY
 
-        # Cria o ícone somente se o ícone for definido
-        icone = ft.Icon(name=icon, color=icon_color) if icon else None
-
-        # Cria os conteúdos do botão (com ou sem ícone)
-        button_contents = [
-            icone if icone else ft.Container(),  # Adiciona o ícone ou um espaço vazio
-            ft.Text(text, size=15),
-        ]
+        # Cria os conteúdos do botão
+        button_contents = []
+        if icon:  # Adiciona o ícone apenas se estiver definido
+            icone = ft.Icon(name=icon, color=icon_color)
+            button_contents.append(icone)
+        button_contents.append(ft.Text(text, size=15))  # Adiciona o texto
 
         # Cria o botão
         button = ft.ElevatedButton(
@@ -148,12 +143,14 @@ class StyleManager:
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             on_click=on_click,
-            width=width,
+            width=width
+            if width is not None
+            else None,  # Deixa o layout ajustar a largura
         )
 
         # Define a função de hover personalizada para o botão e o ícone
         def button_hover_effect(e):
-            if icone:  # Só manipula o ícone se ele existir
+            if icon:  # Só aplica hover ao ícone se ele existir
                 if e.data == "true":
                     # Quando o mouse entra no botão
                     icone.color = hover_icon_color  # Muda a cor do ícone
@@ -165,7 +162,9 @@ class StyleManager:
         # Adiciona o efeito hover para o botão e o ícone
         button.on_hover = lambda e: (
             self.create_button_hover_effect(button, text_color, hover_color_button)(e),
-            button_hover_effect(e),
+            button_hover_effect(e)
+            if icon
+            else None,  # Só chama o efeito do ícone se ele existir
         )
 
         # Cria o container para o botão
@@ -249,18 +248,82 @@ class StyleManager:
 
         return container
 
+    def create_icon_button(
+        self,
+        icon: str,
+        on_click: Callable,
+        tooltip: str = None,
+        icon_color: str = ThemeColors.PRIMARY,
+        hover_icon_color: str = ThemeColors.SECONDARY,
+        hover_color: str = ThemeColors.PRIMARY,
+        hover_color_container: str = None,
+    ) -> ft.Container:
+        """
+        Cria um botão de ícone customizado com container e efeitos de hover
+
+        Parâmetros:
+        - icon: Nome do ícone a ser exibido
+        - on_click: Função de callback para o clique do botão
+        - tooltip: Texto de dica de ferramenta (opcional)
+        - icon_color: Cor padrão do ícone
+        - hover_icon_color: Cor do ícone quando hover
+        - hover_color: Cor de hover para o botão
+        - hover_color_container: Cor de hover para o container (opcional)
+        """
+        # Define o hover_color_container com base em hover_color
+        if hover_color_container is None:
+            hover_color_container = hover_color or ThemeColors.PRIMARY
+
+        # Cria o ícone
+        # icone = ft.Icon(name=icon, color=icon_color)
+
+        # Cria o botão de ícone
+        icon_button = ft.IconButton(
+            icon=icon,  # Passa o nome do ícone diretamente
+            icon_color=icon_color,
+            on_click=on_click,
+            tooltip=tooltip,
+        )
+
+        # Define a função de hover personalizada para o ícone
+        def icon_hover_effect(e):
+            if e.data == "true":
+                # Quando o mouse entra no botão
+                icon_button.icon_color = hover_icon_color  # Muda a cor do ícone
+            else:
+                # Quando o mouse sai do botão
+                icon_button.icon_color = icon_color  # Restaura a cor original do ícone
+            icon_button.update()
+
+        # Adiciona o efeito hover para o ícone
+        icon_button.on_hover = icon_hover_effect
+
+        # Cria o container para o botão de ícone
+        container = ft.Container(
+            content=ft.Column(
+                controls=[icon_button],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            padding=2,
+            border_radius=25,
+            animate=ft.animation.Animation(500, ft.AnimationCurve.EASE_IN_OUT),
+            on_hover=self.create_container_hover_effect(hover_color_container),
+        )
+
+        return container
+
     @property
     def input_style(self) -> Dict[str, Any]:
         """Estilo padrão aprimorado para inputs"""
         return {
             "width": 350,  # Largura ligeiramente maior para destacar o campo
-            "bgcolor": ft.colors.with_opacity(
+            "bgcolor": ft.Colors.with_opacity(
                 0.9, self.colors.IMPUT
             ),  # Fundo mais suave
             "border_radius": 12,  # Cantos mais arredondados para suavidade
             "text_size": 16,  # Tamanho de texto agradável para leitura
             "border": ft.InputBorder.OUTLINE,  # Borda inferior apenas
-            "border_color": ft.colors.with_opacity(
+            "border_color": ft.Colors.with_opacity(
                 0.5, self.colors.PRIMARY
             ),  # Cor da borda ao redor
             "focused_border_color": self.colors.SECONDARY,  # Realce da borda ao focar
@@ -281,7 +344,7 @@ class StyleManager:
     def container_style(self) -> Dict[str, Any]:
         """Estilo padrão aprimorado para containers"""
         return {
-            "bgcolor": ft.colors.with_opacity(
+            "bgcolor": ft.Colors.with_opacity(
                 0.20, self.colors.CONTAINER
             ),  # Fundo com leve transparência
             "margin": 20,  # Margem maior para melhor separação visual
@@ -291,14 +354,14 @@ class StyleManager:
             "border_radius": 20,  # Cantos mais arredondados para um visual elegante
             "border": ft.Border(
                 bottom=ft.BorderSide(
-                    1, ft.colors.with_opacity(0.3, self.colors.VOLTAR)
+                    1, ft.Colors.with_opacity(0.3, self.colors.VOLTAR)
                 ),  # Borda leve e discreta
-                # right=ft.BorderSide(1, ft.colors.with_opacity(0.3, self.colors.VOLTAR)),
+                # right=ft.BorderSide(1, ft.Colors.with_opacity(0.3, self.colors.VOLTAR)),
             ),
             "shadow": ft.BoxShadow(
                 spread_radius=3,  # Ampliação sutil do alcance da sombra
                 blur_radius=15,  # Redução do desfoque para uma sombra mais limpa
-                color=ft.colors.with_opacity(
+                color=ft.Colors.with_opacity(
                     0.25, self.colors.TEXTO
                 ),  # Sombra com cor mais evidente
                 offset=ft.Offset(

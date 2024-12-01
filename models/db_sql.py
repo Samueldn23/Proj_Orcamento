@@ -1,4 +1,4 @@
-"""configurações do banco de dados. db_config.py"""
+"""configurações do banco de dados. db_sql.py"""
 
 import os
 from urllib.parse import quote
@@ -28,10 +28,7 @@ engine = create_engine(DATABASE_URL, echo=False)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
-
-def criar_tabelas():
-    """Cria as tabelas no banco de dados."""
-    Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 
 def get_connection(event=None):  # pylint: disable=unused-argument

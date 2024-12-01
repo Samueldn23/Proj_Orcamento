@@ -6,7 +6,7 @@ import flet as ft
 
 from custom.styles_utils import get_style_manager
 from menu import mostrar_menu
-from models.db_sql import criar_tabelas
+from models.tabelas import criar_tabelas
 
 gsm = get_style_manager()
 
@@ -47,12 +47,12 @@ class OrcamentoApp:
                             "Bem-vindo ao Sistema de Orçamento",
                             size=28,
                             weight=ft.FontWeight.BOLD,
-                            color=ft.colors.BLUE,
+                            color=ft.Colors.BLUE,
                         ),
                         ft.Text(
                             "Faça login para continuar",
                             size=16,
-                            color=ft.colors.GREY_700,
+                            color=ft.Colors.GREY_700,
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -73,7 +73,7 @@ class OrcamentoApp:
             page.update()
         except ValueError as e:
             error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
-            page.add(ft.Text(error_message, color=ft.colors.RED_600))
+            page.add(ft.Text(error_message, color=ft.Colors.RED_600))
             page.update()
             print(error_message)
 

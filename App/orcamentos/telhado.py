@@ -75,7 +75,7 @@ def mostrar_telhado(page):
     voltar_btn = gsm.create_button(
         text="Voltar",
         on_click=lambda _: Voltar.orcamento(page),
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
     )
 

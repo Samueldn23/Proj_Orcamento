@@ -32,11 +32,11 @@ class MenuSuperior:
     def criar_menu_superior(self) -> ft.Pagelet:
         return ft.Pagelet(
             appbar=ft.AppBar(
-                leading=ft.Icon(ft.icons.PALETTE),
+                leading=ft.Icon(ft.Icons.PALETTE),
                 leading_width=40,
                 title=ft.Text("Sistema de Orçamentos"),
                 center_title=False,
-                bgcolor=ft.colors.SURFACE_VARIANT,
+                bgcolor=ft.Colors.SURFACE_VARIANT,
                 actions=self._criar_acoes_menu(),
             ),
             content=ft.Container(),
@@ -44,8 +44,8 @@ class MenuSuperior:
 
     def _criar_acoes_menu(self) -> List[ft.Control]:
         return [
-            ft.IconButton(ft.icons.WB_SUNNY_OUTLINED),
-            ft.IconButton(ft.icons.FILTER_3),
+            ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED),
+            ft.IconButton(ft.Icons.FILTER_3),
             self._criar_menu_popup(),
         ]
 
@@ -63,9 +63,9 @@ class MenuSecundario:
     def criar_menu_cupertino(self) -> ft.Pagelet:
         return ft.Pagelet(
             appbar=ft.CupertinoAppBar(
-                leading=ft.Icon(ft.icons.PALETTE),
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                trailing=ft.Icon(ft.icons.WB_SUNNY_OUTLINED),
+                leading=ft.Icon(ft.Icons.PALETTE),
+                bgcolor=ft.Colors.SURFACE_VARIANT,
+                trailing=ft.Icon(ft.Icons.WB_SUNNY_OUTLINED),
                 middle=ft.Text("Menu Secundário"),
             ),
             content=ft.Container(ft.Column([ft.Text("Conteúdo")], spacing=10)),
@@ -80,10 +80,10 @@ class MenuLateral:
 
         pagelet = ft.Pagelet(
             appbar=ft.AppBar(
-                title=ft.Text("Menu Lateral"), bgcolor=ft.colors.AMBER_ACCENT
+                title=ft.Text("Menu Lateral"), bgcolor=ft.Colors.AMBER_ACCENT
             ),
             content=ft.Text("Conteúdo Principal"),
-            bgcolor=ft.colors.AMBER_100,
+            bgcolor=ft.Colors.AMBER_100,
             bottom_app_bar=self._criar_barra_inferior(),
             end_drawer=self._criar_drawer_lateral(),
             floating_action_button=ft.FloatingActionButton(
@@ -96,14 +96,14 @@ class MenuLateral:
 
     def _criar_barra_inferior(self) -> ft.BottomAppBar:
         return ft.BottomAppBar(
-            bgcolor=ft.colors.BLUE,
+            bgcolor=ft.Colors.BLUE,
             shape=ft.NotchShape.CIRCULAR,
             content=ft.Row(
                 controls=[
-                    ft.IconButton(icon=ft.icons.MENU, icon_color=ft.colors.WHITE),
+                    ft.IconButton(icon=ft.Icons.MENU, icon_color=ft.Colors.WHITE),
                     ft.Container(expand=True),
-                    ft.IconButton(icon=ft.icons.SEARCH, icon_color=ft.colors.WHITE),
-                    ft.IconButton(icon=ft.icons.FAVORITE, icon_color=ft.colors.WHITE),
+                    ft.IconButton(icon=ft.Icons.SEARCH, icon_color=ft.Colors.WHITE),
+                    ft.IconButton(icon=ft.Icons.FAVORITE, icon_color=ft.Colors.WHITE),
                 ]
             ),
         )
@@ -112,10 +112,10 @@ class MenuLateral:
         return ft.NavigationDrawer(
             controls=[
                 ft.NavigationDrawerDestination(
-                    icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Opção 1"
+                    icon=ft.Icons.ADD_TO_HOME_SCREEN_SHARP, label="Opção 1"
                 ),
                 ft.NavigationDrawerDestination(
-                    icon=ft.icons.ADD_COMMENT, label="Opção 2"
+                    icon=ft.Icons.ADD_COMMENT, label="Opção 2"
                 ),
             ]
         )

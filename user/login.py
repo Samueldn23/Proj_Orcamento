@@ -45,8 +45,8 @@ class LoginPage:
             width=300,
             on_click=self.fazer_login,
             style=ft.ButtonStyle(
-                color=ft.colors.WHITE,
-                bgcolor=ft.colors.BLUE,
+                color=ft.Colors.WHITE,
+                bgcolor=ft.Colors.BLUE,
                 shape=ft.RoundedRectangleBorder(radius=10),
                 elevation=5,
             ),
@@ -57,7 +57,7 @@ class LoginPage:
             on_click=lambda _: tela_cadastro(self.page),
         )
 
-        self.error_text = ft.Text(color=ft.colors.RED, visible=False)
+        self.error_text = ft.Text(color=ft.Colors.RED, visible=False)
 
     def mostrar_erro(self, mensagem: str):
         """Exibe uma mensagem de erro na tela"""
@@ -82,7 +82,7 @@ class LoginPage:
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text("Login realizado com sucesso!"),
-                        bgcolor=ft.colors.GREEN,
+                        bgcolor=ft.Colors.GREEN,
                     ),
                 )
                 mostrar_menu(self.page)
@@ -92,7 +92,7 @@ class LoginPage:
             self.mostrar_erro(f"Erro ao fazer login: {str(e)}")
             print(f"Erro ao fazer login: {str(e)}")
         finally:
-            self.page.show_loading = False
+            self.page.show_loading = True
             self.page.update()
 
     def build(self):

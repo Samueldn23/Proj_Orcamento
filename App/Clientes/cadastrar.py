@@ -6,7 +6,7 @@ import flet as ft
 from App.orcamentos import menu_orc
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
-from models.db import Cliente
+from models.db import Cliente, Usuario
 
 gsm = get_style_manager()
 
@@ -23,7 +23,7 @@ class Cadastro:
     def _init_controls(self):
         self.nome_input = ft.TextField(
             label="Nome",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite seu nome completo",
             keyboard_type=ft.KeyboardType.NAME,
             **gsm.input_style,
@@ -31,7 +31,7 @@ class Cadastro:
 
         self.cpf_input = ft.TextField(
             label="CPF",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite seu CPF",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -39,7 +39,7 @@ class Cadastro:
 
         self.data_nascimento_input = ft.TextField(
             label="Data de Nascimento",
-            prefix_icon=ft.icons.CALENDAR_MONTH,
+            prefix_icon=ft.Icons.CALENDAR_MONTH,
             helper_text="Digite sua data de nascimento",
             keyboard_type=ft.KeyboardType.DATETIME,
             **gsm.input_style,
@@ -47,7 +47,7 @@ class Cadastro:
 
         self.rg_input = ft.TextField(
             label="RG",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite seu RG",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -55,7 +55,7 @@ class Cadastro:
 
         self.email_input = ft.TextField(
             label="E-mail",
-            prefix_icon=ft.icons.EMAIL,
+            prefix_icon=ft.Icons.EMAIL,
             helper_text="Digite um e-mail válido",
             keyboard_type=ft.KeyboardType.EMAIL,
             **gsm.input_style,
@@ -63,14 +63,14 @@ class Cadastro:
 
         self.telefone_input = ft.TextField(
             label="Telefone",
-            prefix_icon=ft.icons.PHONE,
+            prefix_icon=ft.Icons.PHONE,
             helper_text="Digite seu telefone",
             keyboard_type=ft.KeyboardType.PHONE,
             **gsm.input_style,
         )
         self.cep_input = ft.TextField(
             label="CEP",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite seu CEP",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -78,14 +78,14 @@ class Cadastro:
 
         self.endereco_input = ft.TextField(
             label="Endereço",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite seu endereço",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
         )
         self.numero_input = ft.TextField(
             label="Número",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o número do endereço",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -93,7 +93,7 @@ class Cadastro:
 
         self.bairro_input = ft.TextField(
             label="Bairro",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o bairro",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
@@ -101,7 +101,7 @@ class Cadastro:
 
         self.cidade_input = ft.TextField(
             label="Cidade",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite a cidade",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
@@ -109,20 +109,20 @@ class Cadastro:
 
         self.estado_input = ft.TextField(
             label="Estado",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o estado",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
         )
 
         self.error_text = ft.Text(
-            color=ft.colors.RED_600,
+            color=ft.Colors.RED_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
 
         self.success_text = ft.Text(
-            color=ft.colors.GREEN_600,
+            color=ft.Colors.GREEN_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
@@ -132,16 +132,18 @@ class Cadastro:
         return [
             gsm.create_button(
                 text="Salvar",
-                icon=ft.icons.SAVE,
+                icon=ft.Icons.SAVE,
                 on_click=self._salvar_cliente,
                 hover_color=None,
-                hover_color_button=ft.colors.GREEN,
+                hover_color_button=ft.Colors.GREEN,
+                width=130,
             ),
             gsm.create_button(
                 text="Voltar",
-                icon=ft.icons.ARROW_BACK,
+                icon=ft.Icons.ARROW_BACK,
                 on_click=lambda _: Voltar.principal(self.page),
                 hover_color=gsm.colors.VOLTAR,
+                width=130,
             ),
         ]
 
@@ -149,14 +151,16 @@ class Cadastro:
         """Valida os campos do formulário"""
         if not self.nome_input.value:
             self._message("O campo nome é obrigatório", True)
-            return False
+            return False, "O campo nome é obrigatório"  # Adiciona a mensagem de erro
 
         if not self.telefone_input.value:
             self._message("O campo telefone é obrigatório", True)
-            return False
+            return (
+                False,
+                "O campo telefone é obrigatório",
+            )  # Adiciona a mensagem de erro
 
-
-        return True, ""
+        return True, ""  # Retorna True e uma string vazia quando os campos são válidos
 
     def _message(self, message: str, is_error: bool = True):
         """Exibe uma mensagem na tela"""
@@ -176,9 +180,13 @@ class Cadastro:
         if not validar:
             self._message(message, True)
             return
-
+        user_id = Usuario.obter_user_id()
+        if user_id is None:
+            self._message("Usuário não encontrado", True)
+            return
         try:
             Cliente.adicionar_cliente(
+                user_id=user_id,
                 nome=self.nome_input.value,
                 cpf=self.cpf_input.value,
                 telefone=self.telefone_input.value,
@@ -194,7 +202,7 @@ class Cadastro:
             self._message(
                 f"Cliente {self.nome_input.value} cadastrado com sucesso!", False
             )
-            time.sleep(2)
+            time.sleep(1)
             menu_orc.mostrar_orcamento(self.page)
         except ValueError as ve:  # Exceção específica para problemas com os dados
             print(ve)
@@ -209,12 +217,12 @@ class Cadastro:
             content=ft.Column(
                 [
                     ft.Text("Cadastro de Clientes", size=24, weight=ft.FontWeight.BOLD),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     ft.Container(
                         content=ft.Column(
                             [
                                 self.nome_input,
-                                # self.cpf_input,
+                                self.cpf_input,
                                 # self.data_nascimento_input,
                                 # self.rg_input,
                                 # self.email_input,
@@ -231,10 +239,15 @@ class Cadastro:
                         ),
                         **gsm.container_style,
                     ),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    # ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     self.error_text,
                     self.success_text,
-                    *self._create_buttons(),
+                    ft.Row(
+                        [
+                            *self._create_buttons(),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 width=600,

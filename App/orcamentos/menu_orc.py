@@ -81,7 +81,7 @@ class OrcamentoPage:
         # Botão voltar
         self.voltar_button = gsm.create_button(
             text="Voltar",
-            icon=ft.icons.ARROW_BACK,
+            icon=ft.Icons.ARROW_BACK,
             on_click=lambda _: Voltar.principal(self.page),
             hover_color=gsm.colors.VOLTAR,
         )
@@ -104,9 +104,9 @@ class OrcamentoPage:
                         "Menu de Orçamentos",
                         size=24,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.colors.BLUE,
+                        color=ft.Colors.BLUE,
                     ),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     ft.Row(
                         controls=self.menu_buttons,
                         alignment=ft.MainAxisAlignment.CENTER,

@@ -2,3 +2,4 @@ flet
 SQLAlchemy
 psycopg2
 supabase
+python-dotenv

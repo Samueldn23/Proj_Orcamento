@@ -53,7 +53,7 @@ def mostrar_fundacao(page):
     voltar_button = gsm.create_button(
         text="Voltar",
         on_click=lambda _: Voltar.orcamento(page),
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
     )
 
     page.add(

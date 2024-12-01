@@ -41,7 +41,7 @@ def mostrar_inspecao(page):
     btn_voltar = gsm.create_button(
         text="Voltar",
         on_click=lambda _: clk.Voltar.principal(page),
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
     )
 

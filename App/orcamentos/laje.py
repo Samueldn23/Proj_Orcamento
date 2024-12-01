@@ -76,7 +76,7 @@ def mostrar_laje(page):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        icon=ft.icons.ARROW_BACK_IOS_NEW,
+        icon=ft.Icons.ARROW_BACK_IOS_NEW,
         on_click=lambda _: clk.Voltar.orcamento(page),
         hover_color=gsm.colors.VOLTAR,
     )

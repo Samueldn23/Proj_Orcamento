@@ -27,7 +27,7 @@ class ParedeCalculator:
         """Inicializa os controles da página"""
         self.altura_input = ft.TextField(
             label="Altura (m)",
-            prefix_icon=ft.icons.HEIGHT,
+            prefix_icon=ft.Icons.HEIGHT,
             suffix_text="metros",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -35,7 +35,7 @@ class ParedeCalculator:
 
         self.comprimento_input = ft.TextField(
             label="Comprimento (m)",
-            prefix_icon=ft.icons.STRAIGHTEN,
+            prefix_icon=ft.Icons.STRAIGHTEN,
             suffix_text="metros",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -43,7 +43,7 @@ class ParedeCalculator:
 
         self.valor_m2_input = ft.TextField(
             label="Valor por m²",
-            prefix_icon=ft.icons.ATTACH_MONEY,
+            prefix_icon=ft.Icons.ATTACH_MONEY,
             suffix_text="R$",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -119,7 +119,7 @@ class ParedeCalculator:
                         "Cálculo de Parede",
                         size=24,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.colors.BLUE,
+                        color=ft.Colors.BLUE,
                     ),
                     ft.Container(
                         content=ft.Column(
@@ -135,7 +135,7 @@ class ParedeCalculator:
                     ),
                     ft.ElevatedButton(
                         text="Calcular",
-                        icon=ft.icons.CALCULATE,
+                        icon=ft.Icons.CALCULATE,
                         on_click=self.calcular,
                         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
                         **gsm.button_style,
@@ -145,7 +145,7 @@ class ParedeCalculator:
                     gsm.create_button(
                         text="Voltar",
                         on_click=lambda _: Voltar.orcamento(self.page),
-                        icon=ft.icons.ARROW_BACK,
+                        icon=ft.Icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
                     ),
                 ],

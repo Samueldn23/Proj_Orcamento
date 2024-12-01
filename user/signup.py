@@ -1,4 +1,4 @@
-"""Importações necessárias para a página de cadastro"""
+"""Menu de cadastro de usuário. signup.py"""
 
 import time
 from typing import Optional
@@ -25,7 +25,7 @@ class SignupPage:
         """Inicializa os controles da página"""
         self.nome_input = ft.TextField(
             label="Nome",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite seu nome completo",
             keyboard_type=ft.KeyboardType.NAME,
             **gsm.input_style,
@@ -33,7 +33,7 @@ class SignupPage:
 
         self.email_input = ft.TextField(
             label="E-mail",
-            prefix_icon=ft.icons.EMAIL,
+            prefix_icon=ft.Icons.EMAIL,
             helper_text="Digite um e-mail válido",
             keyboard_type=ft.KeyboardType.EMAIL,
             **gsm.input_style,
@@ -41,7 +41,7 @@ class SignupPage:
 
         self.senha_input = ft.TextField(
             label="Senha",
-            prefix_icon=ft.icons.LOCK,
+            prefix_icon=ft.Icons.LOCK,
             password=True,
             can_reveal_password=True,
             keyboard_type=ft.KeyboardType.VISIBLE_PASSWORD,
@@ -51,22 +51,22 @@ class SignupPage:
 
         self.senha_check_input = ft.TextField(
             label="Confirma Senha",
-            prefix_icon=ft.icons.LOCK,
+            prefix_icon=ft.Icons.LOCK,
             password=True,
             can_reveal_password=True,
             keyboard_type=ft.KeyboardType.VISIBLE_PASSWORD,
-            # helper_text="Mínimo 6 caracteres",
+            helper_text="As senhas devem coincidir",
             **gsm.input_style,
         )
 
         self.error_text = ft.Text(
-            color=ft.colors.RED_600,
+            color=ft.Colors.RED_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
 
         self.success_text = ft.Text(
-            color=ft.colors.GREEN_600,
+            color=ft.Colors.GREEN_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
@@ -76,11 +76,11 @@ class SignupPage:
         return [
             ft.ElevatedButton(
                 text="Cadastrar",
-                icon=ft.icons.PERSON_ADD,
+                icon=ft.Icons.PERSON_ADD,
                 on_click=self._handle_signup,
                 width=300,
-                color=ft.colors.WHITE,
-                bgcolor=ft.colors.BLUE,
+                color=ft.Colors.WHITE,
+                bgcolor=ft.Colors.BLUE,
                 style=ft.ButtonStyle(
                     shape=ft.RoundedRectangleBorder(radius=8),
                     elevation=5,
@@ -88,7 +88,7 @@ class SignupPage:
             ),
             gsm.create_button(
                 text="Voltar ao Menu Principal",
-                icon=ft.icons.ARROW_BACK,
+                icon=ft.Icons.ARROW_BACK,
                 on_click=lambda _: login.mostrar_tela(self.page),
                 hover_color=gsm.colors.VOLTAR,
                 width=300,
@@ -97,15 +97,17 @@ class SignupPage:
 
     def _validate_inputs(self) -> tuple[bool, str]:
         """Valida os inputs do formulário"""
-
         if "@" not in self.email_input.value:
             return False, "E-mail inválido!"
 
         if len(self.senha_input.value) < 6:
             return False, "A senha deve ter pelo menos 6 caracteres!"
 
-        if self.senha_input.value == self.senha_check_input.value:
-            return False, "Senhas não são iguais!"
+        if self.senha_input.value != self.senha_check_input.value:
+            return False, "As senhas não coincidem!"
+
+        if not self.nome_input.value.strip():
+            return False, "O nome é obrigatório!"
 
         return True, ""
 
@@ -129,16 +131,18 @@ class SignupPage:
             return
 
         try:
-            Usuario.cadastro_usuario(self.email_input.value, self.senha_input.value)
-            self._show_message(
-                f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
-            )
-            time.sleep(2)
-            # Redireciona após 2 segundos
-            # self.page.window.destroy()
-            login.mostrar_tela(self.page)
-        except ValueError as e:
-            self._show_message(f"Erro ao cadastrar usuário: {str(e)}")
+            if Usuario.cadastro_usuario(
+                self.email_input.value, self.senha_input.value, self.nome_input.value
+            ):
+                self._show_message(
+                    f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
+                )
+                time.sleep(2)
+                login.mostrar_tela(self.page)
+            else:
+                self._show_message("Erro ao cadastrar usuário. Tente novamente!")
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            self._show_message(f"Erro inesperado: {str(e)}")
 
     def build(self):
         """Constrói a interface da página"""
@@ -148,7 +152,7 @@ class SignupPage:
                     ft.Text(
                         "Cadastro de Usuário",
                         size=24,
-                        color=ft.colors.BLUE,
+                        color=ft.Colors.BLUE,
                         weight=ft.FontWeight.BOLD,
                     ),
                     self.nome_input,

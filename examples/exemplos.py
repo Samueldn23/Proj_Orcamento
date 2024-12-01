@@ -87,14 +87,14 @@ def main(page):
 
     btn_voltar = gsm.create_button(
         text="Voltar Orçamento",
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
         on_click=lambda _: Voltar.orcamento(page),
         hover_color=gsm.colors.VOLTAR,
         width=200,
     )
     btn_voltar2 = gsm.create_button(
         text="Voltar Página Inicial",
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
         on_click=lambda _: Voltar.principal(page),
         hover_color=gsm.colors.VOLTAR,
         width=220,

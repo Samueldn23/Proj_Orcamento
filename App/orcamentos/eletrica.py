@@ -42,7 +42,7 @@ def mostrar_eletrica(page):
     btn_voltar = gsm.create_button(
         text="Voltar",
         on_click=lambda _: Voltar.orcamento(page),
-        icon=ft.icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK,
     )
 
     page.add(

@@ -4,12 +4,13 @@ from typing import Callable
 
 import flet as ft
 
+from models.db import Usuario
 
-from App.Clientes import cadastro,empresa
+from App.Clientes import clientes, empresa
 from App.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
 from examples import exemplos
-from tests import db_teste, teste
+from tests import teste_btn
 
 gsm = get_style_manager()
 
@@ -36,28 +37,24 @@ class MenuPrincipalPage:
         """Inicializa os botões do menu principal"""
         self.menu_items = [
             {
+                "text": " Clientes",
+                "action": clientes.tela_clientes,
+            },
+            {
                 "text": "Orçamentos",
                 "action": menu_orc.mostrar_orcamento,
             },
             {
-                "text": "Cadastro de Clientes",
-                "action": cadastro.tela_cadastro_cliente,
-            },
-            {
-                "text":"cadastrar empresa",
+                "text": "cadastrar empresa",
                 "action": empresa.tela_empresa,
-            },
-            {
-                "text": "Teste DB",
-                "action": db_teste.testar_conecxao,
             },
             {
                 "text": "Exemplo",
                 "action": exemplos.main,
             },
             {
-                "text": "Teste",
-                "action": teste.main,
+                "text": "Teste Butões",
+                "action": teste_btn.main,
             },
         ]
 
@@ -70,8 +67,8 @@ class MenuPrincipalPage:
             text=item["text"],
             on_click=lambda _: item["action"](self.page),
             width=200,
-            hover_color=ft.colors.PURPLE,
-            text_color=ft.colors.ORANGE,
+            hover_color=ft.Colors.PURPLE,
+            text_color=ft.Colors.ORANGE,
         )
 
     def build(self):
@@ -83,15 +80,23 @@ class MenuPrincipalPage:
                         "Menu Principal",
                         size=24,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.colors.BLUE,
+                        color=ft.Colors.BLUE,
                     ),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     ft.Row(
                         controls=self.menu_buttons,
                         alignment=ft.MainAxisAlignment.CENTER,
                         wrap=True,
                     ),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
+                    gsm.create_button(
+                        "Sair",
+                        on_click=lambda _: Usuario.deslogar(self.page),
+                        width=100,
+                        icon=ft.Icons.LOGOUT,
+                        hover_color=ft.Colors.RED,
+                        text_color=ft.Colors.WHITE,
+                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,
