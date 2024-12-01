@@ -4,8 +4,15 @@ from typing import Callable
 
 import flet as ft
 
-import App.orcamentos as orc
-from custom.button import Voltar
+from base.orcamentos import (
+    contrapiso,
+    eletrica,
+    fundacao,
+    laje,
+    paredes,
+    telhado,
+)
+from base.clientes import detalhes
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
@@ -35,8 +42,9 @@ class MenuButton(ft.ElevatedButton):
 class OrcamentoPage:
     """Classe para gerenciar a página de orçamentos"""
 
-    def __init__(self, page: ft.Page):
+    def __init__(self, page: ft.Page, _cliente):
         self.page = page
+        self.cliente = _cliente
         self._init_buttons()
 
     def _init_buttons(self):
@@ -44,32 +52,34 @@ class OrcamentoPage:
         self.menu_items = [
             {
                 "text": "Parede",
-                "action": lambda _: orc.paredes.mostrar_parede(self.page),
+                "action": lambda _: [
+                    paredes.mostrar_parede(self.page, self.cliente),
+                ],
                 "icon": "icons/parede.png",
             },
             {
                 "text": "Elétrica",
-                "action": lambda _: orc.eletrica.mostrar_eletrica(self.page),
+                "action": lambda _: eletrica.mostrar_eletrica(self.page),
                 "icon": "icons/eletrica.png",
             },
             {
                 "text": "Laje",
-                "action": lambda _: orc.laje.mostrar_laje(self.page),
+                "action": lambda _: laje.mostrar_laje(self.page),
                 "icon": "icons/laje.png",
             },
             {
                 "text": "Contrapiso",
-                "action": lambda _: orc.contrapiso.mostrar_contrapiso(self.page),
+                "action": lambda _: contrapiso.mostrar_contrapiso(self.page),
                 "icon": "icons/contrapiso.png",
             },
             {
                 "text": "Fundação",
-                "action": lambda _: orc.fundacao.mostrar_fundacao(self.page),
+                "action": lambda _: fundacao.mostrar_fundacao(self.page),
                 "icon": "assets/img/iconFundacao.png",
             },
             {
                 "text": "Telhado",
-                "action": lambda _: orc.telhado.mostrar_telhado(self.page),
+                "action": lambda _: telhado.mostrar_telhado(self.page),
                 "icon": "icons/telhado.png",
             },
         ]
@@ -82,7 +92,9 @@ class OrcamentoPage:
         self.voltar_button = gsm.create_button(
             text="Voltar",
             icon=ft.Icons.ARROW_BACK,
-            on_click=lambda _: Voltar.principal(self.page),
+            on_click=lambda _, cliente=self.cliente: detalhes.detalhes_cliente(
+                self.page, cliente
+            ),
             hover_color=gsm.colors.VOLTAR,
         )
 
@@ -101,7 +113,7 @@ class OrcamentoPage:
             content=ft.Column(
                 controls=[
                     ft.Text(
-                        "Menu de Orçamentos",
+                        f"Novo Orçamentos para o cliente {self.cliente['nome']}",
                         size=24,
                         weight=ft.FontWeight.BOLD,
                         color=ft.Colors.BLUE,
@@ -123,9 +135,9 @@ class OrcamentoPage:
         )
 
 
-def mostrar_orcamento(page: ft.Page):
+def mostrar_orcamento(page: ft.Page, _cliente):
     """Função helper para mostrar a página de orçamentos"""
     page.controls.clear()
-    orcamento_page = OrcamentoPage(page)
+    orcamento_page = OrcamentoPage(page, _cliente)
     page.add(orcamento_page.build())
     page.update()

@@ -85,13 +85,6 @@ def main(page):
 
     calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
 
-    btn_voltar = gsm.create_button(
-        text="Voltar Orçamento",
-        icon=ft.Icons.ARROW_BACK,
-        on_click=lambda _: Voltar.orcamento(page),
-        hover_color=gsm.colors.VOLTAR,
-        width=200,
-    )
     btn_voltar2 = gsm.create_button(
         text="Voltar Página Inicial",
         icon=ft.Icons.ARROW_BACK,
@@ -122,7 +115,6 @@ def main(page):
     page.add(
         calcular_button,
         resultado_text,
-        btn_voltar,
         btn_voltar2,
     )
     page.update()

@@ -1,7 +1,10 @@
+"""Módulo para gerenciar os clientes. App/Clientes/clientes.py"""
+
 import flet as ft
 
 from models.db import Cliente, Usuario
-from App.Clientes import atualizar, cadastrar
+
+from base.clientes import atualizar, cadastrar, detalhes
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
@@ -44,11 +47,16 @@ def tela_clientes(page):
                     controls=[
                         ft.Container(
                             content=ft.Text(cliente["nome"], size=16, width=largura),
-                            on_click=lambda e, cliente=cliente: detalhes_cliente(
-                                cliente
-                            ),
+                            on_click=lambda e,
+                            cliente=cliente: detalhes.detalhes_cliente(page, cliente),
                         ),
-                        ft.Text(cliente["telefone"], size=16, width=largura),
+                        ft.Container(
+                            content=ft.Text(
+                                cliente["telefone"], size=16, width=largura
+                            ),
+                            on_click=lambda e,
+                            cliente=cliente: detalhes.detalhes_cliente(page, cliente),
+                        ),
                         ft.Row(
                             controls=[
                                 ft.IconButton(
@@ -88,26 +96,6 @@ def tela_clientes(page):
         page.add(lista_clientes_scrollable)
         page.update()
 
-    def detalhes_cliente(cliente):
-        """Função para exibir os detalhes de um cliente"""
-        page.controls.clear()
-        page.add(
-            ft.Column(
-                controls=[
-                    ft.Text(f"Detalhes do Cliente: {cliente['nome']}", size=24),
-                    ft.Text(f"Telefone: {cliente['telefone']}"),
-                    ft.Text(f"Email: {cliente.get('email', 'Não informado')}"),
-                    ft.Text(f"Endereço: {cliente.get('endereco', 'Não informado')}"),
-                    ft.ElevatedButton(
-                        text="Voltar",
-                        on_click=lambda _: listar_clientes(),
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            )
-        )
-        page.update()
-
     def editar_cliente(cliente_id):
         """Função para editar cliente"""
         atualizar.tela_editar_cliente(page, cliente_id)
@@ -136,14 +124,14 @@ def tela_clientes(page):
                     text="",
                     on_click=lambda e: cadastrar.tela_cadastro_cliente(page),
                     icon=ft.Icons.ADD,
-                    width=70,
+                    width=40,
                     hover_color=gsm.colors.PRIMARY,
                 ),
                 gsm.create_button(
                     text="",
                     on_click=lambda e: Voltar.principal(page),
                     icon=ft.Icons.ARROW_BACK,
-                    width=70,
+                    width=40,
                     hover_color=gsm.colors.VOLTAR,
                 ),
             ],

@@ -1,16 +1,19 @@
 """Importações necessárias para o funcionamento do menu principal. menu.py"""
 
+# 1. Módulos padrão
 from typing import Callable
 
+# 2. Módulos de terceiros
 import flet as ft
 
-from models.db import Usuario
-
-from App.Clientes import clientes, empresa
-from App.orcamentos import menu_orc
-from custom.styles_utils import get_style_manager
+# 3. Módulos locais
+from base.clientes import clientes
+from base.empresa import empresa
+from base.SPDA import SPDA
 from examples import exemplos
+from models.db import Usuario
 from tests import teste_btn
+from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -41,16 +44,12 @@ class MenuPrincipalPage:
                 "action": clientes.tela_clientes,
             },
             {
-                "text": "Orçamentos",
-                "action": menu_orc.mostrar_orcamento,
-            },
-            {
-                "text": "Cadastro de Clientes",
-                "action": clientes.tela_clientes,
-            },
-            {
-                "text": "cadastrar empresa",
+                "text": "Empresa",
                 "action": empresa.tela_cadastro_empresa,
+            },
+            {
+                "text": "SPDA",
+                "action": SPDA.mostrar_inspecao,
             },
             {
                 "text": "Exemplo",

@@ -1,4 +1,4 @@
-"""Módulo para cálculo de orçamento de paredes. parede.py"""
+"""Módulo para cálculo de orçamento de paredes. base/orcamentos/parede.py"""
 
 import locale
 from typing import Optional
@@ -8,8 +8,6 @@ import flet as ft
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
-gsm = get_style_manager()
-
 # Configuração da localização
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 gsm = get_style_manager()
@@ -18,8 +16,9 @@ gsm = get_style_manager()
 class ParedeCalculator:
     """Classe para cálculo de orçamento de paredes"""
 
-    def __init__(self, page: ft.Page):
+    def __init__(self, page: ft.Page, cliente):
         self.page = page
+        self.cliente = cliente
         self.resultado_text: Optional[ft.Text] = None
         self._init_controls()
 
@@ -116,7 +115,7 @@ class ParedeCalculator:
             content=ft.Column(
                 controls=[
                     ft.Text(
-                        "Cálculo de Parede",
+                        f"Cálculo de Parede para {self.cliente['nome']}",
                         size=24,
                         weight=ft.FontWeight.BOLD,
                         color=ft.Colors.BLUE,
@@ -144,7 +143,7 @@ class ParedeCalculator:
                     self.resultado_text,
                     gsm.create_button(
                         text="Voltar",
-                        on_click=lambda _: Voltar.orcamento(self.page),
+                        on_click=lambda _: Voltar.orcamento(self.page, self.cliente),
                         icon=ft.Icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
                     ),
@@ -157,9 +156,9 @@ class ParedeCalculator:
         )
 
 
-def mostrar_parede(page: ft.Page):
+def mostrar_parede(page: ft.Page, cliente):
     """Função helper para mostrar a página de cálculo de parede"""
     page.controls.clear()
-    parede_calculator = ParedeCalculator(page)
+    parede_calculator = ParedeCalculator(page, cliente)
     page.add(parede_calculator.build())
     page.update()

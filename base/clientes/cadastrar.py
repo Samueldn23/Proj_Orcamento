@@ -3,10 +3,10 @@
 from typing import Optional
 import time
 import flet as ft
-from App.orcamentos import menu_orc
-from custom.button import Voltar
+from base.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
 from models.db import Cliente, Usuario
+
 
 gsm = get_style_manager()
 
@@ -129,6 +129,8 @@ class Cadastro:
 
     def _create_buttons(self):
         """Cria os botões da página"""
+        from base.clientes import clientes
+
         return [
             gsm.create_button(
                 text="Salvar",
@@ -141,7 +143,7 @@ class Cadastro:
             gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _: Voltar.principal(self.page),
+                on_click=lambda _: clientes.tela_clientes(self.page),
                 hover_color=gsm.colors.VOLTAR,
                 width=130,
             ),
@@ -202,8 +204,14 @@ class Cadastro:
             self._message(
                 f"Cliente {self.nome_input.value} cadastrado com sucesso!", False
             )
-            time.sleep(1)
-            menu_orc.mostrar_orcamento(self.page)
+
+            clientes = Cliente.listar_clientes(user_id)
+            for _cliente in clientes:
+                if _cliente["telefone"] == self.telefone_input.value:
+                    time.sleep(2)
+                    menu_orc.mostrar_orcamento(self.page, _cliente)
+                    return _cliente
+
         except ValueError as ve:  # Exceção específica para problemas com os dados
             print(ve)
             self._message("Erro ao cadastrar cliente: dados inválidos.", True)
@@ -222,7 +230,7 @@ class Cadastro:
                         content=ft.Column(
                             [
                                 self.nome_input,
-                                self.cpf_input,
+                                # self.cpf_input,
                                 # self.data_nascimento_input,
                                 # self.rg_input,
                                 # self.email_input,

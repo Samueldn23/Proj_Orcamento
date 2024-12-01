@@ -3,7 +3,7 @@
 import flet as ft
 from custom.styles_utils import get_style_manager
 from models.db import Cliente
-from App.Clientes import clientes
+from base.clientes import clientes
 
 gsm = get_style_manager()
 

@@ -5,21 +5,20 @@ from typing import Optional
 
 import flet as ft
 
-from App.orcamentos import menu_orc
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
 
-class cadastro:
+class Cadastro:
     """cadastro da empresa"""
 
     def __init__(self, page: ft.Page):
         self.page = page
         self.page.scroll = "adaptive"
-        self.error_text: Optional[ft.text] = None
-        self.success_text: Optional[ft.text] = None
+        self.error_text: Optional[ft.Text] = None
+        self.success_text: Optional[ft.Text] = None
         self._init_controls()
 
     def _init_controls(self):
@@ -128,12 +127,14 @@ class cadastro:
                 on_click=self._salvar_empresa,
                 hover_color=None,
                 hover_color_button=ft.Colors.GREEN,
+                width=130,
             ),
             gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
                 on_click=lambda _: Voltar.principal(self.page),
                 hover_color=gsm.colors.VOLTAR,
+                width=130,
             ),
         ]
 
@@ -173,7 +174,7 @@ class cadastro:
                 f"Cliente {self.nome_input.value} cadastrado com sucesso!", False
             )
             time.sleep(2)
-            menu_orc.mostrar_orcamento(self.page)
+
         except ValueError as ve:  # Exceção específica para problemas com os dados
             print(ve)
             self._message("Erro ao cadastrar cliente: dados inválidos.", True)
@@ -211,7 +212,12 @@ class cadastro:
                     ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     self.error_text,
                     self.success_text,
-                    *self._create_buttons(),
+                    ft.Row(
+                        [
+                            *self._create_buttons(),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 width=600,
@@ -222,7 +228,7 @@ class cadastro:
 def tela_cadastro_empresa(page: ft.Page):
     """Tela de cadastro de clientes"""
     page.controls.clear()
-    tela_cadastro_empresa_page = cadastro(page)
+    tela_cadastro_empresa_page = Cadastro(page)
     page.add(tela_cadastro_empresa_page.build())
 
     page.update()

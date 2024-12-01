@@ -25,7 +25,7 @@ def mostrar_inspecao(page):
     # Adicione outros itens conforme o check-list
 
     # Botão para salvar a inspeção
-    salvar_button = ft.ElevatedButton(
+    salvar_button = gsm.create_button(
         text="Salvar Inspeção",
         on_click=lambda e: salvar_inspecao(
             razao_social.value,
@@ -36,6 +36,7 @@ def mostrar_inspecao(page):
             observacoes.value,
             [item1.value, item2.value],
         ),
+        width=150,
     )
 
     btn_voltar = gsm.create_button(

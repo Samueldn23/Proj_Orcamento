@@ -23,7 +23,7 @@ class OrcamentoApp:
         page.title = "App de Orçamento"
 
         page.window.min_width = 450  # Largura mínima para responsividade
-
+        page.window.min_height = 600  # Altura mínima para responsividade
         page.update()
 
     def show_welcome_message(self):

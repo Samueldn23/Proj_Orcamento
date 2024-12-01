@@ -1,4 +1,4 @@
-"""Arquivo para armazenar os estilos e botões customizados. styles_utils.py"""
+"""Arquivo para armazenar os estilos e botões customizados. custom/styles_utils.py"""
 
 from dataclasses import dataclass
 from typing import Any, Callable, Dict
@@ -35,7 +35,7 @@ class StyleManager:
         # Configuração da janela
         window_config = {
             "width": 450,
-            "height": 750,
+            "height": 700,
             "title_bar_hidden": False,
             "frameless": False,
             "opacity": 1.0,
@@ -47,8 +47,8 @@ class StyleManager:
         # Configuração do layout
         self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.page.padding = 20
-        self.page.spacing = 20
+        # self.page.padding = 20
+        # self.page.spacing = 20
 
         # Configuração do tema
         self.page.theme = ft.Theme(
