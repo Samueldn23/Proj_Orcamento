@@ -46,7 +46,7 @@ class MenuPrincipalPage:
             },
             {
                 "text": "Cadastro de Clientes",
-                "action": empresa.tela_cadastro_cliente,
+                "action": clientes.tela_clientes,
             },
             {
                 "text": "cadastrar empresa",

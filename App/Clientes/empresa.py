@@ -1,12 +1,13 @@
 """modulo da tela da empresa"""
 
-from typing import Optional
 import time
+from typing import Optional
+
 import flet as ft
+
 from App.orcamentos import menu_orc
-from custom.styles_utils import get_style_manager
 from custom.button import Voltar
-from models.db import Cliente
+from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -24,7 +25,7 @@ class cadastro:
     def _init_controls(self):
         self.razao_social_input = ft.TextField(
             label="Razão Social",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite Sua Razão social",
             keyboard_type=ft.KeyboardType.NAME,
             **gsm.input_style,
@@ -32,7 +33,7 @@ class cadastro:
 
         self.nome_input = ft.TextField(
             label="Nome Da Empresa",
-            prefix_icon=ft.icons.CORPORATE_FARE,
+            prefix_icon=ft.Icons.CORPORATE_FARE,
             helper_text="Digite o Nome Da Empresa",
             keyboard_type=ft.KeyboardType.NAME,
             **gsm.input_style,
@@ -40,28 +41,28 @@ class cadastro:
 
         self.cnpj_input = ft.TextField(
             label="CNPJ",
-            prefix_icon=ft.icons.PERSON,
+            prefix_icon=ft.Icons.PERSON,
             helper_text="Digite seu CNPJ",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
         )
         self.telefone_input = ft.TextField(
             label="Telefone",
-            prefix_icon=ft.icons.PHONE,
+            prefix_icon=ft.Icons.PHONE,
             helper_text="Digite o telefone da Empresa",
             keyboard_type=ft.KeyboardType.PHONE,
             **gsm.input_style,
         )
         self.email_input = ft.TextField(
             label="E-mail",
-            prefix_icon=ft.icons.EMAIL,
+            prefix_icon=ft.Icons.EMAIL,
             helper_text="Digite um e-mail válido",
             keyboard_type=ft.KeyboardType.EMAIL,
             **gsm.input_style,
         )
         self.cep_input = ft.TextField(
             label="CEP",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite seu CEP",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -69,14 +70,14 @@ class cadastro:
 
         self.endereco_input = ft.TextField(
             label="Endereço",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite seu endereço",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
         )
         self.numero_input = ft.TextField(
             label="Número",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o número do endereço",
             keyboard_type=ft.KeyboardType.NUMBER,
             **gsm.input_style,
@@ -84,7 +85,7 @@ class cadastro:
 
         self.bairro_input = ft.TextField(
             label="Bairro",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o bairro",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
@@ -92,7 +93,7 @@ class cadastro:
 
         self.cidade_input = ft.TextField(
             label="Cidade",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite a cidade",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
@@ -100,20 +101,20 @@ class cadastro:
 
         self.estado_input = ft.TextField(
             label="Estado",
-            prefix_icon=ft.icons.LOCATION_ON,
+            prefix_icon=ft.Icons.LOCATION_ON,
             helper_text="Digite o estado",
             keyboard_type=ft.KeyboardType.TEXT,
             **gsm.input_style,
         )
 
         self.error_text = ft.Text(
-            color=ft.colors.RED_600,
+            color=ft.Colors.RED_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
 
         self.success_text = ft.Text(
-            color=ft.colors.GREEN_600,
+            color=ft.Colors.GREEN_600,
             visible=False,
             text_align=ft.TextAlign.CENTER,
         )
@@ -186,7 +187,7 @@ class cadastro:
             content=ft.Column(
                 [
                     ft.Text("Cadastro da Empresa", size=24, weight=ft.FontWeight.BOLD),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     ft.Container(
                         content=ft.Column(
                             [
@@ -207,7 +208,7 @@ class cadastro:
                         ),
                         **gsm.container_style,
                     ),
-                    ft.Divider(height=20, color=ft.colors.BLUE_GREY_100),
+                    ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     self.error_text,
                     self.success_text,
                     *self._create_buttons(),

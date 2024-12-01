@@ -52,7 +52,7 @@ class StyleManager:
 
         # Configuração do tema
         self.page.theme = ft.Theme(
-            color_scheme=ft.ColorScheme(
+            color_scheme=ft.ColorScheme(  # pylint: disable=E1101
                 primary=self.colors.PRIMARY,
                 secondary=self.colors.SECONDARY,
             ),
