@@ -1,6 +1,8 @@
+"""Módulo para a tela de inspeção de edificação. base/SPDA/SPDA.py"""
+
 import flet as ft
 from custom.styles_utils import get_style_manager
-import custom.button as clk
+from custom.button import Voltar
 
 gsm = get_style_manager()
 
@@ -41,9 +43,10 @@ def mostrar_inspecao(page):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: clk.Voltar.principal(page),
+        on_click=lambda _: Voltar.principal(page),
         icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

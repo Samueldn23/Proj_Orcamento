@@ -1,4 +1,4 @@
-"""configurações do banco de dados. db_sql.py"""
+"""configurações do banco de dados. models/db_sql.py"""
 
 import os
 from urllib.parse import quote

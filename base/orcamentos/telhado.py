@@ -13,11 +13,11 @@ gsm = get_style_manager()
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
-def mostrar_telhado(page):
+def mostrar_telhado(page, cliente):
     """Função para mostrar a página de cálculo de telhado"""
     page.controls.clear()
 
-    page.add(ft.Text("Telhado", size=24))
+    page.add(ft.Text(f"Orçamento de Telhado para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(
@@ -74,9 +74,10 @@ def mostrar_telhado(page):
     )
     voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page),
+        on_click=lambda _: Voltar.orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

@@ -1,4 +1,4 @@
-"""Importando as bibliotecas necessárias"""
+"""Módulo de login. user/login.py"""
 
 import os
 
@@ -81,7 +81,10 @@ class LoginPage:
             ):
                 self.page.open(
                     ft.SnackBar(
-                        content=ft.Text("Login realizado com sucesso!"),
+                        content=ft.Text(
+                            value="Login realizado com sucesso!",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
                         bgcolor=ft.Colors.GREEN,
                     ),
                 )

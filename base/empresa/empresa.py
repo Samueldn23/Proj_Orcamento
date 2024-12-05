@@ -218,6 +218,7 @@ class Cadastro:
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                     ),
+                    ft.Divider(height=20, color=ft.Colors.TRANSPARENT),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 width=600,

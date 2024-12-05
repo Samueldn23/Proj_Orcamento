@@ -8,10 +8,10 @@ from custom.styles_utils import get_style_manager
 gsm = get_style_manager()
 
 
-def mostrar_eletrica(page):
+def mostrar_eletrica(page, cliente):
     """Função para mostrar a tela de eletricidade."""
     page.controls.clear()
-    page.add(ft.Text("Tela de elétrica", size=24))
+    page.add(ft.Text(f"Orçamento de elétrica para {cliente['nome']}", size=24))
 
     ponto_input = ft.TextField(
         label="pontos elétricos",
@@ -41,8 +41,10 @@ def mostrar_eletrica(page):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page),
+        on_click=lambda _: Voltar.orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
+        hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

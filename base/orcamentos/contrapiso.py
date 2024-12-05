@@ -13,11 +13,11 @@ gsm = get_style_manager()
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
-def mostrar_contrapiso(page):
+def mostrar_contrapiso(page, cliente):
     """Função para mostrar o calculo do contrapiso."""
     page.controls.clear()
 
-    page.add(ft.Text("Contrapiso", size=24))
+    page.add(ft.Text(f"Orçamento de Contrapiso para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(
         label="Comprimento (m)",
@@ -79,8 +79,10 @@ def mostrar_contrapiso(page):
     )
     voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page),
+        on_click=lambda _: Voltar.orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
+        hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

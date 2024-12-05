@@ -7,10 +7,10 @@ from custom.styles_utils import get_style_manager
 gsm = get_style_manager()
 
 
-def mostrar_fundacao(page):
+def mostrar_fundacao(page, cliente):
     """Função para mostrar a página de cálculo de fundação"""
     page.controls.clear()
-    page.add(ft.Text("orçamento da fundação", size=24))
+    page.add(ft.Text(f"orçamento da fundação para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
@@ -52,8 +52,10 @@ def mostrar_fundacao(page):
     )
     voltar_button = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page),
+        on_click=lambda _: Voltar.orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
+        hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

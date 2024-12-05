@@ -2,6 +2,7 @@
 
 import flet as ft
 
+
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
@@ -26,7 +27,10 @@ def main(page: ft.Page):
     page.add(
         btn_voltar,
         gsm.create_button(
-            text="Teste 1", on_click=lambda _: print("Teste 1"), width=130
+            text="Teste 1",
+            on_click=lambda _: print("Botão 1 pressionado"),
+            width=230,
+            hover_color="#0BF1F1",
         ),
     )
 

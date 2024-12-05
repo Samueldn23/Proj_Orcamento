@@ -1,4 +1,4 @@
-"""Base de dados db.py"""
+"""Base de dados models/db.py"""
 
 import os
 import traceback
@@ -45,7 +45,7 @@ class Usuario:
             # Inserir os dados na tabela `usuarios`
             usuario_data = {"user_id": user_id, "nome": nome}
             insert_response = supabase.from_("usuarios").insert(usuario_data).execute()
-
+            supabase.from_("modulos").insert({"user_id": user_id}).execute()
             # Validar resposta da API
             if insert_response.data is None or len(insert_response.data) == 0:
                 raise ValueError(
@@ -200,6 +200,26 @@ class Cliente:
         except Exception as e:  # pylint: disable=W0718
             print(f"Erro ao deletar cliente: {e}")
             return False
+
+
+class Modulos:
+    """Classe para gerenciar operações relacionadas a módulos."""
+
+    @staticmethod
+    def obter_modulos():
+        """Obtém os módulos associados ao usuário."""
+        try:
+            user_id = Usuario.obter_user_id()
+            response = (
+                supabase.table("modulos")
+                .select("*")
+                .eq("user_id", user_id)  # Filtra pelo user_id
+                .execute()
+            )
+            return response.data
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"Erro ao obter módulos: {e}")
+            return []
 
 
 def acessar_dados_protegidos():

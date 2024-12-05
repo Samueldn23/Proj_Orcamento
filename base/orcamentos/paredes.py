@@ -146,6 +146,7 @@ class ParedeCalculator:
                         on_click=lambda _: Voltar.orcamento(self.page, self.cliente),
                         icon=ft.Icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
+                        width=130,
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

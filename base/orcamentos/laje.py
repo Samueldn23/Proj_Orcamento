@@ -8,10 +8,10 @@ from custom.styles_utils import get_style_manager
 gsm = get_style_manager()
 
 
-def mostrar_laje(page):
+def mostrar_laje(page, cliente):
     """Função para mostrar a página do orçamento da laje"""
     page.controls.clear()
-    page.add(ft.Text("orçamento da laje", size=24))
+    page.add(ft.Text(f"orçamento da laje para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
@@ -77,8 +77,9 @@ def mostrar_laje(page):
     btn_voltar = gsm.create_button(
         text="Voltar",
         icon=ft.Icons.ARROW_BACK_IOS_NEW,
-        on_click=lambda _: clk.Voltar.orcamento(page),
+        on_click=lambda _: clk.Voltar.orcamento(page, cliente),
         hover_color=gsm.colors.VOLTAR,
+        width=130,
     )
 
     page.add(

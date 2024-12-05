@@ -1,4 +1,4 @@
-"""Menu de cadastro de usuário. signup.py"""
+"""Menu de cadastro de usuário. user/signup.py"""
 
 import time
 from typing import Optional

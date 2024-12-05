@@ -15,7 +15,7 @@ def tela_editar_cliente(page, cliente):
     page.controls.clear()
 
     page.title = "Editar Cliente"
-    # page.padding = 20
+    page.padding = 0
     page.scroll = "adaptive"  # Permite rolagem quando o conteúdo ultrapassar a altura
     # Dados do cliente
     cliente_id = cliente["id"]
@@ -23,16 +23,51 @@ def tela_editar_cliente(page, cliente):
 
     # Criar campos de entrada para edição
     inputs = [
-        ft.TextField(label="Nome", value=cliente["nome"], width=400, height=50),
-        ft.TextField(label="CPF", value=cliente["cpf"], width=400, height=50),
-        ft.TextField(label="Telefone", value=cliente["telefone"], width=400, height=50),
-        ft.TextField(label="Email", value=cliente["email"], width=400, height=50),
-        ft.TextField(label="Endereço", value=cliente["endereco"], width=400, height=50),
-        ft.TextField(label="Cidade", value=cliente["cidade"], width=400, height=50),
-        ft.TextField(label="Estado", value=cliente["estado"], width=400, height=50),
-        ft.TextField(label="CEP", value=cliente["cep"], width=400, height=50),
-        ft.TextField(label="Bairro", value=cliente["bairro"], width=400, height=50),
-        ft.TextField(label="Número", value=cliente["numero"], width=400, height=50),
+        ft.TextField(label="Nome", value=cliente["nome"], height=50, **gsm.input_style),
+        ft.TextField(label="CPF", value=cliente["cpf"], height=50, **gsm.input_style),
+        ft.TextField(
+            label="Telefone",
+            value=cliente["telefone"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(
+            label="Email",
+            value=cliente["email"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(
+            label="Endereço",
+            value=cliente["endereco"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(
+            label="Cidade",
+            value=cliente["cidade"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(
+            label="Estado",
+            value=cliente["estado"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(label="CEP", value=cliente["cep"], height=50, **gsm.input_style),
+        ft.TextField(
+            label="Bairro",
+            value=cliente["bairro"],
+            height=50,
+            **gsm.input_style,
+        ),
+        ft.TextField(
+            label="Número",
+            value=cliente["numero"],
+            height=50,
+            **gsm.input_style,
+        ),
     ]
 
     @staticmethod
@@ -82,11 +117,15 @@ def tela_editar_cliente(page, cliente):
                     "Editar Cadastro do Cliente",
                     size=24,
                     weight=ft.FontWeight.BOLD,
+                    text_align=ft.TextAlign.CENTER,
                 ),
-                ft.ListView(
-                    controls=inputs,
-                    expand=True,
-                    spacing=20,
+                ft.Container(
+                    content=ft.ListView(
+                        controls=inputs,
+                        expand=True,
+                        spacing=20,
+                    ),
+                    **gsm.container_style,
                 ),
                 ft.Row(
                     [
@@ -101,13 +140,14 @@ def tela_editar_cliente(page, cliente):
                             "Cancelar",
                             on_click=cancelar_edicao,
                             width=150,
-                            icon=ft.Icons.CIRCLE_OUTLINED,
+                            icon=ft.Icons.CANCEL,
                             hover_color=gsm.colors.VOLTAR,
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=20,
                 ),
+                ft.Divider(height=20, color=ft.colors.TRANSPARENT),
             ],
             spacing=20,
         )

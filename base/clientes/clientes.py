@@ -1,4 +1,4 @@
-"""Módulo para gerenciar os clientes. App/Clientes/clientes.py"""
+"""Módulo para gerenciar os clientes. base/Clientes/clientes.py"""
 
 import flet as ft
 
