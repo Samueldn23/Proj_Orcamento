@@ -9,7 +9,8 @@ import flet as ft
 # 3. Módulos locais
 from base.clientes import clientes
 from base.empresa import empresa
-from base.SPDA import SPDA
+
+# from base.SPDA import SPDA
 from examples import exemplos
 from models.db import Usuario
 from tests import teste_btn
@@ -47,10 +48,10 @@ class MenuPrincipalPage:
                 "text": "Empresa",
                 "action": empresa.tela_cadastro_empresa,
             },
-            {
-                "text": "SPDA",
-                "action": SPDA.mostrar_inspecao,
-            },
+            # {
+            #    "text": "SPDA",
+            #    "action": SPDA.mostrar_inspecao,
+            # },
             {
                 "text": "Exemplo",
                 "action": exemplos.main,
