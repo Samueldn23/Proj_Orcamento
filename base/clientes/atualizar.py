@@ -16,7 +16,6 @@ def tela_editar_cliente(page, cliente):
 
     page.title = "Editar Cliente"
     page.padding = 0
-    page.scroll = "adaptive"  # Permite rolagem quando o conteúdo ultrapassar a altura
     # Dados do cliente
     cliente_id = cliente["id"]
     user_id = cliente["user_id"]
@@ -147,7 +146,7 @@ def tela_editar_cliente(page, cliente):
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=20,
                 ),
-                ft.Divider(height=20, color=ft.colors.TRANSPARENT),
+                ft.Divider(height=20, color=ft.Colors.TRANSPARENT),
             ],
             spacing=20,
         )

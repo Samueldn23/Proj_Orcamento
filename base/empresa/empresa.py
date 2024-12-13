@@ -16,7 +16,6 @@ class Cadastro:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.scroll = "adaptive"
         self.error_text: Optional[ft.Text] = None
         self.success_text: Optional[ft.Text] = None
         self._init_controls()

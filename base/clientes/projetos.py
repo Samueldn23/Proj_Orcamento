@@ -1,33 +1,37 @@
-"""Módulo para exibir detalhes de um cliente. App/Clientes/detalhes.py"""
+"""Módulo para exibir detalhes de um cliente. App/Clientes/projetos.py"""
 
 import flet as ft
 
-from base.orcamentos import menu_orc
+from base.orcamentos import tela_orc
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
 
-def detalhes_cliente(page: ft.Page, cliente):
-    """Função para exibir os detalhes de um cliente"""
-    from base.clientes.clientes import (
-        tela_clientes,  # pylint: disable=import-outside-toplevel
+def projetos_cliente(page: ft.Page, cliente):
+    """Função para exibir os projetos de um cliente"""
+    from base.clientes.clientes import (  # pylint: disable=import-outside-toplevel
+        tela_clientes,
     )
+
+    def listar_projetos():
+        """Função para listar os projetos de um cliente"""
 
     page.controls.clear()
     page.add(
         ft.Column(
             controls=[
-                ft.Text(f"Detalhes do Cliente: {cliente['nome']}", size=24),
+                ft.Text(f"Projetos do Cliente: {cliente['nome']}", size=24),
                 ft.Text(f"Telefone: {cliente['telefone']}"),
                 ft.Text(f"Email: {cliente.get('email', 'Não informado')}"),
                 ft.Text(f"Endereço: {cliente.get('endereco', 'Não informado')}"),
                 ft.Row(
                     [
                         gsm.create_button(
-                            text="Orçamento ",
-                            on_click=lambda _,
-                            cliente=cliente: menu_orc.mostrar_orcamento(page, cliente),
+                            text="Projeto",
+                            on_click=lambda _, cliente=cliente: tela_orc.criar_projeto(
+                                page, cliente
+                            ),
                             icon=ft.Icons.ADD,
                             hover_color=gsm.colors.PRIMARY,
                         ),
@@ -44,4 +48,5 @@ def detalhes_cliente(page: ft.Page, cliente):
             alignment=ft.MainAxisAlignment.CENTER,
         )
     )
+    listar_projetos()
     page.update()

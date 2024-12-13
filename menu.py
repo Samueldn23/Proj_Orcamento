@@ -54,7 +54,7 @@ class MenuPrincipalPage:
             # },
             {
                 "text": "Exemplo",
-                "action": exemplos.main,
+                "action": exemplos.mostrar_parede,
             },
             {
                 "text": "Teste Butões",

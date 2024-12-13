@@ -12,7 +12,8 @@ from base.orcamentos import (
     paredes,
     telhado,
 )
-from base.clientes import detalhes
+from base.clientes import projetos
+from base.orcamentos.tela_orc import criar_projeto
 
 from models.db import Modulos
 
@@ -127,6 +128,13 @@ class OrcamentoPage:
                             "icon": "icons/fundacao.png",
                         }
                     )
+                self.menu_items.append(
+                    {
+                        "text": "Orçamento",
+                        "action": lambda _: criar_projeto(self.page, self.cliente),
+                        "icon": "icons/icon.png",
+                    }
+                )
 
             # Cria os botões do menu
             # self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
@@ -138,7 +146,7 @@ class OrcamentoPage:
             self.voltar_button = gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _, cliente=self.cliente: detalhes.detalhes_cliente(
+                on_click=lambda _, cliente=self.cliente: projetos.projetos_cliente(
                     self.page, cliente
                 ),
                 hover_color=gsm.colors.VOLTAR,

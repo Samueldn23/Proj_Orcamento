@@ -4,7 +4,7 @@ import flet as ft
 
 from models.db import Cliente, Usuario
 
-from base.clientes import atualizar, cadastrar, detalhes
+from base.clientes import atualizar, cadastrar, projetos
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
@@ -15,7 +15,6 @@ def tela_clientes(page):
     """Função principal do aplicativo"""
     page.controls.clear()
     page.title = "Listar Clientes"
-    page.scroll = "adaptive"  # Permite rolagem quando o conteúdo ultrapassar a altura
     largura = 150
 
     def listar_clientes():
@@ -48,14 +47,14 @@ def tela_clientes(page):
                         ft.Container(
                             content=ft.Text(cliente["nome"], size=16, width=largura),
                             on_click=lambda e,
-                            cliente=cliente: detalhes.detalhes_cliente(page, cliente),
+                            cliente=cliente: projetos.projetos_cliente(page, cliente),
                         ),
                         ft.Container(
                             content=ft.Text(
                                 cliente["telefone"], size=16, width=largura
                             ),
                             on_click=lambda e,
-                            cliente=cliente: detalhes.detalhes_cliente(page, cliente),
+                            cliente=cliente: projetos.projetos_cliente(page, cliente),
                         ),
                         ft.Row(
                             controls=[

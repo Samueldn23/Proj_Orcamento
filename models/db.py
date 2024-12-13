@@ -202,6 +202,37 @@ class Cliente:
             return False
 
 
+class Orcamento:
+    """Classe para gerenciar operações relacionadas a orçamentos."""
+
+    @staticmethod
+    def adicionar_orcamento(
+        cliente_id,
+        data_orcamento,
+        descricao,
+        valor,
+    ):
+        """Adiciona um novo orçamento ao banco de dados."""
+        try:
+            response = (
+                supabase.table("orcamentos")
+                .insert(
+                    {
+                        "cliente_id": cliente_id,
+                        "data_orcamento": data_orcamento,
+                        "descricao": descricao,
+                        "valor": valor,
+                    }
+                )
+                .execute()
+            )
+            print("Orçamento adicionado com sucesso!")
+            return response.data
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"Erro ao adicionar orçamento: {e}")
+            return None
+
+
 class Modulos:
     """Classe para gerenciar operações relacionadas a módulos."""
 
@@ -220,16 +251,3 @@ class Modulos:
         except Exception as e:  # pylint: disable=broad-except
             print(f"Erro ao obter módulos: {e}")
             return []
-
-
-def acessar_dados_protegidos():
-    """Exemplo de como acessar dados protegidos após o login."""
-    # Aqui você pode acessar dados que requerem autenticação
-    try:
-        # Acesso a dados que requerem autenticação
-        response = supabase.from_("sua_tabela").select("*").execute()
-        print("Dados:", response.data)
-        return response.data
-    except Exception as e:  # pylint: disable=broad-except
-        print(f"Erro ao acessar dados: {e}")
-        return None

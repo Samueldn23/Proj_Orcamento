@@ -1,12 +1,14 @@
 """Modulo de cadastro de clientes. cadastro.py"""
 
-from typing import Optional
 import time
+from typing import Optional
+
 import flet as ft
+
 from base.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
-from models.db import Cliente, Usuario
 
+from models.db import Cliente, Usuario
 
 gsm = get_style_manager()
 

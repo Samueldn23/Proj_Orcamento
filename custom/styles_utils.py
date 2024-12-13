@@ -13,7 +13,7 @@ class ThemeColors:
     PRIMARY = ft.Colors.BLUE
     SECONDARY = ft.Colors.WHITE
     VOLTAR = ft.Colors.RED
-    SOMBRA_CTR = ft.Colors.GREY_900
+    SOMBRA_CTR = ft.Colors.BLUE_GREY_900
     CONTAINER = ft.Colors.BLACK87
     TEXTO = ft.Colors.WHITE
     IMPUT = ft.Colors.GREY_900
@@ -45,6 +45,7 @@ class StyleManager:
         # self.page.window.center()
 
         # Configuração do layout
+        self.page.scroll = ft.ScrollMode.ADAPTIVE
         self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         # self.page.padding = 20
