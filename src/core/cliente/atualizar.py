@@ -2,10 +2,12 @@
 
 import flet as ft
 from custom.styles_utils import get_style_manager
-from models.db import Cliente
-from base.clientes import clientes
+from src.infrastructure.database.repositories import UserRepository, ClientRepository
+from src.core.cliente import clientes
 
 gsm = get_style_manager()
+Usuario = UserRepository()
+Cliente = ClientRepository()
 
 
 def tela_editar_cliente(page, cliente):
@@ -88,7 +90,7 @@ def tela_editar_cliente(page, cliente):
         }
 
         # Atualizar cliente no banco de dados
-        sucesso = Cliente.atualizar_cliente(cliente_id, cliente_atualizado)
+        sucesso = Cliente.update(cliente_id, cliente_atualizado)
 
         # Configura e exibe o SnackBar
         page.open(

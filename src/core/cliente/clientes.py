@@ -2,13 +2,15 @@
 
 import flet as ft
 
-from models.db import Cliente, Usuario
+from src.infrastructure.database.repositories import user_repository, client_repository
 
-from base.clientes import atualizar, cadastrar, projetos
+from src.core.cliente import atualizar, cadastrar, projetos
 from custom.button import Voltar
 from custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
+user_repo = user_repository.UserRepository()
+client_repo = client_repository.ClientRepository()
 
 
 def tela_clientes(page):
@@ -19,8 +21,10 @@ def tela_clientes(page):
 
     def listar_clientes():
         """Função para listar clientes"""
-        user_id = Usuario.obter_user_id()  # Substitua pelo ID do usuário autenticado
-        clientes = Cliente.listar_clientes(user_id)
+        user_id = (
+            user_repo.get_current_user()
+        )  # Substitua pelo ID do usuário autenticado
+        clientes = client_repo.list_by_user(user_id)
 
         if not clientes:
             page.add(ft.Text("Nenhum cliente encontrado.", color="red", size=20))
@@ -103,7 +107,7 @@ def tela_clientes(page):
         """Função para excluir cliente"""
         cliente_id = cliente_id["id"]
         print(f"Excluindo cliente com ID: {cliente_id}")
-        Cliente.deletar_cliente(cliente_id)
+        client_repo.deletar_cliente(cliente_id)
         listar_clientes()
 
     # Cabeçalho moderno e estilizado
@@ -123,14 +127,14 @@ def tela_clientes(page):
                     text="",
                     on_click=lambda e: cadastrar.tela_cadastro_cliente(page),
                     icon=ft.Icons.ADD,
-                    width=40,
+                    width=34,
                     hover_color=gsm.colors.PRIMARY,
                 ),
                 gsm.create_button(
                     text="",
                     on_click=lambda e: Voltar.principal(page),
                     icon=ft.Icons.ARROW_BACK,
-                    width=40,
+                    width=34,
                     hover_color=gsm.colors.VOLTAR,
                 ),
             ],

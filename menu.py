@@ -7,16 +7,18 @@ from typing import Callable
 import flet as ft
 
 # 3. Módulos locais
-from base.clientes import clientes
-from base.empresa import empresa
+from src.core.cliente import clientes
+from src.core.empresa import empresa
 
 # from base.SPDA import SPDA
 from examples import exemplos
-from models.db import Usuario
+from src.infrastructure.database.repositories import UserRepository
 from tests import teste_btn
 from custom.styles_utils import get_style_manager
+from src.navigation.router import navigate_to_login  # Nova importação
 
 gsm = get_style_manager()
+Usuario = UserRepository()  # Instanciar o repositório
 
 
 class MenuButton(ft.ElevatedButton):
@@ -65,6 +67,19 @@ class MenuPrincipalPage:
         # Cria os botões do menu
         self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
 
+    def _handle_logout(self, _):
+        """Função para lidar com o logout"""
+        if Usuario.logout():
+            # Se o logout foi bem sucedido, volta para a tela de login
+            navigate_to_login(self.page)
+        else:
+            # Se houve erro, mostra mensagem
+            self.page.show_snack_bar(
+                ft.SnackBar(
+                    content=ft.Text("Erro ao realizar logout!"), bgcolor=ft.colors.ERROR
+                )
+            )
+
     def _create_menu_button(self, item: dict) -> ft.Container:
         """Cria um botão de menu estilizado"""
         return gsm.create_button(
@@ -95,7 +110,7 @@ class MenuPrincipalPage:
                     ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     gsm.create_button(
                         "Sair",
-                        on_click=lambda _: Usuario.deslogar(self.page),
+                        on_click=self._handle_logout,  # Usar o novo método
                         width=100,
                         icon=ft.Icons.LOGOUT,
                         hover_color=ft.Colors.RED,

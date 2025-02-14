@@ -6,7 +6,7 @@ import traceback
 from dotenv import load_dotenv
 from supabase import Client, create_client
 
-from user import login
+from src.user import login
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -45,7 +45,21 @@ class Usuario:
             # Inserir os dados na tabela `usuarios`
             usuario_data = {"user_id": user_id, "nome": nome}
             insert_response = supabase.from_("usuarios").insert(usuario_data).execute()
-            supabase.from_("modulos").insert({"user_id": user_id}).execute()
+
+            # Inserir dados na tabela modulos incluindo o user_name
+            supabase.from_("modulos").insert(
+                {
+                    "user_id": user_id,
+                    "user_name": nome,
+                    "parede": True,  # valor padrão
+                    "contrapiso": False,  # valor padrão
+                    "eletrica": False,  # valor padrão
+                    "fundacao": False,  # valor padrão
+                    "laje": False,  # valor padrão
+                    "telhado": False,  # valor padrão
+                }
+            ).execute()
+
             # Validar resposta da API
             if insert_response.data is None or len(insert_response.data) == 0:
                 raise ValueError(

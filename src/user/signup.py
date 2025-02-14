@@ -6,10 +6,11 @@ from typing import Optional
 import flet as ft
 
 from custom.styles_utils import get_style_manager
-from models.db import Usuario
-from user import login
+from src.infrastructure.database.repositories import UserRepository
+from src.user import login
 
 gsm = get_style_manager()
+Usuario = UserRepository()
 
 
 class SignupPage:
@@ -81,6 +82,7 @@ class SignupPage:
                 width=300,
                 color=ft.Colors.WHITE,
                 bgcolor=ft.Colors.BLUE,
+                icon_color=ft.Colors.WHITE,
                 style=ft.ButtonStyle(
                     shape=ft.RoundedRectangleBorder(radius=8),
                     elevation=5,
@@ -131,7 +133,7 @@ class SignupPage:
             return
 
         try:
-            if Usuario.cadastro_usuario(
+            if Usuario.create(
                 self.email_input.value, self.senha_input.value, self.nome_input.value
             ):
                 self._show_message(

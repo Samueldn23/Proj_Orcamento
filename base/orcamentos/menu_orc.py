@@ -12,14 +12,14 @@ from base.orcamentos import (
     paredes,
     telhado,
 )
-from base.clientes import projetos
+from src.core.cliente import projetos
 from base.orcamentos.tela_orc import criar_projeto
 
-from models.db import Modulos
-
 from custom.styles_utils import get_style_manager
+from src.infrastructure.database.repositories.module_repository import ModuleRepository
 
 gsm = get_style_manager()
+module_repo = ModuleRepository()
 
 
 class MenuButton(ft.ElevatedButton):
@@ -49,7 +49,7 @@ class OrcamentoPage:
     def __init__(self, page: ft.Page, _cliente):
         self.page = page
         self.cliente = _cliente
-        self.modulo = Modulos.obter_modulos()
+        self.modulo = module_repo.get_modules(self.cliente["user_id"])
         self._init_buttons()
 
     def _init_buttons(self):

@@ -31,6 +31,12 @@ def main(page: ft.Page):
             on_click=lambda _: print("Botão 1 pressionado"),
             width=230,
             hover_color="#0BF1F1",
+            icon=ft.Icons.CALCULATE,
+        ),
+        ft.ElevatedButton(
+            text="teste",
+            icon=ft.Icons.CALCULATE,
+            on_click=lambda _: print("teste"),
         ),
     )
 

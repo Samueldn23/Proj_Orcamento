@@ -1,0 +1,5 @@
+"""Base para os models do SQLAlchemy"""
+
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()

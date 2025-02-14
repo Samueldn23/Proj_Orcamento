@@ -10,7 +10,7 @@ gsm = get_style_manager()
 
 def projetos_cliente(page: ft.Page, cliente):
     """Função para exibir os projetos de um cliente"""
-    from base.clientes.clientes import (  # pylint: disable=import-outside-toplevel
+    from src.core.cliente.clientes import (  # pylint: disable=import-outside-toplevel
         tela_clientes,
     )
 

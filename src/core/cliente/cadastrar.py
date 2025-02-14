@@ -8,9 +8,11 @@ import flet as ft
 from base.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
 
-from models.db import Cliente, Usuario
+from src.infrastructure.database.repositories import ClientRepository, UserRepository
 
 gsm = get_style_manager()
+Cliente = ClientRepository()
+Usuario = UserRepository()
 
 
 class Cadastro:
@@ -131,7 +133,7 @@ class Cadastro:
 
     def _create_buttons(self):
         """Cria os botões da página"""
-        from base.clientes import clientes
+        from src.core.cliente import clientes
 
         return [
             gsm.create_button(
@@ -184,12 +186,12 @@ class Cadastro:
         if not validar:
             self._message(message, True)
             return
-        user_id = Usuario.obter_user_id()
+        user_id = Usuario.get_current_user()
         if user_id is None:
             self._message("Usuário não encontrado", True)
             return
         try:
-            Cliente.adicionar_cliente(
+            Cliente.create(
                 user_id=user_id,
                 nome=self.nome_input.value,
                 cpf=self.cpf_input.value,
@@ -207,7 +209,7 @@ class Cadastro:
                 f"Cliente {self.nome_input.value} cadastrado com sucesso!", False
             )
 
-            clientes = Cliente.listar_clientes(user_id)
+            clientes = Cliente.list_by_user(user_id)
             for _cliente in clientes:
                 if _cliente["telefone"] == self.telefone_input.value:
                     time.sleep(2)

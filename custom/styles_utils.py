@@ -338,6 +338,7 @@ class StyleManager:
         return {
             "width": 200,
             "color": self.colors.TEXTO,
+            "icon_color": self.colors.TEXTO,
             "bgcolor": self.colors.PRIMARY,
         }
 

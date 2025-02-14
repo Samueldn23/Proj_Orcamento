@@ -1,11 +1,17 @@
 """Aplicativo de Orçamentos com Flet e SQLAlchemy, com autenticação de usuários. main.py"""
 
 from typing import Optional
+import os
+import sys
 
 import flet as ft
 
 from custom.styles_utils import get_style_manager
-from user.login import mostrar_tela
+from src.user.login import mostrar_tela
+
+# Adiciona o diretório raiz do projeto ao PYTHONPATH
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, project_root)
 
 gsm = get_style_manager()
 

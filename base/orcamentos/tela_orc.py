@@ -8,9 +8,15 @@ import flet as ft
 from base.orcamentos import menu_orc
 from custom.styles_utils import get_style_manager
 
-from models.db import Orcamento
+from src.infrastructure.database.repositories import (
+    budget_repository,
+    client_repository,
+)
 
 gsm = get_style_manager()
+
+budget_repo = budget_repository.BudgetRepository()
+client_repo = client_repository.ClientRepository()
 
 
 def criar_projeto(page: ft.Page, cliente):
@@ -29,11 +35,11 @@ def criar_projeto(page: ft.Page, cliente):
         valor_total = float(valor_input.value)
 
         # Salvar no banco de dados
-        Orcamento.adicionar_orcamento(
+        budget_repo.create(
             cliente_id=cliente["id"],
+            data_orcamento=datetime.datetime.now(),
             descricao=descricao,
             valor=valor_total,
-            data_orcamento=datetime.datetime.now(),
         )
 
         # Exibir mensagem de sucesso

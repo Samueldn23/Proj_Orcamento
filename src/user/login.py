@@ -1,4 +1,4 @@
-"""Módulo de login. user/login.py"""
+"""Módulo de login"""
 
 import os
 
@@ -6,12 +6,13 @@ import flet as ft
 from dotenv import load_dotenv
 
 from custom.styles_utils import get_style_manager
-from menu import mostrar_menu
-from models.db import Usuario
+from src.navigation.router import navigate_to_menu
+from src.infrastructure.database.repositories import UserRepository
 
 from .signup import tela_cadastro
 
 gsm = get_style_manager()
+user_repo = UserRepository()
 load_dotenv()
 
 
@@ -76,7 +77,7 @@ class LoginPage:
         self.page.update()
 
         try:
-            if Usuario.login_com_senha(
+            if user_repo.login_with_password(
                 self.email_input.value, self.password_input.value
             ):
                 self.page.open(
@@ -88,7 +89,7 @@ class LoginPage:
                         bgcolor=ft.Colors.GREEN,
                     ),
                 )
-                mostrar_menu(self.page)
+                navigate_to_menu(self.page)
             else:
                 self.mostrar_erro("Usuário ou senha inválidos")
         except ValueError as e:
@@ -120,7 +121,11 @@ class LoginPage:
 
 
 def mostrar_tela(page: ft.Page):
-    """Função para mostrar a página de login"""
+    """Mostra a tela de login"""
+
+    def handle_login_success(_):
+        navigate_to_menu(page)
+
     page.controls.clear()
     login_page = LoginPage(page)
     page.add(login_page.build())
