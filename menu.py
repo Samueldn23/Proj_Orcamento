@@ -14,7 +14,7 @@ from src.core.empresa import empresa
 from src.core.configuracao import configuracao
 from examples import exemplos
 from src.infrastructure.database.repositories import UserRepository
-from tests import teste_btn
+from _tests import teste_btn
 from src.custom.styles_utils import get_style_manager
 from src.navigation.router import navigate_to_login  # Nova importação
 
