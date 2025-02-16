@@ -4,7 +4,9 @@ from typing import Optional, List, Dict, Any
 
 # from sqlalchemy.orm import Session
 # from src.user import login
+from ...cache.cache_config import cache_query
 from ..models.user import User
+from ..models import Module
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
 
@@ -93,6 +95,7 @@ class UserRepository:
             print(f"Erro ao enviar OTP: {e}")
             return None
 
+    @cache_query
     def get_current_user(self) -> Optional[str]:
         """Obtém o ID do usuário atual"""
         try:
@@ -113,25 +116,39 @@ class UserRepository:
             print(f"Erro ao realizar logout: {e}")
             return False
 
-    def get_modules(self, user_id: str) -> List[Dict[str, Any]]:
+    def get_modules(self, user_id: str) -> Optional[Module]:
         """Obtém os módulos do usuário"""
         try:
-            response = (
-                self.supabase.table("modulos")
-                .select("*")
-                .eq("user_id", user_id)
-                .execute()
-            )
-            return response.data if response.data else []
+            with self.db.get_session() as session:
+                return session.query(Module).filter(Module.user_id == user_id).first()
         except Exception as e:
             print(f"Erro ao obter módulos: {e}")
-            return []
+            return None
 
+    def update_modules(self, user_id: str, module_data: dict) -> bool:
+        """Atualiza os módulos do usuário"""
+        try:
+            with self.db.get_session() as session:
+                modules = (
+                    session.query(Module).filter(Module.user_id == user_id).first()
+                )
+                if modules:
+                    for key, value in module_data.items():
+                        setattr(modules, key, value)
+                    session.commit()
+                    return True
+                return False
+        except Exception as e:
+            print(f"Erro ao atualizar módulos: {e}")
+            return False
+
+    @cache_query
     def get_by_id(self, user_id: str) -> Optional[User]:
         """Busca usuário por ID"""
         with self.db.get_session() as session:
             return session.query(User).filter(User.user_id == user_id).first()
 
+    @cache_query
     def list_all(self) -> List[User]:
         """Lista todos os usuários"""
         with self.db.get_session() as session:

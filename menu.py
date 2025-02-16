@@ -11,10 +11,11 @@ from src.core.cliente import clientes
 from src.core.empresa import empresa
 
 # from base.SPDA import SPDA
+from src.core.configuracao import configuracao
 from examples import exemplos
 from src.infrastructure.database.repositories import UserRepository
 from tests import teste_btn
-from custom.styles_utils import get_style_manager
+from src.custom.styles_utils import get_style_manager
 from src.navigation.router import navigate_to_login  # Nova importação
 
 gsm = get_style_manager()
@@ -50,10 +51,6 @@ class MenuPrincipalPage:
                 "text": "Empresa",
                 "action": empresa.tela_cadastro_empresa,
             },
-            # {
-            #    "text": "SPDA",
-            #    "action": SPDA.mostrar_inspecao,
-            # },
             {
                 "text": "Exemplo",
                 "action": exemplos.mostrar_parede,
@@ -61,6 +58,10 @@ class MenuPrincipalPage:
             {
                 "text": "Teste Butões",
                 "action": teste_btn.main,
+            },
+            {
+                "text": "Configuração",
+                "action": configuracao.tela_config,
             },
         ]
 

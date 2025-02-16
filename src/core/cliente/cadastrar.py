@@ -5,8 +5,8 @@ from typing import Optional
 
 import flet as ft
 
-from base.orcamentos import menu_orc
-from custom.styles_utils import get_style_manager
+from src.core.orcamento import menu_orc
+from src.custom.styles_utils import get_style_manager
 
 from src.infrastructure.database.repositories import ClientRepository, UserRepository
 

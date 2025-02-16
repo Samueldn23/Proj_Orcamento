@@ -1,0 +1,8 @@
+-r base.txt
+# Utilitários
+black>=23.0.0  # Formatador de código
+pylint>=3.0.0  # Linter
+pytest>=7.0.0  # Testes
+
+# Opcional - para desenvolvimento
+ipython>=8.0.0  # Shell interativo melhorado

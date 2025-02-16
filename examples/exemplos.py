@@ -7,8 +7,8 @@ from typing import List, Optional  # pylint: disable=W0611 # noqa: F401
 import flet as ft
 # import pandas as pd
 
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation import router
+from src.custom.styles_utils import get_style_manager
 
 
 # from models.db import Feedback, Orcamento
@@ -255,7 +255,7 @@ class ParedeCalculator:
                     ),
                     gsm.create_button(
                         text="Voltar",
-                        on_click=lambda _: Voltar.principal(self.page),
+                        on_click=lambda _: router.navegar_principal(self.page),
                         icon=ft.Icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
                         width=130,

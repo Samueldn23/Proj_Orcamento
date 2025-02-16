@@ -2,7 +2,7 @@
 
 from typing import Optional, List, Dict, Any
 
-# from sqlalchemy.orm import Session
+from src.infrastructure.cache.cache_config import cache_query
 from ..models.client import Client
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
@@ -52,6 +52,7 @@ class ClientRepository:
             print(f"Erro ao criar cliente: {e}")
             return None
 
+    @cache_query
     def list_by_user(self, user_id: str) -> List[Dict[str, Any]]:
         """Lista clientes de um usuário"""
         try:
@@ -106,6 +107,7 @@ class ClientRepository:
             print(f"Erro ao deletar cliente: {e}")
             return False
 
+    @cache_query
     def get_by_id(self, client_id: int) -> Optional[Client]:
         """Busca um cliente pelo ID"""
         try:

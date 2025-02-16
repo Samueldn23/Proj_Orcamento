@@ -1,0 +1,28 @@
+# Web Framework
+flet>=0.26.0
+flet-core>=0.26.0
+flet-desktop>=0.26.0
+
+# Banco de Dados
+SQLAlchemy>=2.0.37
+psycopg2>=2.9.10
+supabase>=2.13.0
+postgrest>=0.19.3
+
+# Configuração e Cache
+python-dotenv>=1.0.1
+cachetools>=5.5.1
+
+# Utilitários
+pydantic>=2.10.6
+python-dateutil>=2.9.0
+typing-extensions>=4.12.2
+watchdog>=4.0.2
+
+# HTTP e Comunicação
+httpx>=0.28.1
+websockets>=14.2
+requests>=2.32.3
+
+# Formatação e Tipos
+types-python-dateutil>=2.9.0.20241206

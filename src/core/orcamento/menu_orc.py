@@ -4,18 +4,12 @@ from typing import Callable
 
 import flet as ft
 
-from base.orcamentos import (
-    contrapiso,
-    eletrica,
-    fundacao,
-    laje,
-    paredes,
-    telhado,
-)
-from src.core.cliente import projetos
-from base.orcamentos.tela_orc import criar_projeto
+from src.core.orcamento import eletrica, fundacao, laje, paredes, telhado, contrapiso
 
-from custom.styles_utils import get_style_manager
+from src.core.cliente import projetos
+from src.core.orcamento.index_orcamento import criar_projeto
+
+from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories.module_repository import ModuleRepository
 
 gsm = get_style_manager()

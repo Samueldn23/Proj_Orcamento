@@ -1,16 +1,17 @@
-"""Módulo para cálculo de orçamento de fundação. fundacao.py"""
+"""Modulo para o orçamento da laje. laje.py"""
 
 import flet as ft
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+
+from src.navigation.router import navegar_orcamento
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
 
-def mostrar_fundacao(page, cliente):
-    """Função para mostrar a página de cálculo de fundação"""
+def mostrar_laje(page, cliente):
+    """Função para mostrar a página do orçamento da laje"""
     page.controls.clear()
-    page.add(ft.Text(f"orçamento da fundação para {cliente['nome']}", size=24))
+    page.add(ft.Text(f"orçamento da laje para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
@@ -19,10 +20,34 @@ def mostrar_fundacao(page, cliente):
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
-    switch = ft.Switch(label="cm para mm", on_change=lambda e: atualizar(), value=False)
+    switch = ft.Switch(
+        label="cm para mm",
+        on_change=lambda _: atualizar(),
+        value=False,
+    )
+    cg = ft.RadioGroup(
+        content=ft.Row(
+            controls=[
+                ft.Radio(
+                    value="cm",
+                    label="cm",
+                    label_position=ft.LabelPosition.LEFT,
+                    fill_color="white",
+                ),
+                ft.Radio(
+                    value="mm",
+                    label="mm",
+                    label_position=ft.LabelPosition.LEFT,
+                    fill_color="blue",
+                ),
+            ],
+        ),
+        value="cm",
+        on_change=lambda e: atualizar(),
+    )
 
     def atualizar():
-        if switch.value:
+        if cg.value == "mm":
             espessura_input.label = "Espessura (mm)"
         else:
             espessura_input.label = "Espessura (cm)"
@@ -47,13 +72,12 @@ def mostrar_fundacao(page, cliente):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(
-        text="Calcular", on_click=calcular, **gsm.button_style
-    )
-    voltar_button = gsm.create_button(
+    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
+
+    btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page, cliente),
-        icon=ft.Icons.ARROW_BACK,
+        icon=ft.Icons.ARROW_BACK_IOS_NEW,
+        on_click=lambda _: navegar_orcamento(page, cliente),
         hover_color=gsm.colors.VOLTAR,
         width=130,
     )
@@ -66,7 +90,7 @@ def mostrar_fundacao(page, cliente):
                     largura_input,
                     espessura_input,
                     valor_m3_input,
-                    switch,
+                    cg,
                 ],
                 alignment="center",
                 spacing=10,  # Espaçamento entre os botões
@@ -75,5 +99,9 @@ def mostrar_fundacao(page, cliente):
         ),
     )
 
-    page.add(calcular_button, resultado_text, voltar_button)
+    page.add(
+        calcular_button,
+        resultado_text,
+        btn_voltar,
+    )
     page.update()

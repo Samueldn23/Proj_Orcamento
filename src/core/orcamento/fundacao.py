@@ -1,17 +1,16 @@
-"""Modulo para o orçamento da laje. laje.py"""
+"""Módulo para cálculo de orçamento de fundação. fundacao.py"""
 
 import flet as ft
-
-import custom.button as clk
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_orcamento
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
 
-def mostrar_laje(page, cliente):
-    """Função para mostrar a página do orçamento da laje"""
+def mostrar_fundacao(page, cliente):
+    """Função para mostrar a página de cálculo de fundação"""
     page.controls.clear()
-    page.add(ft.Text(f"orçamento da laje para {cliente['nome']}", size=24))
+    page.add(ft.Text(f"orçamento da fundação para {cliente['nome']}", size=24))
 
     comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
     largura_input = ft.TextField(label="Largura (m)", **gsm.input_style)
@@ -20,34 +19,10 @@ def mostrar_laje(page, cliente):
 
     resultado_text = ft.Text("Custo Total: R$ 0.00", size=18)
 
-    switch = ft.Switch(
-        label="cm para mm",
-        on_change=lambda _: atualizar(),
-        value=False,
-    )
-    cg = ft.RadioGroup(
-        content=ft.Row(
-            controls=[
-                ft.Radio(
-                    value="cm",
-                    label="cm",
-                    label_position=ft.LabelPosition.LEFT,
-                    fill_color="white",
-                ),
-                ft.Radio(
-                    value="mm",
-                    label="mm",
-                    label_position=ft.LabelPosition.LEFT,
-                    fill_color="blue",
-                ),
-            ],
-        ),
-        value="cm",
-        on_change=lambda e: atualizar(),
-    )
+    switch = ft.Switch(label="cm para mm", on_change=lambda e: atualizar(), value=False)
 
     def atualizar():
-        if cg.value == "mm":
+        if switch.value:
             espessura_input.label = "Espessura (mm)"
         else:
             espessura_input.label = "Espessura (cm)"
@@ -72,12 +47,13 @@ def mostrar_laje(page, cliente):
             resultado_text.value = "Por favor, insira valores válidos."
             page.update()
 
-    calcular_button = ft.ElevatedButton(text="Calcular", on_click=calcular)
-
-    btn_voltar = gsm.create_button(
+    calcular_button = ft.ElevatedButton(
+        text="Calcular", on_click=calcular, **gsm.button_style
+    )
+    voltar_button = gsm.create_button(
         text="Voltar",
-        icon=ft.Icons.ARROW_BACK_IOS_NEW,
-        on_click=lambda _: clk.Voltar.orcamento(page, cliente),
+        on_click=lambda _: navegar_orcamento(page, cliente),
+        icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
         width=130,
     )
@@ -90,7 +66,7 @@ def mostrar_laje(page, cliente):
                     largura_input,
                     espessura_input,
                     valor_m3_input,
-                    cg,
+                    switch,
                 ],
                 alignment="center",
                 spacing=10,  # Espaçamento entre os botões
@@ -99,9 +75,5 @@ def mostrar_laje(page, cliente):
         ),
     )
 
-    page.add(
-        calcular_button,
-        resultado_text,
-        btn_voltar,
-    )
+    page.add(calcular_button, resultado_text, voltar_button)
     page.update()

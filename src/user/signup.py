@@ -5,7 +5,7 @@ from typing import Optional
 
 import flet as ft
 
-from custom.styles_utils import get_style_manager
+from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import UserRepository
 from src.user import login
 

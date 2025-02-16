@@ -1,7 +1,7 @@
 """Repositório de módulos"""
 
-from typing import Optional, List, Dict, Any
-from ..models.module import Module
+from typing import Optional, List, Dict, Any  # noqa: F401
+from ..models.module import Module  # noqa: F401
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
 

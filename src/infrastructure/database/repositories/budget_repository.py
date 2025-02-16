@@ -1,6 +1,6 @@
 """Repositório de orçamentos"""
 
-from typing import Optional  # , Dict, Any
+from typing import Optional, Dict, Any  # noqa: F401
 from ..models.budget import Budget
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase

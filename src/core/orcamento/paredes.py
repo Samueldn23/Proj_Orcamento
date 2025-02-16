@@ -5,8 +5,8 @@ from typing import Optional
 
 import flet as ft
 
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_orcamento
+from src.custom.styles_utils import get_style_manager
 
 # Configuração da localização
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -143,7 +143,7 @@ class ParedeCalculator:
                     self.resultado_text,
                     gsm.create_button(
                         text="Voltar",
-                        on_click=lambda _: Voltar.orcamento(self.page, self.cliente),
+                        on_click=lambda _: navegar_orcamento(self.page, self.cliente),
                         icon=ft.Icons.ARROW_BACK,
                         hover_color=gsm.colors.VOLTAR,
                         width=130,

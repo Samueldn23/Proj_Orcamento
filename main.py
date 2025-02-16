@@ -6,7 +6,7 @@ import sys
 
 import flet as ft
 
-from custom.styles_utils import get_style_manager
+from src.custom.styles_utils import get_style_manager
 from src.user.login import mostrar_tela
 
 # Adiciona o diretório raiz do projeto ao PYTHONPATH

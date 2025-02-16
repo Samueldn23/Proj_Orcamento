@@ -1,11 +1,11 @@
-"""Módulo para cálculo de orçamento de telhado. telhado.py"""
+"""Modulo para calcular o valor do contrapiso. contrapiso.py"""
 
 import locale
 
 import flet as ft
 
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_orcamento
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -13,13 +13,16 @@ gsm = get_style_manager()
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
-def mostrar_telhado(page, cliente):
-    """Função para mostrar a página de cálculo de telhado"""
+def mostrar_contrapiso(page, cliente):
+    """Função para mostrar o calculo do contrapiso."""
     page.controls.clear()
 
-    page.add(ft.Text(f"Orçamento de Telhado para {cliente['nome']}", size=24))
+    page.add(ft.Text(f"Orçamento de Contrapiso para {cliente['nome']}", size=24))
 
-    comprimento_input = ft.TextField(label="Comprimento (m)", **gsm.input_style)
+    comprimento_input = ft.TextField(
+        label="Comprimento (m)",
+        **gsm.input_style,
+    )
     largura_input = ft.TextField(
         label="Largura (m)",
         **gsm.input_style,
@@ -28,8 +31,8 @@ def mostrar_telhado(page, cliente):
         label="Valor do Metro (R$)",
         **gsm.input_style,
     )
-    valor_material_input = ft.TextField(
-        label="Valor do material (R$) ",
+    espessura_input = ft.TextField(
+        label="Espessura (Cm)",
         visible=False,
         **gsm.input_style,
     )
@@ -42,11 +45,13 @@ def mostrar_telhado(page, cliente):
             largura = float(largura_input.value)
             valor_m2 = float(valor_input.value)
 
-            if switch.value:  # switch para adicionar valor do material
-                valor_material = float(valor_material_input.value)
-                calculo_m3 = largura * comprimento  # cálculo de área (m²)
-                custo_total = calculo_m3 * valor_material
-            else:  # cálculo com valor por metro quadrado
+            if switch.value:  # switch para metros cúbicos
+                espessura = float(espessura_input.value)
+                calculo_m3 = (
+                    largura * comprimento * (espessura / 100)
+                )  # Convertendo espessura de cm para metros
+                custo_total = calculo_m3 * valor_m2
+            else:  # metros quadrados
                 calculo_m2 = largura * comprimento
                 custo_total = calculo_m2 * valor_m2
 
@@ -57,13 +62,13 @@ def mostrar_telhado(page, cliente):
             resultado_text.value = "Por favor, insira valores válidos."
         page.update()
 
-    # Função para atualizar visibilidade do campo de valor material
+    # Função para atualizar visibilidade do campo de espessura
     def atualizar():
-        valor_material_input.visible = switch.value
+        espessura_input.visible = switch.value
         page.update()
 
     switch = ft.Switch(
-        label="Adicionar valor do material", on_change=atualizar, value=False
+        label="Metro Quadrado para Metro Cúbico", on_change=atualizar, value=False
     )
 
     calcular_btn = ft.ElevatedButton(
@@ -74,7 +79,7 @@ def mostrar_telhado(page, cliente):
     )
     voltar_btn = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page, cliente),
+        on_click=lambda _: navegar_orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
         width=130,
@@ -87,16 +92,16 @@ def mostrar_telhado(page, cliente):
                     comprimento_input,
                     largura_input,
                     valor_input,
-                    valor_material_input,
+                    espessura_input,
                     switch,
                     calcular_btn,
                     resultado_text,
                     voltar_btn,
                 ],
                 alignment="center",
-                spacing=10,  # Espaçamento entre os controles
+                spacing=10,
             ),
             **gsm.container_style,
-        ),
+        )
     )
     page.update()

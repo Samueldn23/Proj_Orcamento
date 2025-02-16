@@ -5,7 +5,7 @@ import os
 import flet as ft
 from dotenv import load_dotenv
 
-from custom.styles_utils import get_style_manager
+from src.custom.styles_utils import get_style_manager
 from src.navigation.router import navigate_to_menu
 from src.infrastructure.database.repositories import UserRepository
 

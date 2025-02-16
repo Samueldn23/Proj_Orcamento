@@ -2,8 +2,8 @@
 
 import flet as ft
 
-from base.orcamentos import tela_orc
-from custom.styles_utils import get_style_manager
+from src.core.orcamento import index_orcamento
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -29,7 +29,8 @@ def projetos_cliente(page: ft.Page, cliente):
                     [
                         gsm.create_button(
                             text="Projeto",
-                            on_click=lambda _, cliente=cliente: tela_orc.criar_projeto(
+                            on_click=lambda _,
+                            cliente=cliente: index_orcamento.criar_projeto(
                                 page, cliente
                             ),
                             icon=ft.Icons.ADD,

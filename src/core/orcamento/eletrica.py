@@ -2,8 +2,8 @@
 
 import flet as ft
 
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_orcamento
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -41,7 +41,7 @@ def mostrar_eletrica(page, cliente):
 
     btn_voltar = gsm.create_button(
         text="Voltar",
-        on_click=lambda _: Voltar.orcamento(page, cliente),
+        on_click=lambda _: navegar_orcamento(page, cliente),
         icon=ft.Icons.ARROW_BACK,
         hover_color=gsm.colors.VOLTAR,
         width=130,

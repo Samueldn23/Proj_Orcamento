@@ -5,8 +5,8 @@ import flet as ft
 from src.infrastructure.database.repositories import user_repository, client_repository
 
 from src.core.cliente import atualizar, cadastrar, projetos
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_principal
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 user_repo = user_repository.UserRepository()
@@ -132,7 +132,7 @@ def tela_clientes(page):
                 ),
                 gsm.create_button(
                     text="",
-                    on_click=lambda e: Voltar.principal(page),
+                    on_click=lambda e: navegar_principal(page),
                     icon=ft.Icons.ARROW_BACK,
                     width=34,
                     hover_color=gsm.colors.VOLTAR,

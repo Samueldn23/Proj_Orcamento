@@ -5,8 +5,8 @@ from typing import Optional
 
 import flet as ft
 
-from custom.button import Voltar
-from custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_principal
+from src.custom.styles_utils import get_style_manager
 
 gsm = get_style_manager()
 
@@ -131,7 +131,7 @@ class Cadastro:
             gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _: Voltar.principal(self.page),
+                on_click=lambda _: navegar_principal(self.page),
                 hover_color=gsm.colors.VOLTAR,
                 width=130,
             ),
