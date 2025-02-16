@@ -140,9 +140,7 @@ class OrcamentoPage:
             self.voltar_button = gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _, cliente=self.cliente: projetos.projetos_cliente(
-                    self.page, cliente
-                ),
+                on_click=lambda _, cliente=self.cliente: criar_projeto(self.page, self.cliente),
                 hover_color=gsm.colors.VOLTAR,
                 width=130,
             )
