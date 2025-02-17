@@ -137,6 +137,8 @@ def tela_clientes(page):
                     width=34,
                     hover_color=gsm.colors.VOLTAR,
                 ),
+                ft.TextField(icon=ft.Icons.SEARCH,)
+
             ],
             spacing=20,
             alignment=ft.MainAxisAlignment.CENTER,
