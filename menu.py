@@ -75,7 +75,7 @@ class MenuPrincipalPage:
             navigate_to_login(self.page)
         else:
             # Se houve erro, mostra mensagem
-            self.page.show_snack_bar(
+            self.page.open(
                 ft.SnackBar(
                     content=ft.Text("Erro ao realizar logout!"), bgcolor=ft.colors.ERROR
                 )

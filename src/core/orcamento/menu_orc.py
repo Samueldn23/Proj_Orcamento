@@ -6,7 +6,6 @@ import flet as ft
 
 from src.core.orcamento import eletrica, fundacao, laje, paredes, telhado, contrapiso
 
-from src.core.cliente import projetos
 from src.core.orcamento.index_orcamento import criar_projeto
 
 from src.custom.styles_utils import get_style_manager
@@ -122,13 +121,6 @@ class OrcamentoPage:
                             "icon": "icons/fundacao.png",
                         }
                     )
-                self.menu_items.append(
-                    {
-                        "text": "Orçamento",
-                        "action": lambda _: criar_projeto(self.page, self.cliente),
-                        "icon": "icons/icon.png",
-                    }
-                )
 
             # Cria os botões do menu
             # self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
@@ -140,7 +132,9 @@ class OrcamentoPage:
             self.voltar_button = gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _, cliente=self.cliente: criar_projeto(self.page, self.cliente),
+                on_click=lambda _, cliente=self.cliente: criar_projeto(
+                    self.page, self.cliente
+                ),
                 hover_color=gsm.colors.VOLTAR,
                 width=130,
             )

@@ -1,31 +1,31 @@
 # Web Framework
-flet>=0.26.0              # Framework Flutter/Python para criar interfaces gráficas multiplataforma
-flet-core>=0.26.0         # Componentes principais do Flet
-flet-desktop>=0.26.0      # Suporte específico para aplicações desktop com Flet
+flet                    # Framework Flutter/Python para criar interfaces gráficas multiplataforma
+flet-core               # Componentes principais do Flet
+flet-desktop            # Suporte específico para aplicações desktop com Flet
 
 # Banco de Dados
-SQLAlchemy>=2.0.37        # ORM (Object Relational Mapper) para trabalhar com bancos de dados
-psycopg2>=2.9.10          # Driver PostgreSQL para Python
-supabase>=2.13.0          # Cliente Python para Supabase (Backend as a Service)
-postgrest>=0.19.3         # Cliente Python para PostgreSQL RESTful API
+SQLAlchemy              # ORM (Object Relational Mapper) para trabalhar com bancos de dados
+psycopg2                # Driver PostgreSQL para Python
+supabase                # Cliente Python para Supabase (Backend as a Service)
+postgrest               # Cliente Python para PostgreSQL RESTful API
 
 # Configuração e Cache
-python-dotenv>=1.0.1      # Carrega variáveis de ambiente de arquivos .env
-cachetools>=5.5.1         # Implementações de cache em memória (usado para otimizar consultas)
+python-dotenv           # Carrega variáveis de ambiente de arquivos .env
+cachetools              # Implementações de cache em memória (usado para otimizar consultas)
 
 # Utilitários
-pydantic>=2.10.6          # Validação de dados e gerenciamento de configurações usando type hints
-python-dateutil>=2.9.0    # Extensões úteis para manipulação de datas e horários
-typing-extensions>=4.12.2  # Recursos adicionais para type hints
-watchdog>=4.0.2           # Monitora mudanças em arquivos do sistema (útil para desenvolvimento)
+pydantic                # Validação de dados e gerenciamento de configurações usando type hints
+python-dateutil         # Extensões úteis para manipulação de datas e horários
+typing-extensions       # Recursos adicionais para type hints
+watchdog                # Monitora mudanças em arquivos do sistema (útil para desenvolvimento)
 
 # HTTP e Comunicação
-httpx>=0.28.1             # Cliente HTTP moderno e assíncrono
-websockets>=14.2          # Implementação do protocolo WebSocket
-requests>=2.32.3          # Biblioteca HTTP para fazer requisições web
+httpx                   # Cliente HTTP moderno e assíncrono
+websockets              # Implementação do protocolo WebSocket
+requests                # Biblioteca HTTP para fazer requisições web
 
 # Formatação e Tipos
-types-python-dateutil>=2.9.0.20241206  # Type hints para python-dateutil (auxilia no desenvolvimento)
+types-python-dateutil   # Type hints para python-dateutil (auxilia no desenvolvimento)
 
 # Opcional - para desenvolvimento
-ipython>=8.0.0           # Shell interativo melhorado para desenvolvimento
+ipython                 # Shell interativo melhorado para desenvolvimento

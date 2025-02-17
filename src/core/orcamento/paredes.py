@@ -109,6 +109,11 @@ class ParedeCalculator:
             self.area_text.value = ""
             self.page.update()
 
+    def salvar(self, e):
+        self.page.open(
+            ft.SnackBar(content=ft.Text("teste"), bgcolor=ft.Colors.TERTIARY_CONTAINER)
+        )
+
     def build(self):
         """Constrói a interface da página"""
         return ft.Container(
@@ -141,12 +146,27 @@ class ParedeCalculator:
                     ),
                     self.area_text,
                     self.resultado_text,
-                    gsm.create_button(
-                        text="Voltar",
-                        on_click=lambda _: navegar_orcamento(self.page, self.cliente),
-                        icon=ft.Icons.ARROW_BACK,
-                        hover_color=gsm.colors.VOLTAR,
-                        width=130,
+                    ft.Row(
+                        [
+                            gsm.create_button(
+                                text="Salvar",
+                                on_click=self.salvar,
+                                icon=ft.Icons.SAVE,
+                                hover_color=ft.Colors.GREEN,
+                                width=130,
+                            ),
+                            gsm.create_button(
+                                text="Voltar",
+                                on_click=lambda _: navegar_orcamento(
+                                    self.page, self.cliente
+                                ),
+                                icon=ft.Icons.ARROW_BACK,
+                                hover_color=gsm.colors.VOLTAR,
+                                width=130,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=10,
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

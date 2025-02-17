@@ -13,7 +13,7 @@ class ThemeColors:
     PRIMARY = ft.Colors.BLUE
     SECONDARY = ft.Colors.WHITE
     VOLTAR = ft.Colors.RED
-    SOMBRA_CTR = ft.Colors.BLUE_GREY_900
+    SOMBRA_CTR = ft.Colors.GREY_900
     CONTAINER = ft.Colors.BLACK87
     TEXTO = ft.Colors.WHITE
     IMPUT = ft.Colors.GREY_900
@@ -98,7 +98,7 @@ class StyleManager:
 
         def on_hover(e):
             if e.data == "true":
-                e.control.scale = 1.05
+                e.control.scale = 1.00
                 e.control.shadow = ft.BoxShadow(
                     spread_radius=1,
                     blur_radius=15,

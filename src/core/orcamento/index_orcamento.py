@@ -28,7 +28,6 @@ def criar_projeto(page: ft.Page, cliente):
     endereco_input = ft.TextField(label="Endereço do Projeto", **gsm.input_style)
     valor_input = ft.TextField(label="Valor (R$)", read_only=True, **gsm.input_style)
 
-
     def salvar_orcamento():
         """Função para salvar o orçamento no banco de dados."""
         descricao = descricao_input.value
@@ -48,7 +47,7 @@ def criar_projeto(page: ft.Page, cliente):
 
     btn_orcamento = gsm.create_button(
         text="Orçamento",
-        icon=ft.Icons.MONEY,
+        icon=ft.Icons.MONETIZATION_ON_OUTLINED,
         on_click=lambda _: menu_orc.mostrar_orcamento(page, cliente),
         width=130,
         hover_color=gsm.colors.PRIMARY,
@@ -56,14 +55,10 @@ def criar_projeto(page: ft.Page, cliente):
     btn_voltar = gsm.create_button(
         text="Voltar",
         icon=ft.Icons.ARROW_BACK,
-        on_click=lambda _: projetos.projetos_cliente(
-                    page, cliente
-                ),
+        on_click=lambda _: projetos.projetos_cliente(page, cliente),
         width=130,
         hover_color=gsm.colors.VOLTAR,
     )
 
-    page.add(
-        descricao_input, endereco_input, valor_input, btn_orcamento, btn_voltar
-    )
+    page.add(descricao_input, endereco_input, valor_input, btn_orcamento, btn_voltar)
     page.update()
