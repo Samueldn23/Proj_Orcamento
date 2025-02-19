@@ -12,6 +12,7 @@ postgrest               # Cliente Python para PostgreSQL RESTful API
 # Configuração e Cache
 python-dotenv           # Carrega variáveis de ambiente de arquivos .env
 cachetools              # Implementações de cache em memória (usado para otimizar consultas)
+pytz                    # Biblioteca para trabalhar com fusos horários
 
 # Utilitários
 pydantic                # Validação de dados e gerenciamento de configurações usando type hints

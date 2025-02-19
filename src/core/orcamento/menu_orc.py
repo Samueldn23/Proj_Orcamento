@@ -6,7 +6,7 @@ import flet as ft
 
 from src.core.orcamento import eletrica, fundacao, laje, paredes, telhado, contrapiso
 
-from src.core.orcamento.index_orcamento import criar_projeto
+from src.core.projeto.criar_projeto import criar_projeto
 
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories.module_repository import ModuleRepository

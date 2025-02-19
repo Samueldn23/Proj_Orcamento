@@ -2,9 +2,10 @@
 
 import flet as ft
 
+from src.core.projeto import listar_projetos
 from src.infrastructure.database.repositories import user_repository, client_repository
 
-from src.core.cliente import atualizar, cadastrar, projetos
+from src.core.cliente import atualizar, cadastrar
 from src.navigation.router import navegar_principal
 from src.custom.styles_utils import get_style_manager
 
@@ -51,14 +52,18 @@ def tela_clientes(page):
                         ft.Container(
                             content=ft.Text(cliente["nome"], size=16, width=largura),
                             on_click=lambda e,
-                            cliente=cliente: projetos.projetos_cliente(page, cliente),
+                            cliente=cliente: listar_projetos.projetos_cliente(
+                                page, cliente
+                            ),
                         ),
                         ft.Container(
                             content=ft.Text(
                                 cliente["telefone"], size=16, width=largura
                             ),
                             on_click=lambda e,
-                            cliente=cliente: projetos.projetos_cliente(page, cliente),
+                            cliente=cliente: listar_projetos.projetos_cliente(
+                                page, cliente
+                            ),
                         ),
                         ft.Row(
                             controls=[
@@ -137,8 +142,10 @@ def tela_clientes(page):
                     width=34,
                     hover_color=gsm.colors.VOLTAR,
                 ),
-                ft.TextField(icon=ft.Icons.SEARCH,)
-
+                ft.TextField(
+                    label="Pesquisar",
+                    icon=ft.Icons.SEARCH,
+                ),
             ],
             spacing=20,
             alignment=ft.MainAxisAlignment.CENTER,
