@@ -4,6 +4,7 @@ import flet as ft
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import ProjetoRepository
 from src.core.projeto import listar_projetos
+from src.core.orcamento.menu_orc import mostrar_orcamento
 
 gsm = get_style_manager()
 projeto_repo = ProjetoRepository()
@@ -135,6 +136,12 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 valor_input,
                 ft.Row(
                     [
+                        gsm.create_button(
+                            text="Orçamento",
+                            icon=ft.Icons.PLUS_ONE,
+                            on_click=lambda _: mostrar_orcamento(page, cliente),
+                            hover_color=ft.Colors.BLUE,                            
+                        ),
                         gsm.create_button(
                             text="Salvar",
                             icon=ft.Icons.SAVE,

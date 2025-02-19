@@ -111,7 +111,7 @@ class ParedeCalculator:
 
     def salvar(self, e):
         self.page.open(
-            ft.SnackBar(content=ft.Text("teste"), bgcolor=ft.Colors.TERTIARY_CONTAINER)
+            ft.SnackBar(content=ft.Text("teste"), bgcolor=ft.Colors.GREEN)
         )
 
     def build(self):
