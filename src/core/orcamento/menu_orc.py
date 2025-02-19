@@ -6,13 +6,14 @@ import flet as ft
 
 from src.core.orcamento import eletrica, fundacao, laje, paredes, telhado, contrapiso
 
-from src.core.projeto.criar_projeto import criar_projeto
+from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
 
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories.module_repository import ModuleRepository
 
 gsm = get_style_manager()
 module_repo = ModuleRepository()
+
 
 
 class MenuButton(ft.ElevatedButton):
@@ -39,9 +40,10 @@ class MenuButton(ft.ElevatedButton):
 class OrcamentoPage:
     """Classe para gerenciar a página de orçamentos"""
 
-    def __init__(self, page: ft.Page, _cliente):
+    def __init__(self, page: ft.Page, _cliente, projeto):
         self.page = page
         self.cliente = _cliente
+        self.projeto = projeto
         self.modulo = module_repo.get_modules(self.cliente["user_id"])
         self._init_buttons()
 
@@ -132,9 +134,7 @@ class OrcamentoPage:
             self.voltar_button = gsm.create_button(
                 text="Voltar",
                 icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _, cliente=self.cliente: criar_projeto(
-                    self.page, self.cliente
-                ),
+                on_click=lambda _: tela_detalhes_projeto(self.page, self.projeto, self.cliente),
                 hover_color=gsm.colors.VOLTAR,
                 width=130,
             )
@@ -176,9 +176,9 @@ class OrcamentoPage:
         )
 
 
-def mostrar_orcamento(page: ft.Page, _cliente):
+def mostrar_orcamento(page: ft.Page, _cliente, projeto):
     """Função helper para mostrar a página de orçamentos"""
     page.controls.clear()
-    orcamento_page = OrcamentoPage(page, _cliente)
+    orcamento_page = OrcamentoPage(page, _cliente, projeto)
     page.add(orcamento_page.build())
     page.update()

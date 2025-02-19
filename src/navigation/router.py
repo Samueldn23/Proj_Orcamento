@@ -17,11 +17,11 @@ def navigate_to_menu(page: ft.Page):
     mostrar_menu(page)
 
 
-def navegar_orcamento(page, cliente):
+def navegar_orcamento(page, cliente, projeto):
     """Navega para o menu orcamento"""
     from src.core.orcamento.menu_orc import mostrar_orcamento
 
-    mostrar_orcamento(page, cliente)
+    mostrar_orcamento(page, cliente, projeto)
 
 
 def navegar_principal(page):
