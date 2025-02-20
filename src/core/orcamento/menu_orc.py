@@ -60,7 +60,7 @@ class OrcamentoPage:
                         {
                             "text": "Parede",
                             "action": lambda _: paredes.mostrar_parede(
-                                self.page, self.cliente
+                                self.page, self.cliente, self.projeto
                             ),
                             "icon": "icons/parede.png",
                         }

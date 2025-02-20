@@ -1,9 +1,10 @@
 """Módulo para exibir e gerenciar detalhes de um projeto"""
 
 import flet as ft
+
+from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import ProjetoRepository
-from src.core.projeto import listar_projetos
 from src.navigation.router import navegar_orcamento
 
 gsm = get_style_manager()
@@ -13,44 +14,54 @@ projeto_repo = ProjetoRepository()
 def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     """Função para exibir detalhes do projeto e opções de edição/exclusão"""
 
-    def confirmar_exclusao():
-        """Função para confirmar exclusão do projeto"""
-        return ft.AlertDialog(
+    def confirmar_exclusao(e):
+        """Exibe diálogo de confirmação para exclusão"""
+
+        def excluir_confirmado(e):
+            dlg_confirmacao.open = False
+            page.update()
+            try:
+                if projeto_repo.delete(projeto.id):
+                    page.open(
+                        ft.SnackBar(
+                            content=ft.Text("Projeto excluído com sucesso!"),
+                            bgcolor=ft.Colors.GREEN,
+                        )
+                    )
+                    listar_projetos.projetos_cliente(page, cliente)
+                else:
+                    page.open(
+                        ft.SnackBar(
+                            content=ft.Text("Erro ao excluir projeto!"),
+                            bgcolor=ft.colors.ERROR,
+                        )
+                    )
+            except Exception as error:
+                page.open(
+                    ft.SnackBar(
+                        content=ft.Text(f"Erro ao excluir projeto: {str(error)}"),
+                        bgcolor=ft.colors.ERROR,
+                    )
+                )
+            page.update()
+
+        def cancelar_exclusao(e):
+            dlg_confirmacao.open = False
+            page.update()
+
+        dlg_confirmacao = ft.AlertDialog(
             modal=True,
             title=ft.Text("Confirmar Exclusão"),
-            content=ft.Text("Tem certeza que deseja excluir este projeto?"),
+            content=ft.Text(f"Deseja realmente excluir o projeto '{projeto.nome}'? \nEsta ação não poderá ser desfeita!"),
             actions=[
-                ft.TextButton("Cancelar", on_click=lambda _: dlg.open),
-                ft.TextButton("Excluir", on_click=excluir_projeto),
+                ft.TextButton("Sim", on_click=excluir_confirmado),
+                ft.TextButton("Não", on_click=cancelar_exclusao),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
 
-    def excluir_projeto(e):
-        """Função para excluir o projeto"""
-        try:
-            if projeto_repo.delete(projeto.id):
-                page.open(
-                    ft.SnackBar(
-                        content=ft.Text("Projeto excluído com sucesso!"),
-                        bgcolor=ft.colors.GREEN,
-                    )
-                )
-                listar_projetos.projetos_cliente(page, cliente)
-            else:
-                page.open(
-                    ft.SnackBar(
-                        content=ft.Text("Erro ao excluir projeto!"),
-                        bgcolor=ft.colors.ERROR,
-                    )
-                )
-        except Exception as error:
-            page.open(
-                ft.SnackBar(
-                    content=ft.Text(f"Erro ao excluir projeto: {str(error)}"),
-                    bgcolor=ft.colors.ERROR,
-                )
-            )
+        page.overlay.append(dlg_confirmacao)
+        dlg_confirmacao.open = True
         page.update()
 
     def salvar_edicao(e):
@@ -106,6 +117,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     nome_input = ft.TextField(
         label="Nome do Projeto", value=projeto.nome, **gsm.input_style
     )
+
     descricao_input = ft.TextField(
         label="Descrição",
         value=projeto.descricao,
@@ -120,9 +132,6 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         keyboard_type=ft.KeyboardType.NUMBER,
         **gsm.input_style,
     )
-
-    dlg = confirmar_exclusao()
-    page.dialog = dlg
 
     page.controls.clear()
     page.add(
@@ -139,8 +148,10 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                         gsm.create_button(
                             text="Orçamento",
                             icon=ft.Icons.PLUS_ONE,
-                            on_click=lambda _: navegar_orcamento(page, cliente, projeto),
-                            hover_color=ft.Colors.BLUE,                            
+                            on_click=lambda _: navegar_orcamento(
+                                page, cliente, projeto
+                            ),
+                            hover_color=ft.Colors.BLUE,
                         ),
                         gsm.create_button(
                             text="Salvar",
@@ -151,7 +162,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                         gsm.create_button(
                             text="Excluir",
                             icon=ft.Icons.DELETE,
-                            on_click=lambda _: dlg.open,
+                            on_click=confirmar_exclusao,
                             hover_color=ft.Colors.RED,
                         ),
                         gsm.create_button(
@@ -167,6 +178,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 ),
             ],
             scroll=ft.ScrollMode.AUTO,
-        )
+            alignment=ft.MainAxisAlignment.CENTER,
+        ),
     )
     page.update()
