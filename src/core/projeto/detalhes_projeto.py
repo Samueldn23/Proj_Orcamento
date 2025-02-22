@@ -1,15 +1,41 @@
 """Módulo para exibir e gerenciar detalhes de um projeto"""
 
+import locale
+
 import flet as ft
 
 from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
+from src.infrastructure.database.connections import Session
+from src.infrastructure.database.models.construction import Wall
 from src.infrastructure.database.repositories import ProjetoRepository
 from src.navigation.router import navegar_orcamento
 
+# Configuração da localização para formatação de moeda
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+
 gsm = get_style_manager()
 projeto_repo = ProjetoRepository()
+session = Session()
 
+def criar_card_construcao(construcao):
+    """Cria um card para exibir informações da construção"""
+    return ft.Card(
+        content=ft.Container(
+            content=ft.Column([
+                ft.ListTile(
+                    leading=ft.Icon(ft.icons.WALL),
+                    title=ft.Text(f"Parede {construcao.id}"),
+                    subtitle=ft.Text(f"Área: {construcao.area}m² | Tipo: {construcao.tipo_tijolo}")
+                ),
+                ft.Row([
+                    ft.Text(f"Tijolos: {construcao.quantidade_tijolos} un"),
+                    ft.Text(f"Custo: {locale.currency(float(construcao.custo_total), grouping=True)}")
+                ]),
+            ]),
+            padding=10
+        )
+    )
 
 def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     """Função para exibir detalhes do projeto e opções de edição/exclusão"""
@@ -133,6 +159,13 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         **gsm.input_style,
     )
 
+    # Adicionar lista de construções
+    construcoes = session.query(Wall).filter_by(orcamento_id=projeto.id).all()
+    lista_construcoes = ft.Column([
+        ft.Text("Construções", size=20, weight=ft.FontWeight.BOLD),
+        ft.Column([criar_card_construcao(c) for c in construcoes])
+    ]) if construcoes else ft.Text("Nenhuma construção cadastrada")
+
     page.controls.clear()
     page.add(
         ft.Column(
@@ -176,6 +209,8 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                 ),
+                ft.Divider(),
+                lista_construcoes,
             ],
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,

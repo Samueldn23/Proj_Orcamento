@@ -1,0 +1,23 @@
+{
+    "Tijolo 8 Furos (9x19x19)": {
+        "nome": "Tijolo 8 Furos",
+        "largura": 0.19,
+        "altura": 0.19,
+        "profundidade": 0.09,
+        "preco_unitario": 1.2
+    },
+    "Tijolo 6 Furos (9x14x24)": {
+        "nome": "Tijolo 6 Furos",
+        "largura": 0.24,
+        "altura": 0.14,
+        "profundidade": 0.09,
+        "preco_unitario": 0.9
+    },
+    "Bloco Cerâmico (14x19x29)": {
+        "nome": "Bloco Cerâmico",
+        "largura": 0.29,
+        "altura": 0.19,
+        "profundidade": 0.14,
+        "preco_unitario": 1.5
+    }
+}

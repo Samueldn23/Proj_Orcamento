@@ -1,9 +1,8 @@
 """Conexão com PostgreSQL"""
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, Session as SQLAlchemySession
 from ...config.settings import settings
-
 
 class PostgresConnection:
     """Gerenciador de conexão PostgreSQL"""
@@ -23,7 +22,7 @@ class PostgresConnection:
         self._engine = create_engine(settings.DATABASE_URL, echo=False)
         self._session_maker = sessionmaker(bind=self._engine)
 
-    def get_session(self) -> Session:
+    def get_session(self) -> SQLAlchemySession:
         """Retorna uma nova sessão"""
         return self._session_maker()
 
@@ -32,5 +31,5 @@ class PostgresConnection:
         """Retorna o engine SQLAlchemy"""
         return self._engine
 
-
 postgres = PostgresConnection()
+Session = postgres.get_session

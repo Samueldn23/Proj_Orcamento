@@ -1,4 +1,4 @@
-"""Módulo para cálculo de orçamento de paredes. base/orcamentos/parede.py"""
+"""Módulo para cálculo de orçamento de paredes"""
 
 import locale
 from typing import Optional
@@ -7,36 +7,15 @@ import flet as ft
 
 from src.navigation.router import navegar_orcamento
 from src.custom.styles_utils import get_style_manager
+from src.data.tijolos import carregar_tijolos, salvar_tijolos
+from src.infrastructure.database.connections import Session
+from src.infrastructure.database.models.construction import Wall
 
-# Adicione após as importações existentes
-
-TIPOS_TIJOLOS = {
-    "Tijolo 8 Furos (9x19x19)": {
-        "nome": "Tijolo 8 Furos",
-        "largura": 0.19,
-        "altura": 0.19,
-        "profundidade": 0.09,
-        "preco_unitario": 1.20  # Preço exemplo
-    },
-    "Tijolo 6 Furos (9x14x24)": {
-        "nome": "Tijolo 6 Furos",
-        "largura": 0.24,
-        "altura": 0.14,
-        "profundidade": 0.09,
-        "preco_unitario": 0.90
-    },
-    "Bloco Cerâmico (14x19x29)": {
-        "nome": "Bloco Cerâmico",
-        "largura": 0.29,
-        "altura": 0.19,
-        "profundidade": 0.14,
-        "preco_unitario": 1.50
-    }
-}
-
-# Configuração da localização
+# Configurações
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 gsm = get_style_manager()
+TIPOS_TIJOLOS = carregar_tijolos()
+session = Session()
 
 
 class ParedeCalculator:
@@ -129,7 +108,7 @@ class ParedeCalculator:
         valor_m2 = float(self.valor_m2_input.value)
 
         area = altura * comprimento
-        custo_total = area * valor_m2
+        mao_obra = area * valor_m2
 
         # Cálculo da quantidade de tijolos
         tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
@@ -137,19 +116,24 @@ class ParedeCalculator:
         tijolos_por_m2 = 1 / area_tijolo
         quantidade_tijolos = int(area * tijolos_por_m2)
         
-        return area, custo_total, quantidade_tijolos
+        return area, mao_obra, quantidade_tijolos
 
-    def _update_resultado(self, area: float, custo_total: float, qtd_tijolos: int):
+    def _update_resultado(self, area: float, mao_obra: float, qtd_tijolos: int):
         """Atualiza o texto de resultado"""
         tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
+        preco_unitario = tijolo_selecionado["preco_unitario"]
+        custo_tijolos = qtd_tijolos * preco_unitario
+        custo_total = mao_obra + custo_tijolos
+
         self.area_text.value = f"Área total: {area:.2f} m²"
         self.qtd_tijolos_text.value = (
-            f"Quantidade de tijolos necessários: {qtd_tijolos} unidades\n"
+            f"Quantidade de tijolos: {qtd_tijolos} unidades\n"
             f"Custo estimado dos tijolos: "
-            f"{locale.currency(qtd_tijolos * tijolo_selecionado['preco_unitario'], grouping=True)}"
+            f"{locale.currency(custo_tijolos, grouping=True)}\n"
+            f"Custo mão de obra: {locale.currency(mao_obra, grouping=True)}"
         )
         self.resultado_text.value = (
-            f"Custo Total (mão de obra): {locale.currency(custo_total, grouping=True)}"
+            f"Custo Total estimado: {locale.currency(custo_total, grouping=True)}"
         )
         self.page.update()
 
@@ -163,67 +147,91 @@ class ParedeCalculator:
             return
 
         try:
-            area, custo_total, quantidade_tijolos = self._calcular_orcamento()
-            self._update_resultado(area, custo_total, quantidade_tijolos)
+            area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
+            self._update_resultado(area, mao_obra, quantidade_tijolos)
         except ValueError as e:
             self.resultado_text.value = f"Erro ao calcular: {str(e)}"
             self.area_text.value = ""
             self.page.update()
 
     def salvar(self, e):
-        self.page.open(
-            ft.SnackBar(content=ft.Text("teste"), bgcolor=ft.Colors.GREEN)
-        )
+        #try:
+            # Validar e calcular
+            valid, message = self._validate_inputs()
+            if not valid:
+                self.page.open(
+                    ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.ERROR)
+                )
+                return
+
+            area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
+            tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
+            custo_tijolos = quantidade_tijolos * tijolo_selecionado["preco_unitario"]
+            custo_total = mao_obra + custo_tijolos
+
+            # Criar nova parede no banco
+            nova_parede = Wall(
+                orcamento_id=self.projeto.id,
+                altura=float(self.altura_input.value),
+                comprimento=float(self.comprimento_input.value),
+                area=area,
+                valor_m2=float(self.valor_m2_input.value),
+                tipo_tijolo=self.tipo_tijolo_dropdown.value,
+                quantidade_tijolos=quantidade_tijolos,
+                custo_tijolos=custo_tijolos,
+                custo_mao_obra=mao_obra,
+                custo_total=custo_total
+            )
+
+            session.add(nova_parede)
+            session.commit()
+
+            # Navegar para detalhes do projeto
+            navegar_orcamento(self.page, self.cliente, self.projeto)
+            
+        #except Exception as error:
+        #    self.page.open(
+        #        ft.SnackBar(
+        #            content=ft.Text(f"Erro ao salvar: {str(error)}"),
+        #            bgcolor=ft.colors.ERROR
+        #        )
+        #    )
 
     def _abrir_dialog_preco(self, e):
-        """Abre um diálogo para editar o preço do tijolo"""
-        tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
-        
-        preco_input = ft.TextField(
-            label="Novo preço unitário",
-            value=str(tijolo_selecionado["preco_unitario"]),
-            prefix_icon=ft.Icons.ATTACH_MONEY,
-            keyboard_type=ft.KeyboardType.NUMBER,
-            **gsm.input_style
-        )
-
-        def salvar_preco(e):
-            try:
-                novo_preco = float(preco_input.value)
-                if novo_preco <= 0:
-                    raise ValueError("Preço deve ser maior que zero")
-                    
-                TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]["preco_unitario"] = novo_preco
-                dlg.open = False
-                self.page.update()
-                
-                self.page.show_snack_bar(
-                    ft.SnackBar(
-                        content=ft.Text("Preço atualizado com sucesso!"),
-                        bgcolor=ft.colors.GREEN
-                    )
-                )
-            except ValueError:
-                self.page.show_snack_bar(
-                    ft.SnackBar(
-                        content=ft.Text("Por favor, insira um valor válido!"),
-                        bgcolor=ft.colors.RED
-                    )
-                )
-
-        dlg = ft.AlertDialog(
-            title=ft.Text(f"Editar preço - {tijolo_selecionado['nome']}"),
-            content=preco_input,
+        tijolo_selecionado = self.tipo_tijolo_dropdown.value
+        dlg_preco = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Editar Preço"),
+            content=ft.TextField(
+                label="Novo preço",
+                value=str(TIPOS_TIJOLOS[tijolo_selecionado]["preco_unitario"]),
+                keyboard_type=ft.KeyboardType.NUMBER,
+            ),
             actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: setattr(dlg, 'open', False)),
-                ft.TextButton("Salvar", on_click=salvar_preco),
+                ft.TextButton("Cancelar", on_click=lambda e: self.page.close(dlg_preco)),
+                ft.TextButton("Confirmar", on_click=lambda e: self._confirmar_preco(e, dlg_preco)),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
+        
+        self.page.open(dlg_preco)
 
-        self.page.dialog = dlg
-        dlg.open = True
-        self.page.update()
+    def _confirmar_preco(self, e, dlg):
+        try:
+            novo_preco = float(dlg.content.value)
+            tijolo_selecionado = self.tipo_tijolo_dropdown.value
+            TIPOS_TIJOLOS[tijolo_selecionado]["preco_unitario"] = novo_preco
+            salvar_tijolos(TIPOS_TIJOLOS)  # Salva as alterações no arquivo
+            self.page.close(dlg)
+            
+            # Recalcula os valores se houver dados nos campos
+            if self.altura_input.value and self.comprimento_input.value and self.valor_m2_input.value:
+                self.calcular(None)
+                
+        except ValueError:
+            self.page.open(
+                ft.SnackBar(content=ft.Text("Por favor, insira um valor válido"))
+            )
 
     def build(self):
         """Constrói a interface da página"""

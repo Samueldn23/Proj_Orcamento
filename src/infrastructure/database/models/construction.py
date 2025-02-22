@@ -1,6 +1,6 @@
 """Models de construção"""
 
-from sqlalchemy import Column, BigInteger, Numeric, ForeignKey
+from sqlalchemy import Column, BigInteger, Numeric, ForeignKey, String
 from sqlalchemy.orm import relationship
 from .base import Base
 
@@ -103,7 +103,12 @@ class Wall(Base):
     )
     altura = Column(Numeric(10, 2), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
+    area = Column(Numeric(10, 2), nullable=False)
     valor_m2 = Column(Numeric(10, 2), nullable=False)
+    tipo_tijolo = Column(String(100), nullable=False)
+    quantidade_tijolos = Column(BigInteger, nullable=False)
+    custo_tijolos = Column(Numeric(10, 2), nullable=False)
+    custo_mao_obra = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
     orcamento = relationship("Budget", back_populates="paredes")

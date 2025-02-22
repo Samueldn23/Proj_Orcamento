@@ -317,7 +317,7 @@ class StyleManager:
     def input_style(self) -> Dict[str, Any]:
         """Estilo padrão aprimorado para inputs"""
         return {
-            "width": 350,  # Largura ligeiramente maior para destacar o campo
+            #"width": 350,  # Largura ligeiramente maior para destacar o campo
             "bgcolor": ft.Colors.with_opacity(
                 0.9, self.colors.IMPUT
             ),  # Fundo mais suave
