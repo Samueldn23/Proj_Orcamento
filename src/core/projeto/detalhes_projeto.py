@@ -18,24 +18,34 @@ gsm = get_style_manager()
 projeto_repo = ProjetoRepository()
 session = Session()
 
+
 def criar_card_construcao(construcao):
     """Cria um card para exibir informações da construção"""
     return ft.Card(
         content=ft.Container(
-            content=ft.Column([
-                ft.ListTile(
-                    leading=ft.Icon(ft.icons.WALL),
-                    title=ft.Text(f"Parede {construcao.id}"),
-                    subtitle=ft.Text(f"Área: {construcao.area}m² | Tipo: {construcao.tipo_tijolo}")
-                ),
-                ft.Row([
-                    ft.Text(f"Tijolos: {construcao.quantidade_tijolos} un"),
-                    ft.Text(f"Custo: {locale.currency(float(construcao.custo_total), grouping=True)}")
-                ]),
-            ]),
-            padding=10
+            content=ft.Column(
+                [
+                    ft.ListTile(
+                        leading=ft.Icon(ft.icons.WALL),
+                        title=ft.Text(f"Parede {construcao.id}"),
+                        subtitle=ft.Text(
+                            f"Área: {construcao.area}m² | Tipo: {construcao.tipo_tijolo}"
+                        ),
+                    ),
+                    ft.Row(
+                        [
+                            ft.Text(f"Tijolos: {construcao.quantidade_tijolos} un"),
+                            ft.Text(
+                                f"Custo: {locale.currency(float(construcao.custo_total), grouping=True)}"
+                            ),
+                        ]
+                    ),
+                ]
+            ),
+            padding=10,
         )
     )
+
 
 def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     """Função para exibir detalhes do projeto e opções de edição/exclusão"""
@@ -78,7 +88,9 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         dlg_confirmacao = ft.AlertDialog(
             modal=True,
             title=ft.Text("Confirmar Exclusão"),
-            content=ft.Text(f"Deseja realmente excluir o projeto '{projeto.nome}'? \nEsta ação não poderá ser desfeita!"),
+            content=ft.Text(
+                f"Deseja realmente excluir o projeto '{projeto.nome}'? \nEsta ação não poderá ser desfeita!"
+            ),
             actions=[
                 ft.TextButton("Sim", on_click=excluir_confirmado),
                 ft.TextButton("Não", on_click=cancelar_exclusao),
@@ -148,8 +160,8 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         label="Descrição",
         value=projeto.descricao,
         multiline=True,
-        min_lines=3,
-        max_lines=5,
+        # min_lines=3,
+        # max_lines=5,
         **gsm.input_style,
     )
     valor_input = ft.TextField(
@@ -160,11 +172,17 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     )
 
     # Adicionar lista de construções
-    construcoes = session.query(Wall).filter_by(orcamento_id=projeto.id).all()
-    lista_construcoes = ft.Column([
-        ft.Text("Construções", size=20, weight=ft.FontWeight.BOLD),
-        ft.Column([criar_card_construcao(c) for c in construcoes])
-    ]) if construcoes else ft.Text("Nenhuma construção cadastrada")
+    construcoes = session.query(Wall).filter_by(projeto_id=projeto.id).all()
+    lista_construcoes = (
+        ft.Column(
+            [
+                ft.Text("Construções", size=20, weight=ft.FontWeight.BOLD),
+                ft.Column([criar_card_construcao(c) for c in construcoes]),
+            ]
+        )
+        if construcoes
+        else ft.Text("Nenhuma construção cadastrada")
+    )
 
     page.controls.clear()
     page.add(
@@ -179,7 +197,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 ft.Row(
                     [
                         gsm.create_button(
-                            text="Orçamento",
+                            text="Construir",
                             icon=ft.Icons.PLUS_ONE,
                             on_click=lambda _: navegar_orcamento(
                                 page, cliente, projeto

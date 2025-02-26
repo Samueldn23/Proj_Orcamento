@@ -65,6 +65,7 @@ class ProjetoRepository:
         nome: str = None,
         descricao: str = None,
         custo_estimado: float = None,
+        valor_total: float = None,  # Adicionando valor_total
     ) -> Optional[Project]:
         """Atualiza um projeto existente"""
         try:
@@ -77,11 +78,27 @@ class ProjetoRepository:
                         projeto.descricao = descricao
                     if custo_estimado is not None:
                         projeto.custo_estimado = custo_estimado
+                    if valor_total is not None:
+                        projeto.valor_total = valor_total
                     session.commit()
                 return projeto
         except Exception as e:
             print(f"Erro ao atualizar projeto: {e}")
             return None
+
+    def atualizar_valor_total(self, projeto_id: int, valor_total: float) -> bool:
+        """Atualiza o valor total do projeto"""
+        try:
+            with self.db.get_session() as session:
+                projeto = session.query(Project).filter_by(id=projeto_id).first()
+                if projeto:
+                    projeto.valor_total = valor_total
+                    session.commit()
+                    return True
+                return False
+        except Exception as e:
+            print(f"Erro ao atualizar valor total: {e}")
+            return False
 
     def delete(self, projeto_id: int) -> bool:
         """Remove um projeto"""

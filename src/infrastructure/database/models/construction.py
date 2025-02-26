@@ -98,9 +98,7 @@ class Wall(Base):
     __tablename__ = "paredes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id"), nullable=False)
     altura = Column(Numeric(10, 2), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     area = Column(Numeric(10, 2), nullable=False)

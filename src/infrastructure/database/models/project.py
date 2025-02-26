@@ -31,7 +31,7 @@ class Project(Base):
     )
     valor_total = Column(Numeric(10, 2), nullable=True)
 
-    # Relacionamentos
+    # Relacionamentos - remover qualquer referência a orçamentos
     cliente = relationship("Client", back_populates="projetos")
     fundacoes = relationship("Foundation", back_populates="projeto")
     contrapisos = relationship("Floor", back_populates="projeto")
