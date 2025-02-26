@@ -24,6 +24,7 @@ class Budget(Base):
     telhados = relationship("Roof", back_populates="orcamento")
     eletricas = relationship("Electrical", back_populates="orcamento")
     paredes = relationship("Wall", back_populates="orcamento")
+    projetos = relationship("Project", back_populates="budget")
 
     def __repr__(self):
         return f"Orcamento(id={self.id}, cliente_id={self.cliente_id})"

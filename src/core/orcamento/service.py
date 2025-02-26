@@ -4,7 +4,7 @@ from typing import Dict
 from decimal import Decimal
 
 
-class OrcamentoService:
+class ProjetoService:  # Renomeado de OrcamentoService
     def __init__(self, repository):
         self.repository = repository
 

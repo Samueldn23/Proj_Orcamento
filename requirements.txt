@@ -5,9 +5,10 @@ flet-desktop            # Suporte específico para aplicações desktop com Flet
 
 # Banco de Dados
 SQLAlchemy              # ORM (Object Relational Mapper) para trabalhar com bancos de dados
-psycopg2                # Driver PostgreSQL para Python
+psycopg2-binary         # Driver PostgreSQL para Python (versão pré-compilada)
 supabase                # Cliente Python para Supabase (Backend as a Service)
 postgrest               # Cliente Python para PostgreSQL RESTful API
+alembic                 # Gerenciador de migrações para bancos de dados
 
 # Configuração e Cache
 python-dotenv           # Carrega variáveis de ambiente de arquivos .env

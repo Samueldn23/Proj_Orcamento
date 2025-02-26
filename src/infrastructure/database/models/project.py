@@ -8,6 +8,7 @@ from sqlalchemy import (
     Numeric,
     ForeignKey,
     TIMESTAMP,
+    DateTime,
     func,
 )
 from sqlalchemy.orm import relationship
@@ -28,9 +29,16 @@ class Project(Base):
     atualizado_em = Column(
         TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=True
     )
+    valor_total = Column(Numeric(10, 2), nullable=True)
 
     # Relacionamentos
     cliente = relationship("Client", back_populates="projetos")
+    fundacoes = relationship("Foundation", back_populates="projeto")
+    contrapisos = relationship("Floor", back_populates="projeto")
+    lajes = relationship("Slab", back_populates="projeto")
+    telhados = relationship("Roof", back_populates="projeto")
+    eletricas = relationship("Electrical", back_populates="projeto")
+    paredes = relationship("Wall", back_populates="projeto")
 
     def __repr__(self):
         return f"Project(id={self.id}, nome={self.nome})"

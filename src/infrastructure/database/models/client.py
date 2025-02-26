@@ -26,7 +26,6 @@ class Client(Base):
 
     # Relacionamentos
     usuario = relationship("User", back_populates="clientes")
-    orcamentos = relationship("Budget", back_populates="cliente")
     projetos = relationship("Project", back_populates="cliente")
 
     def __repr__(self):

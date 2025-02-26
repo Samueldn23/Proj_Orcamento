@@ -11,8 +11,8 @@ class Foundation(Base):
     __tablename__ = "fundacoes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
@@ -20,7 +20,7 @@ class Foundation(Base):
     valor_m3 = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="fundacoes")
+    projeto = relationship("Project", back_populates="fundacoes")
 
 
 class Floor(Base):
@@ -29,8 +29,8 @@ class Floor(Base):
     __tablename__ = "contrapisos"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
@@ -38,7 +38,7 @@ class Floor(Base):
     valor_metro = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="contrapisos")
+    projeto = relationship("Project", back_populates="contrapisos")
 
 
 class Slab(Base):
@@ -47,8 +47,8 @@ class Slab(Base):
     __tablename__ = "lajes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
@@ -56,7 +56,7 @@ class Slab(Base):
     valor_m3 = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="lajes")
+    projeto = relationship("Project", back_populates="lajes")
 
 
 class Roof(Base):
@@ -65,15 +65,15 @@ class Roof(Base):
     __tablename__ = "telhados"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
     valor_metro = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="telhados")
+    projeto = relationship("Project", back_populates="telhados")
 
 
 class Electrical(Base):
@@ -82,14 +82,14 @@ class Electrical(Base):
     __tablename__ = "eletricas"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     pontos_eletricos = Column(BigInteger, nullable=False)
     valor_por_ponto = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="eletricas")
+    projeto = relationship("Project", back_populates="eletricas")
 
 
 class Wall(Base):
@@ -98,8 +98,8 @@ class Wall(Base):
     __tablename__ = "paredes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    orcamento_id = Column(
-        BigInteger, ForeignKey("orcamentos.id", ondelete="CASCADE"), nullable=False
+    projeto_id = Column(
+        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
     )
     altura = Column(Numeric(10, 2), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
@@ -111,4 +111,4 @@ class Wall(Base):
     custo_mao_obra = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    orcamento = relationship("Budget", back_populates="paredes")
+    projeto = relationship("Project", back_populates="paredes")
