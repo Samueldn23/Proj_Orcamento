@@ -8,15 +8,15 @@ import flet as ft
 
 @dataclass
 class ThemeColors:
-    """Define as cores do tema da aplicação"""
+    """Define as cores do tema da aplicação usando uma paleta mais moderna"""
 
-    PRIMARY = ft.Colors.BLUE
-    SECONDARY = ft.Colors.WHITE
-    VOLTAR = ft.Colors.RED
-    SOMBRA_CTR = ft.Colors.GREY_900
-    CONTAINER = ft.Colors.BLACK87
-    TEXTO = ft.Colors.WHITE
-    IMPUT = ft.Colors.GREY_900
+    PRIMARY = "#2196F3"  # Azul mais vibrante
+    SECONDARY = "#FFFFFF"
+    VOLTAR = "#F44336"  # Vermelho mais suave
+    SOMBRA_CTR = "#1A1A1A"
+    CONTAINER = "#212121"  # Cinza escuro mais suave
+    TEXTO = "#FFFFFF"
+    IMPUT = "#424242"  # Cinza mais claro para inputs
 
 
 class StyleManager:
@@ -315,21 +315,19 @@ class StyleManager:
 
     @property
     def input_style(self) -> Dict[str, Any]:
-        """Estilo padrão aprimorado para inputs"""
+        """Estilo modernizado para inputs"""
         return {
-            #"width": 350,  # Largura ligeiramente maior para destacar o campo
-            "bgcolor": ft.Colors.with_opacity(
-                0.9, self.colors.IMPUT
-            ),  # Fundo mais suave
-            "border_radius": 12,  # Cantos mais arredondados para suavidade
-            "text_size": 16,  # Tamanho de texto agradável para leitura
-            "border": ft.InputBorder.OUTLINE,  # Borda inferior apenas
-            "border_color": ft.Colors.with_opacity(
-                0.5, self.colors.PRIMARY
-            ),  # Cor da borda ao redor
-            "focused_border_color": self.colors.SECONDARY,  # Realce da borda ao focar
-            "content_padding": 12,  # Espaçamento interno para uma aparência mais espaçosa
-            "color": self.colors.TEXTO,  # Cor do texto padrão
+            "bgcolor": ft.Colors.with_opacity(0.95, self.colors.IMPUT),
+            "border_radius": 8,
+            "text_size": 16,
+            "border": ft.InputBorder.UNDERLINE,
+            "border_width": 2,
+            "border_color": ft.Colors.with_opacity(0.3, self.colors.PRIMARY),
+            "focused_border_color": self.colors.PRIMARY,
+            "content_padding": 15,
+            "color": self.colors.TEXTO,
+            # "cursor_color": self.colors.PRIMARY,
+            # "selection_color": ft.Colors.with_opacity(0.2, self.colors.PRIMARY),
         }
 
     @property
@@ -344,39 +342,42 @@ class StyleManager:
 
     @property
     def container_style(self) -> Dict[str, Any]:
-        """Estilo padrão aprimorado para containers"""
+        """Estilo modernizado para containers"""
         return {
-            "bgcolor": ft.Colors.with_opacity(
-                0.20, self.colors.CONTAINER
-            ),  # Fundo com leve transparência
-            "margin": 20,  # Margem maior para melhor separação visual
-            "padding": 25,  # Espaçamento interno mais confortável
-            "alignment": ft.alignment.center,  # Centralização consistente
-            "width": 400,  # Largura mais expressiva para destacar o container
-            "border_radius": 20,  # Cantos mais arredondados para um visual elegante
+            "bgcolor": ft.Colors.with_opacity(0.15, self.colors.CONTAINER),
+            "margin": ft.margin.only(bottom=15),
+            "padding": ft.padding.all(20),
+            "alignment": ft.alignment.center,
+            "width": 450,  # Container mais largo
+            "border_radius": 15,
             "border": ft.Border(
                 bottom=ft.BorderSide(
-                    1, ft.Colors.with_opacity(0.3, self.colors.VOLTAR)
-                ),  # Borda leve e discreta
-                # right=ft.BorderSide(1, ft.Colors.with_opacity(0.3, self.colors.VOLTAR)),
+                    2, ft.Colors.with_opacity(0.2, self.colors.PRIMARY)
+                ),
             ),
             "shadow": ft.BoxShadow(
-                spread_radius=3,  # Ampliação sutil do alcance da sombra
-                blur_radius=15,  # Redução do desfoque para uma sombra mais limpa
-                color=ft.Colors.with_opacity(
-                    0.25, self.colors.TEXTO
-                ),  # Sombra com cor mais evidente
-                offset=ft.Offset(
-                    0, 5
-                ),  # Deslocamento da sombra para um efeito de elevação
-                blur_style=ft.ShadowBlurStyle.OUTER,  # Sombra externa mais suave
+                spread_radius=1,
+                blur_radius=10,
+                color=ft.Colors.with_opacity(0.2, self.colors.PRIMARY),
+                offset=ft.Offset(0, 4),
+                blur_style=ft.ShadowBlurStyle.OUTER,
             ),
-            "animate": ft.animation.Animation(
-                400, ft.AnimationCurve.EASE_IN_OUT
-            ),  # Animação suave para alterações
-            "on_hover": self.create_container_hover_effect(
-                self.colors.SOMBRA_CTR
-            ),  # Efeito de hover personalizado
+            "animate": ft.animation.Animation(300, ft.AnimationCurve.EASE_OUT),
+        }
+
+    @property
+    def dropdown_style(self) -> Dict[str, Any]:
+        """Estilo específico para dropdowns"""
+        return {
+            "bgcolor": ft.Colors.with_opacity(0.95, self.colors.IMPUT),
+            "border_radius": 8,
+            "text_size": 16,
+            "border": ft.InputBorder.UNDERLINE,
+            "border_width": 2,
+            "border_color": ft.Colors.with_opacity(0.3, self.colors.PRIMARY),
+            "focused_border_color": self.colors.PRIMARY,
+            "content_padding": 15,
+            "color": self.colors.TEXTO,
         }
 
 

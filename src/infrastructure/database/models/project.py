@@ -8,7 +8,6 @@ from sqlalchemy import (
     Numeric,
     ForeignKey,
     TIMESTAMP,
-    DateTime,
     func,
 )
 from sqlalchemy.orm import relationship

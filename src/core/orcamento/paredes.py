@@ -56,15 +56,13 @@ class ParedeCalculator:
 
         self.tipo_tijolo_dropdown = ft.Dropdown(
             label="Tipo de Tijolo",
-            prefix_icon=ft.Icons.GRID_VIEW,
-            options=[
-                ft.dropdown.Option(key=tipo) for tipo in TIPOS_TIJOLOS.keys()
-            ],
+            leading_icon=ft.Icons.GRID_VIEW,
+            options=[ft.dropdown.Option(key=tipo) for tipo in TIPOS_TIJOLOS.keys()],
             value=list(TIPOS_TIJOLOS.keys())[0],  # Seleciona o primeiro por padrão
             expand=True,  # Adicione esta linha
             **gsm.input_style,
         )
-        
+
         self.edit_preco_button = ft.IconButton(
             icon=ft.Icons.EDIT,
             tooltip="Editar preço do tijolo",
@@ -115,7 +113,7 @@ class ParedeCalculator:
         area_tijolo = tijolo_selecionado["largura"] * tijolo_selecionado["altura"]
         tijolos_por_m2 = 1 / area_tijolo
         quantidade_tijolos = int(area * tijolos_por_m2)
-        
+
         return area, mao_obra, quantidade_tijolos
 
     def _update_resultado(self, area: float, mao_obra: float, qtd_tijolos: int):
@@ -141,61 +139,73 @@ class ParedeCalculator:
         """Manipula o evento de cálculo"""
         valid, message = self._validate_inputs()
         if not valid:
-            self.resultado_text.value = message
+            self.page.open(
+                ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
+            )
+            self.resultado_text.value = ""
             self.area_text.value = ""
+            self.qtd_tijolos_text.value = ""
             self.page.update()
             return
 
         try:
             area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
             self._update_resultado(area, mao_obra, quantidade_tijolos)
+
+            # Força atualização da UI
+            self.page.update()
+
         except ValueError as e:
-            self.resultado_text.value = f"Erro ao calcular: {str(e)}"
-            self.area_text.value = ""
+            self.page.open(
+                ft.SnackBar(
+                    content=ft.Text(f"Erro ao calcular: {str(e)}"),
+                    bgcolor=ft.Colors.ERROR,
+                )
+            )
             self.page.update()
 
     def salvar(self, e):
-        #try:
-            # Validar e calcular
-            valid, message = self._validate_inputs()
-            if not valid:
-                self.page.open(
-                    ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.ERROR)
-                )
-                return
-
-            area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
-            tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
-            custo_tijolos = quantidade_tijolos * tijolo_selecionado["preco_unitario"]
-            custo_total = mao_obra + custo_tijolos
-
-            # Criar nova parede no banco
-            nova_parede = Wall(
-                orcamento_id=self.projeto.id,
-                altura=float(self.altura_input.value),
-                comprimento=float(self.comprimento_input.value),
-                area=area,
-                valor_m2=float(self.valor_m2_input.value),
-                tipo_tijolo=self.tipo_tijolo_dropdown.value,
-                quantidade_tijolos=quantidade_tijolos,
-                custo_tijolos=custo_tijolos,
-                custo_mao_obra=mao_obra,
-                custo_total=custo_total
+        # try:
+        # Validar e calcular
+        valid, message = self._validate_inputs()
+        if not valid:
+            self.page.open(
+                ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
             )
+            return
 
-            session.add(nova_parede)
-            session.commit()
+        area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
+        tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
+        custo_tijolos = quantidade_tijolos * tijolo_selecionado["preco_unitario"]
+        custo_total = mao_obra + custo_tijolos
 
-            # Navegar para detalhes do projeto
-            navegar_orcamento(self.page, self.cliente, self.projeto)
-            
-        #except Exception as error:
-        #    self.page.open(
-        #        ft.SnackBar(
-        #            content=ft.Text(f"Erro ao salvar: {str(error)}"),
-        #            bgcolor=ft.colors.ERROR
-        #        )
-        #    )
+        # Criar nova parede no banco
+        nova_parede = Wall(
+            orcamento_id=self.projeto.id,
+            altura=float(self.altura_input.value),
+            comprimento=float(self.comprimento_input.value),
+            area=area,
+            valor_m2=float(self.valor_m2_input.value),
+            tipo_tijolo=self.tipo_tijolo_dropdown.value,
+            quantidade_tijolos=quantidade_tijolos,
+            custo_tijolos=custo_tijolos,
+            custo_mao_obra=mao_obra,
+            custo_total=custo_total,
+        )
+
+        session.add(nova_parede)
+        session.commit()
+
+        # Navegar para detalhes do projeto
+        navegar_orcamento(self.page, self.cliente, self.projeto)
+
+    # except Exception as error:
+    #    self.page.open(
+    #        ft.SnackBar(
+    #            content=ft.Text(f"Erro ao salvar: {str(error)}"),
+    #            bgcolor=ft.Colors.ERROR
+    #        )
+    #    )
 
     def _abrir_dialog_preco(self, e):
         tijolo_selecionado = self.tipo_tijolo_dropdown.value
@@ -208,12 +218,16 @@ class ParedeCalculator:
                 keyboard_type=ft.KeyboardType.NUMBER,
             ),
             actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: self.page.close(dlg_preco)),
-                ft.TextButton("Confirmar", on_click=lambda e: self._confirmar_preco(e, dlg_preco)),
+                ft.TextButton(
+                    "Cancelar", on_click=lambda e: self.page.close(dlg_preco)
+                ),
+                ft.TextButton(
+                    "Confirmar", on_click=lambda e: self._confirmar_preco(e, dlg_preco)
+                ),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-        
+
         self.page.open(dlg_preco)
 
     def _confirmar_preco(self, e, dlg):
@@ -223,11 +237,15 @@ class ParedeCalculator:
             TIPOS_TIJOLOS[tijolo_selecionado]["preco_unitario"] = novo_preco
             salvar_tijolos(TIPOS_TIJOLOS)  # Salva as alterações no arquivo
             self.page.close(dlg)
-            
+
             # Recalcula os valores se houver dados nos campos
-            if self.altura_input.value and self.comprimento_input.value and self.valor_m2_input.value:
+            if (
+                self.altura_input.value
+                and self.comprimento_input.value
+                and self.valor_m2_input.value
+            ):
                 self.calcular(None)
-                
+
         except ValueError:
             self.page.open(
                 ft.SnackBar(content=ft.Text("Por favor, insira um valor válido"))
@@ -238,48 +256,105 @@ class ParedeCalculator:
         return ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text(
-                        f"Cálculo de Parede para {self.cliente['nome']}",
-                        size=24,
-                        weight=ft.FontWeight.BOLD,
-                        color=ft.Colors.BLUE,
-                    ),
+                    # Cabeçalho Compacto
                     ft.Container(
                         content=ft.Column(
-                            controls=[
-                                self.altura_input,
-                                self.comprimento_input,
-                                ft.Row(
-                                    controls=[
-                                        self.tipo_tijolo_dropdown,
-                                        self.edit_preco_button,
-                                    ],
-                                    spacing=0,
+                            [
+                                ft.Text(
+                                    "Cálculo de Parede",
+                                    size=20,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=ft.Colors.BLUE,
                                 ),
-                                self.valor_m2_input,
+                                ft.Row(
+                                    [
+                                        ft.Text(
+                                            f"Projeto: {self.projeto.nome}",
+                                            size=12,
+                                            # weight=ft.FontWeight.BOLD,
+                                            color=ft.Colors.BLUE_300,
+                                        ),
+                                        ft.Text(
+                                            f"Cliente: {self.cliente['nome']}",
+                                            size=12,
+                                            # weight=ft.FontWeight.BOLD,
+                                            color=ft.Colors.BLUE_300,
+                                        ),
+                                    ],
+                                ),
                             ],
-                            alignment=ft.MainAxisAlignment.CENTER,
+                        )
+                    ),
+                    # Área de Entrada
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Row(
+                                    [
+                                        ft.Container(
+                                            content=self.altura_input,
+                                            expand=1,
+                                        ),
+                                        ft.Container(
+                                            content=self.comprimento_input,
+                                            expand=1,
+                                        ),
+                                    ],
+                                    spacing=10,
+                                ),
+                                ft.Row(
+                                    [
+                                        ft.Container(
+                                            content=self.tipo_tijolo_dropdown,
+                                            expand=3,
+                                        ),
+                                        ft.Container(
+                                            content=self.valor_m2_input,
+                                            expand=2,
+                                        ),
+                                    ],
+                                    spacing=5,
+                                ),
+                                self.edit_preco_button,
+                            ],
                             spacing=10,
                         ),
-                        **gsm.container_style,
+                        padding=10,
+                        # bgcolor=ft.Colors.ON_SURFACE_VARIANT,
+                        border_radius=10,
                     ),
-                    ft.ElevatedButton(
+                    # Botão Calcular
+                    gsm.create_button(
                         text="Calcular",
                         icon=ft.Icons.CALCULATE,
                         on_click=self.calcular,
-                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
-                        **gsm.button_style,
+                        width=200,
+                        hover_color=ft.Colors.BLUE_600,
                     ),
-                    self.area_text,
-                    self.qtd_tijolos_text,  # Adicione esta linha
-                    self.resultado_text,
+                    # Resultados
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                self.area_text,
+                                self.qtd_tijolos_text,
+                                self.resultado_text,
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+                            spacing=5,
+                        ),
+                        # bgcolor=ft.Colors.ON_SURFACE_VARIANT,
+                        padding=10,
+                        border_radius=10,
+                        # visible=bool(self.resultado_text.value),
+                    ),
+                    # Botões de ação
                     ft.Row(
                         [
                             gsm.create_button(
                                 text="Salvar",
                                 on_click=self.salvar,
                                 icon=ft.Icons.SAVE,
-                                hover_color=ft.Colors.GREEN,
+                                hover_color=ft.Colors.GREEN_600,
                                 width=130,
                             ),
                             gsm.create_button(
@@ -297,10 +372,9 @@ class ParedeCalculator:
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
+                spacing=10,
             ),
-            padding=0,
-            alignment=ft.alignment.center,
+            padding=10,
         )
 
 

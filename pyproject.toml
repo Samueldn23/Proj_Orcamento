@@ -1,15 +1,9 @@
-[tool.poetry]
-name = "proj_orcamento"
+[project]
+name = "proj-orcamento"
 version = "0.1.0"
-description = "Sistema de Orçamentos"
-authors = ["Seu Nome <seu.email@exemplo.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.8"
-alembic = "^1.13.1"
-SQLAlchemy = "^2.0.27"
-psycopg2 = "^2.9.9"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ruff>=0.9.7",
+]

@@ -38,6 +38,13 @@ def main(page: ft.Page):
             icon=ft.Icons.CALCULATE,
             on_click=lambda _: print("teste"),
         ),
+        gsm.create_button(
+            text="Calcular",
+            icon=ft.Icons.CALCULATE,
+            on_click=lambda _: print("Botão 1 pressionado"),
+            width=130,
+            hover_color=ft.Colors.BLUE_600,
+        ),
     )
 
 
