@@ -319,7 +319,7 @@ class StyleManager:
         return {
             "bgcolor": ft.Colors.with_opacity(0.95, self.colors.IMPUT),
             "border_radius": 8,
-            "text_size": 16,
+            "text_size": 14,
             "border": ft.InputBorder.UNDERLINE,
             "border_width": 2,
             "border_color": ft.Colors.with_opacity(0.3, self.colors.PRIMARY),

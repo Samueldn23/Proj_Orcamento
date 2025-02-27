@@ -165,47 +165,55 @@ class ParedeCalculator:
             self.page.update()
 
     def salvar(self, e):
-        # try:
-        # Validar e calcular
-        valid, message = self._validate_inputs()
-        if not valid:
-            self.page.open(
-                ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
+        try:
+            # Validar e calcular
+            valid, message = self._validate_inputs()
+            if not valid:
+                self.page.open(
+                    ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
+                )
+                return
+
+            area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
+            tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
+            custo_tijolos = quantidade_tijolos * tijolo_selecionado["preco_unitario"]
+            custo_total = mao_obra + custo_tijolos
+
+            # Criar nova parede no banco
+            nova_parede = Wall(
+                projeto_id=self.projeto.id,  # Corrigido de orcamento_id para projeto_id
+                altura=float(self.altura_input.value),
+                comprimento=float(self.comprimento_input.value),
+                area=area,
+                valor_m2=float(self.valor_m2_input.value),
+                tipo_tijolo=self.tipo_tijolo_dropdown.value,
+                quantidade_tijolos=quantidade_tijolos,
+                custo_tijolos=custo_tijolos,
+                custo_mao_obra=mao_obra,
+                custo_total=custo_total,
             )
-            return
 
-        area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
-        tijolo_selecionado = TIPOS_TIJOLOS[self.tipo_tijolo_dropdown.value]
-        custo_tijolos = quantidade_tijolos * tijolo_selecionado["preco_unitario"]
-        custo_total = mao_obra + custo_tijolos
+            session.add(nova_parede)
+            session.commit()
 
-        # Criar nova parede no banco
-        nova_parede = Wall(
-            orcamento_id=self.projeto.id,
-            altura=float(self.altura_input.value),
-            comprimento=float(self.comprimento_input.value),
-            area=area,
-            valor_m2=float(self.valor_m2_input.value),
-            tipo_tijolo=self.tipo_tijolo_dropdown.value,
-            quantidade_tijolos=quantidade_tijolos,
-            custo_tijolos=custo_tijolos,
-            custo_mao_obra=mao_obra,
-            custo_total=custo_total,
-        )
+            # Mostrar mensagem de sucesso
+            self.page.open(
+                ft.SnackBar(
+                    content=ft.Text("Parede salva com sucesso!"),
+                    bgcolor=ft.Colors.GREEN,
+                )
+            )
 
-        session.add(nova_parede)
-        session.commit()
+            # Navegar para detalhes do projeto
+            navegar_orcamento(self.page, self.cliente, self.projeto)
 
-        # Navegar para detalhes do projeto
-        navegar_orcamento(self.page, self.cliente, self.projeto)
-
-    # except Exception as error:
-    #    self.page.open(
-    #        ft.SnackBar(
-    #            content=ft.Text(f"Erro ao salvar: {str(error)}"),
-    #            bgcolor=ft.Colors.ERROR
-    #        )
-    #    )
+        except Exception as error:
+            self.page.open(
+                ft.SnackBar(
+                    content=ft.Text(f"Erro ao salvar: {str(error)}"),
+                    bgcolor=ft.Colors.ERROR
+                )
+            )
 
     def _abrir_dialog_preco(self, e):
         tijolo_selecionado = self.tipo_tijolo_dropdown.value

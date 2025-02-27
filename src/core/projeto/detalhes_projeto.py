@@ -23,27 +23,45 @@ def criar_card_construcao(construcao):
     """Cria um card para exibir informações da construção"""
     return ft.Card(
         content=ft.Container(
-            content=ft.Column(
+            content=ft.Row(
                 [
-                    ft.ListTile(
-                        leading=ft.Icon(ft.icons.WALL),
-                        title=ft.Text(f"Parede {construcao.id}"),
-                        subtitle=ft.Text(
-                            f"Área: {construcao.area}m² | Tipo: {construcao.tipo_tijolo}"
-                        ),
-                    ),
-                    ft.Row(
+                    ft.Icon(ft.Icons.HOUSE_SIDING, color=ft.Colors.BLUE, size=20),
+                    ft.VerticalDivider(width=10),
+                    ft.Column(
                         [
-                            ft.Text(f"Tijolos: {construcao.quantidade_tijolos} un"),
                             ft.Text(
-                                f"Custo: {locale.currency(float(construcao.custo_total), grouping=True)}"
+                                f"Área: {construcao.area}m² - {construcao.tipo_tijolo}",
+                                size=12,
+                                weight=ft.FontWeight.W_500,
                             ),
-                        ]
+                            ft.Row(
+                                [
+                                    ft.Text(
+                                        f"{construcao.quantidade_tijolos} tijolos",
+                                        size=11,
+                                        color=ft.Colors.BLUE_GREY_400,
+                                    ),
+                                    ft.Text(
+                                        locale.currency(
+                                            float(construcao.custo_total), grouping=True
+                                        ),
+                                        size=11,
+                                        color=ft.Colors.GREEN,
+                                        weight=ft.FontWeight.BOLD,
+                                    ),
+                                ],
+                                spacing=10,
+                            ),
+                        ],
+                        spacing=3,
+                        expand=True,
                     ),
-                ]
+                ],
+                alignment=ft.MainAxisAlignment.START,
             ),
-            padding=10,
-        )
+            padding=ft.padding.all(8),
+        ),
+        elevation=1,
     )
 
 
@@ -69,14 +87,14 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                     page.open(
                         ft.SnackBar(
                             content=ft.Text("Erro ao excluir projeto!"),
-                            bgcolor=ft.colors.ERROR,
+                            bgcolor=ft.Colors.ERROR,
                         )
                     )
             except Exception as error:
                 page.open(
                     ft.SnackBar(
                         content=ft.Text(f"Erro ao excluir projeto: {str(error)}"),
-                        bgcolor=ft.colors.ERROR,
+                        bgcolor=ft.Colors.ERROR,
                     )
                 )
             page.update()
@@ -132,21 +150,21 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 page.open(
                     ft.SnackBar(
                         content=ft.Text("Erro ao atualizar projeto!"),
-                        bgcolor=ft.colors.ERROR,
+                        bgcolor=ft.Colors.ERROR,
                     )
                 )
         except ValueError:
             page.open(
                 ft.SnackBar(
                     content=ft.Text("Valor inválido para o custo estimado!"),
-                    bgcolor=ft.colors.ERROR,
+                    bgcolor=ft.Colors.ERROR,
                 )
             )
         except Exception as error:
             page.open(
                 ft.SnackBar(
                     content=ft.Text(f"Erro ao atualizar projeto: {str(error)}"),
-                    bgcolor=ft.colors.ERROR,
+                    bgcolor=ft.Colors.ERROR,
                 )
             )
         page.update()
@@ -184,54 +202,131 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         else ft.Text("Nenhuma construção cadastrada")
     )
 
+    page.window_width = 450
+    page.window_height = 700
+    page.window_resizable = False
+
     page.controls.clear()
     page.add(
-        ft.Column(
-            controls=[
-                ft.Text(f"Detalhes do Projeto: {projeto.nome}", size=24),
-                ft.Text(f"Criado em: {projeto.criado_em.strftime('%d/%m/%Y')}"),
-                ft.Divider(),
-                nome_input,
-                descricao_input,
-                valor_input,
-                ft.Row(
-                    [
-                        gsm.create_button(
-                            text="Construir",
-                            icon=ft.Icons.PLUS_ONE,
-                            on_click=lambda _: navegar_orcamento(
-                                page, cliente, projeto
-                            ),
-                            hover_color=ft.Colors.BLUE,
+        ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Container(
+                        content=ft.Row(
+                            [
+                                ft.Text(
+                                    "Detalhes do Projeto",
+                                    size=20,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=ft.Colors.BLUE_700,
+                                ),
+                                ft.Text(
+                                    projeto.nome, size=16, color=ft.Colors.BLUE_GREY_700
+                                ),
+                            ],  # spacing=1
                         ),
-                        gsm.create_button(
-                            text="Salvar",
-                            icon=ft.Icons.SAVE,
-                            on_click=salvar_edicao,
-                            hover_color=ft.Colors.GREEN,
+                        padding=10,
+                    ),
+                    ft.Text(
+                        f"Criado em: {projeto.criado_em.strftime('%d/%m/%Y')}",
+                        color=ft.Colors.GREY_700,
+                        size=12,
+                    ),
+                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.TextField(
+                                    ref=nome_input,
+                                    label="Nome do Projeto",
+                                    value=projeto.nome,
+                                    prefix_icon=ft.Icons.FOLDER_SPECIAL,
+                                    height=45,
+                                    **gsm.input_style,
+                                ),
+                                ft.TextField(
+                                    ref=descricao_input,
+                                    label="Descrição",
+                                    value=projeto.descricao,
+                                    prefix_icon=ft.Icons.DESCRIPTION,
+                                    multiline=True,
+                                    min_lines=2,
+                                    max_lines=3,
+                                    **gsm.input_style,
+                                ),
+                                ft.TextField(
+                                    ref=valor_input,
+                                    label="Custo Estimado (R$)",
+                                    prefix_icon=ft.Icons.ATTACH_MONEY,
+                                    keyboard_type=ft.KeyboardType.NUMBER,
+                                    height=45,
+                                    **gsm.input_style,
+                                ),
+                            ],
+                            spacing=10,
                         ),
-                        gsm.create_button(
-                            text="Excluir",
-                            icon=ft.Icons.DELETE,
-                            on_click=confirmar_exclusao,
-                            hover_color=ft.Colors.RED,
+                        padding=10,
+                    ),
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Row(
+                                    [
+                                        gsm.create_button(
+                                            text="Construir",
+                                            icon=ft.Icons.ADD_HOME_WORK,
+                                            on_click=lambda _: navegar_orcamento(
+                                                page, cliente, projeto
+                                            ),
+                                            hover_color=ft.Colors.BLUE_700,
+                                        ),
+                                        gsm.create_button(
+                                            text="Salvar",
+                                            icon=ft.Icons.SAVE,
+                                            on_click=salvar_edicao,
+                                            hover_color=ft.Colors.GREEN_700,
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                    spacing=10,
+                                ),
+                                ft.Row(
+                                    [
+                                        gsm.create_button(
+                                            text="Excluir",
+                                            icon=ft.Icons.DELETE_FOREVER,
+                                            on_click=confirmar_exclusao,
+                                            hover_color=ft.Colors.RED_700,
+                                        ),
+                                        gsm.create_button(
+                                            text="Voltar",
+                                            icon=ft.Icons.ARROW_BACK,
+                                            on_click=lambda _: listar_projetos.projetos_cliente(
+                                                page, cliente
+                                            ),
+                                            hover_color=gsm.colors.VOLTAR,
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                    spacing=10,
+                                ),
+                            ],
+                            spacing=10,
                         ),
-                        gsm.create_button(
-                            text="Voltar",
-                            icon=ft.Icons.ARROW_BACK,
-                            on_click=lambda _: listar_projetos.projetos_cliente(
-                                page, cliente
-                            ),
-                            hover_color=gsm.colors.VOLTAR,
-                        ),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                ),
-                ft.Divider(),
-                lista_construcoes,
-            ],
-            scroll=ft.ScrollMode.AUTO,
-            alignment=ft.MainAxisAlignment.CENTER,
-        ),
+                        padding=ft.padding.symmetric(vertical=10),
+                    ),
+                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
+                    ft.Container(
+                        content=lista_construcoes,
+                        padding=10,
+                    ),
+                ],
+                scroll=ft.ScrollMode.AUTO,
+                horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+                spacing=0,
+            ),
+            padding=10,
+            border_radius=8,
+        )
     )
     page.update()
