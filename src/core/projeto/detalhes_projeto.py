@@ -10,6 +10,7 @@ from src.infrastructure.database.connections import Session
 from src.infrastructure.database.models.construction import Wall
 from src.infrastructure.database.repositories import ProjetoRepository
 from src.navigation.router import navegar_orcamento
+from src.core.projeto.construcao import Parede
 
 # Configuração da localização para formatação de moeda
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -19,50 +20,11 @@ projeto_repo = ProjetoRepository()
 session = Session()
 
 
-def criar_card_construcao(construcao):
-    """Cria um card para exibir informações da construção"""
-    return ft.Card(
-        content=ft.Container(
-            content=ft.Row(
-                [
-                    ft.Icon(ft.Icons.HOUSE_SIDING, color=ft.Colors.BLUE, size=20),
-                    ft.VerticalDivider(width=10),
-                    ft.Column(
-                        [
-                            ft.Text(
-                                f"Área: {construcao.area}m² - {construcao.tipo_tijolo}",
-                                size=12,
-                                weight=ft.FontWeight.W_500,
-                            ),
-                            ft.Row(
-                                [
-                                    ft.Text(
-                                        f"{construcao.quantidade_tijolos} tijolos",
-                                        size=11,
-                                        color=ft.Colors.BLUE_GREY_400,
-                                    ),
-                                    ft.Text(
-                                        locale.currency(
-                                            float(construcao.custo_total), grouping=True
-                                        ),
-                                        size=11,
-                                        color=ft.Colors.GREEN,
-                                        weight=ft.FontWeight.BOLD,
-                                    ),
-                                ],
-                                spacing=10,
-                            ),
-                        ],
-                        spacing=3,
-                        expand=True,
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.START,
-            ),
-            padding=ft.padding.all(8),
-        ),
-        elevation=1,
-    )
+def atualizar_custo_estimado(projeto_id):
+    """Atualiza o custo estimado do projeto somando o custo de todas as construções"""
+    construcoes = session.query(Wall).filter_by(projeto_id=projeto_id).all()
+    custo_total = sum(construcao.custo_total for construcao in construcoes)
+    projeto_repo.update(projeto_id, custo_estimado=custo_total)
 
 
 def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
@@ -139,6 +101,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
             )
 
             if projeto_atualizado:
+                atualizar_custo_estimado(projeto.id)  # Atualiza o custo estimado
                 page.open(
                     ft.SnackBar(
                         content=ft.Text("Projeto atualizado com sucesso!"),
@@ -190,15 +153,17 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     )
 
     # Adicionar lista de construções
-    construcoes = session.query(Wall).filter_by(projeto_id=projeto.id).all()
+    construcoes_parede = session.query(Wall).filter_by(projeto_id=projeto.id).all()
+
+
     lista_construcoes = (
         ft.Column(
             [
                 ft.Text("Construções", size=20, weight=ft.FontWeight.BOLD),
-                ft.Column([criar_card_construcao(c) for c in construcoes]),
+                ft.Column([Parede(c.area, c.custo_total, c.tipo_tijolo, c.quantidade_tijolos).criar_card() for c in construcoes_parede]),
             ]
         )
-        if construcoes
+        if construcoes_parede 
         else ft.Text("Nenhuma construção cadastrada")
     )
 
