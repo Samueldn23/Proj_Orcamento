@@ -1,7 +1,8 @@
 """Models de construção"""
 
-from sqlalchemy import Column, BigInteger, Numeric, ForeignKey, String
+from sqlalchemy import BigInteger, Column, ForeignKey, Numeric, String
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 

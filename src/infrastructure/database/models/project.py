@@ -1,16 +1,17 @@
 """Model de projeto"""
 
 from sqlalchemy import (
-    Column,
+    TIMESTAMP,
     BigInteger,
+    Column,
+    ForeignKey,
+    Numeric,
     String,
     Text,
-    Numeric,
-    ForeignKey,
-    TIMESTAMP,
     func,
 )
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 
@@ -25,9 +26,7 @@ class Project(Base):
     custo_estimado = Column(Numeric(precision=10, scale=2), nullable=True)
     cliente_id = Column(BigInteger, ForeignKey("clientes.id"), nullable=False)
     criado_em = Column(TIMESTAMP, server_default=func.now(), nullable=False)
-    atualizado_em = Column(
-        TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=True
-    )
+    atualizado_em = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=True)
     valor_total = Column(Numeric(10, 2), nullable=True)
 
     # Relacionamentos - remover qualquer referência a orçamentos

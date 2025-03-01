@@ -1,7 +1,6 @@
 """Menu de cadastro de usuário. user/signup.py"""
 
 import time
-from typing import Optional
 
 import flet as ft
 
@@ -18,8 +17,8 @@ class SignupPage:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.error_text: Optional[ft.Text] = None
-        self.success_text: Optional[ft.Text] = None
+        self.error_text: ft.Text | None = None
+        self.success_text: ft.Text | None = None
         self._init_controls()
 
     def _init_controls(self):
@@ -144,7 +143,7 @@ class SignupPage:
             else:
                 self._show_message("Erro ao cadastrar usuário. Tente novamente!")
         except Exception as e:  # pylint: disable=broad-exception-caught
-            self._show_message(f"Erro inesperado: {str(e)}")
+            self._show_message(f"Erro inesperado: {e!s}")
 
     def build(self):
         """Constrói a interface da página"""

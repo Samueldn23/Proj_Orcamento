@@ -1,14 +1,14 @@
 """Repositório de usuários"""
 
-from typing import Optional, List, Dict, Any
+from typing import Any
 
 # from sqlalchemy.orm import Session
 # from src.user import login
 from ...cache.cache_config import cache_query
-from ..models.user import User
-from ..models import Module
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
+from ..models import Module
+from ..models.user import User
 
 
 class UserRepository:
@@ -18,7 +18,7 @@ class UserRepository:
         self.db = postgres
         self.supabase = supabase.client
 
-    def create(self, email: str, password: str, nome: str) -> Optional[Dict[str, Any]]:
+    def create(self, email: str, password: str, nome: str) -> dict[str, Any] | None:
         """Cadastra um novo usuário"""
         try:
             # Registrar no Supabase Auth
@@ -75,7 +75,7 @@ class UserRepository:
 
     def login_with_password(
         self, email: str, password: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Realiza login com email e senha"""
         try:
             response = self.supabase.auth.sign_in_with_password(
@@ -86,7 +86,7 @@ class UserRepository:
             print(f"Erro no login: {e}")
             return None
 
-    def login_with_otp(self, email: str) -> Optional[Dict[str, Any]]:
+    def login_with_otp(self, email: str) -> dict[str, Any] | None:
         """Envia email com código OTP"""
         try:
             response = self.supabase.auth.sign_in_with_otp({"email": email})
@@ -96,7 +96,7 @@ class UserRepository:
             return None
 
     @cache_query
-    def get_current_user(self) -> Optional[str]:
+    def get_current_user(self) -> str | None:
         """Obtém o ID do usuário atual"""
         try:
             response = self.supabase.auth.get_user()
@@ -116,7 +116,7 @@ class UserRepository:
             print(f"Erro ao realizar logout: {e}")
             return False
 
-    def get_modules(self, user_id: str) -> Optional[Module]:
+    def get_modules(self, user_id: str) -> Module | None:
         """Obtém os módulos do usuário"""
         try:
             with self.db.get_session() as session:
@@ -143,13 +143,13 @@ class UserRepository:
             return False
 
     @cache_query
-    def get_by_id(self, user_id: str) -> Optional[User]:
+    def get_by_id(self, user_id: str) -> User | None:
         """Busca usuário por ID"""
         with self.db.get_session() as session:
             return session.query(User).filter(User.user_id == user_id).first()
 
     @cache_query
-    def list_all(self) -> List[User]:
+    def list_all(self) -> list[User]:
         """Lista todos os usuários"""
         with self.db.get_session() as session:
             return session.query(User).all()

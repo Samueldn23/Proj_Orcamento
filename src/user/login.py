@@ -6,8 +6,8 @@ import flet as ft
 from dotenv import load_dotenv
 
 from src.custom.styles_utils import get_style_manager
-from src.navigation.router import navigate_to_menu
 from src.infrastructure.database.repositories import UserRepository
+from src.navigation.router import navigate_to_menu
 
 from .signup import tela_cadastro
 
@@ -93,8 +93,8 @@ class LoginPage:
             else:
                 self.mostrar_erro("Usuário ou senha inválidos")
         except ValueError as e:
-            self.mostrar_erro(f"Erro ao fazer login: {str(e)}")
-            print(f"Erro ao fazer login: {str(e)}")
+            self.mostrar_erro(f"Erro ao fazer login: {e!s}")
+            print(f"Erro ao fazer login: {e!s}")
         finally:
             self.page.show_loading = True
             self.page.update()

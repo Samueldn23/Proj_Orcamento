@@ -1,11 +1,14 @@
 import locale
+
 import flet as ft
 
 # Configuração da localização para formatação de moeda
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
+
 class Construcao:
     """Classe base para diferentes tipos de construção"""
+
     def __init__(self, tipo, area, custo_total):
         self.tipo = tipo
         self.area = area
@@ -18,7 +21,7 @@ class Construcao:
                 content=ft.Row(
                     [
                         ft.Icon(ft.Icons.HOUSE_SIDING, color=ft.Colors.BLUE, size=20),
-                        #ft.VerticalDivider(width=10),
+                        # ft.VerticalDivider(width=10),
                         ft.Column(
                             [
                                 ft.Text(
@@ -27,9 +30,7 @@ class Construcao:
                                     weight=ft.FontWeight.W_500,
                                 ),
                                 ft.Text(
-                                    locale.currency(
-                                        float(self.custo_total), grouping=True
-                                    ),
+                                    locale.currency(float(self.custo_total), grouping=True),
                                     size=11,
                                     color=ft.Colors.GREEN,
                                     weight=ft.FontWeight.BOLD,
@@ -38,6 +39,23 @@ class Construcao:
                             spacing=3,
                             expand=True,
                         ),
+                        ft.Container(
+                            content=ft.Row(
+                                [
+                                    ft.IconButton(
+                                        icon=ft.Icons.EDIT_SQUARE,
+                                        tooltip="Editar",
+                                        on_click=lambda e: print("editar_construcao(construcao)"),
+                                    ),
+                                    ft.IconButton(
+                                        icon=ft.Icons.DELETE_FOREVER,
+                                        tooltip="Excluir",
+                                        on_click=lambda e: print("excluir_construcao(construcao)"),
+                                    ),
+                                ],
+                                spacing=1,
+                            ),
+                        ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                 ),
@@ -45,6 +63,7 @@ class Construcao:
             ),
             elevation=1,
         )
+
 
 class Parede(Construcao):
     def __init__(self, area, custo_total, tipo_tijolo, quantidade_tijolos):
@@ -63,6 +82,7 @@ class Parede(Construcao):
         )
         return card
 
+
 class Eletrica(Construcao):
     def __init__(self, area, custo_total, tipo_fio, quantidade_fios):
         super().__init__("Elétrica", area, custo_total)
@@ -79,6 +99,7 @@ class Eletrica(Construcao):
             )
         )
         return card
+
 
 class Telhado(Construcao):
     def __init__(self, area, custo_total, tipo_telhas, quantidade_telhas):
@@ -97,6 +118,7 @@ class Telhado(Construcao):
         )
         return card
 
+
 def criar_card_parede(construcao):
     """Cria um card para exibir informações da construção"""
     return ft.Card(
@@ -104,7 +126,7 @@ def criar_card_parede(construcao):
             content=ft.Row(
                 [
                     ft.Icon(ft.Icons.HOUSE_SIDING, color=ft.Colors.BLUE, size=20),
-                    #ft.VerticalDivider(width=10),
+                    # ft.VerticalDivider(width=10),
                     ft.Column(
                         [
                             ft.Text(
@@ -120,9 +142,7 @@ def criar_card_parede(construcao):
                                         color=ft.Colors.BLUE_GREY_400,
                                     ),
                                     ft.Text(
-                                        locale.currency(
-                                            float(construcao.custo_total), grouping=True
-                                        ),
+                                        locale.currency(float(construcao.custo_total), grouping=True),
                                         size=11,
                                         color=ft.Colors.GREEN,
                                         weight=ft.FontWeight.BOLD,
@@ -151,6 +171,7 @@ def criar_card_parede(construcao):
         ),
         elevation=1,
     )
+
 
 # Esqueleto para criação de cards para outros tipos de construções
 def criar_card_outro_tipo(construcao):

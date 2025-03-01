@@ -1,9 +1,10 @@
 """Repositório de módulos"""
 
-from typing import Optional, List, Dict, Any  # noqa: F401
-from ..models.module import Module  # noqa: F401
+from typing import Any, Optional  # noqa: F401
+
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
+from ..models.module import Module  # noqa: F401
 
 
 class ModuleRepository:
@@ -13,15 +14,10 @@ class ModuleRepository:
         self.db = postgres
         self.supabase = supabase.client
 
-    def get_modules(self, user_id: str) -> List[Dict[str, Any]]:
+    def get_modules(self, user_id: str) -> list[dict[str, Any]]:
         """Obtém os módulos do usuário"""
         try:
-            response = (
-                self.supabase.table("modulos")
-                .select("*")
-                .eq("user_id", user_id)
-                .execute()
-            )
+            response = self.supabase.table("modulos").select("*").eq("user_id", user_id).execute()
             return response.data if response.data else []
         except Exception as e:
             print(f"Erro ao obter módulos: {e}")
@@ -54,12 +50,7 @@ class ModuleRepository:
     def update_module(self, user_id: str, module_data: dict) -> bool:
         """Atualiza os módulos de um usuário"""
         try:
-            response = (
-                self.supabase.table("modulos")
-                .update(module_data)
-                .eq("user_id", user_id)
-                .execute()
-            )
+            response = self.supabase.table("modulos").update(module_data).eq("user_id", user_id).execute()
             return bool(response.data)
         except Exception as e:
             print(f"Erro ao atualizar módulos: {e}")

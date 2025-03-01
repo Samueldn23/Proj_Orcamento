@@ -1,8 +1,9 @@
 """Model de módulos"""
 
-from sqlalchemy import Column, BigInteger, Boolean, String, ForeignKey
+from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 

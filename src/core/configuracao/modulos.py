@@ -1,10 +1,10 @@
 """Gerenciamento de módulos do sistema"""
 
 import flet as ft
-from src.infrastructure.database.repositories.user_repository import UserRepository
 
 # from src.infrastructure.database.models import Module
 from src.custom.styles_utils import get_style_manager
+from src.infrastructure.database.repositories.user_repository import UserRepository
 
 gsm = get_style_manager()
 user_repo = UserRepository()

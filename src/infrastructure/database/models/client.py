@@ -1,8 +1,9 @@
 """Model de cliente"""
 
-from sqlalchemy import Column, BigInteger, String, ForeignKey, Text, DateTime, func
+from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 

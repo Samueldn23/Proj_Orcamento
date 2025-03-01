@@ -2,12 +2,11 @@
 
 import flet as ft
 
-from src.core.projeto import listar_projetos
-from src.infrastructure.database.repositories import user_repository, client_repository
-
 from src.core.cliente import atualizar, cadastrar
-from src.navigation.router import navegar_principal
+from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
+from src.infrastructure.database.repositories import client_repository, user_repository
+from src.navigation.router import navegar_principal
 
 gsm = get_style_manager()
 user_repo = user_repository.UserRepository()

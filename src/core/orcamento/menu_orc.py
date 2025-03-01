@@ -1,13 +1,11 @@
 """Módulo para o menu de orçamentos. base/orcamentos/menu_orc.py"""
 
-from typing import Callable
+from collections.abc import Callable
 
 import flet as ft
 
-from src.core.orcamento import eletrica, fundacao, laje, paredes, telhado, contrapiso
-
+from src.core.orcamento import contrapiso, eletrica, fundacao, laje, paredes, telhado
 from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
-
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories.module_repository import ModuleRepository
 

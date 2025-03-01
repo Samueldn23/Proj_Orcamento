@@ -5,19 +5,19 @@ import locale
 import flet as ft
 
 from src.core.projeto import listar_projetos
+from src.core.projeto.construcao import Parede
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.connections import Session
 from src.infrastructure.database.models.construction import Wall
 from src.infrastructure.database.repositories import ProjetoRepository
 from src.navigation.router import navegar_orcamento
-from src.core.projeto.construcao import Parede
 
 # Configuração da localização para formatação de moeda
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
-gsm = get_style_manager()
-projeto_repo = ProjetoRepository()
-session = Session()
+gsm = get_style_manager()  # Instância do gerenciador de estilos
+projeto_repo = ProjetoRepository()  # Instância do repositório de projetos
+session = Session()  # Instância da sessão do banco de dados
 
 
 def atualizar_custo_estimado(projeto_id):
@@ -55,7 +55,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
             except Exception as error:
                 page.open(
                     ft.SnackBar(
-                        content=ft.Text(f"Erro ao excluir projeto: {str(error)}"),
+                        content=ft.Text(f"Erro ao excluir projeto: {error!s}"),
                         bgcolor=ft.Colors.ERROR,
                     )
                 )
@@ -68,9 +68,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         dlg_confirmacao = ft.AlertDialog(
             modal=True,
             title=ft.Text("Confirmar Exclusão"),
-            content=ft.Text(
-                f"Deseja realmente excluir o projeto '{projeto.nome}'? \nEsta ação não poderá ser desfeita!"
-            ),
+            content=ft.Text(f"Deseja realmente excluir o projeto '{projeto.nome}'?\nEsta ação não poderá ser desfeita!"),
             actions=[
                 ft.TextButton("Sim", on_click=excluir_confirmado),
                 ft.TextButton("Não", on_click=cancelar_exclusao),
@@ -86,9 +84,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         """Função para salvar as alterações no projeto"""
         try:
             if not nome_input.value:
-                page.open(
-                    ft.SnackBar(content=ft.Text("Nome do projeto é obrigatório!"))
-                )
+                page.open(ft.SnackBar(content=ft.Text("Nome do projeto é obrigatório!")))
                 return
 
             custo_estimado = float(valor_input.value) if valor_input.value else None
@@ -126,16 +122,14 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         except Exception as error:
             page.open(
                 ft.SnackBar(
-                    content=ft.Text(f"Erro ao atualizar projeto: {str(error)}"),
+                    content=ft.Text(f"Erro ao atualizar projeto: {error!s}"),
                     bgcolor=ft.Colors.ERROR,
                 )
             )
         page.update()
 
     # Campos de edição
-    nome_input = ft.TextField(
-        label="Nome do Projeto", value=projeto.nome, **gsm.input_style
-    )
+    nome_input = ft.TextField(label="Nome do Projeto", value=projeto.nome, **gsm.input_style)
 
     descricao_input = ft.TextField(
         label="Descrição",
@@ -155,7 +149,6 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     # Adicionar lista de construções
     construcoes_parede = session.query(Wall).filter_by(projeto_id=projeto.id).all()
 
-
     lista_construcoes = (
         ft.Column(
             [
@@ -163,12 +156,12 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 ft.Column([Parede(c.area, c.custo_total, c.tipo_tijolo, c.quantidade_tijolos).criar_card() for c in construcoes_parede]),
             ]
         )
-        if construcoes_parede 
+        if construcoes_parede
         else ft.Text("Nenhuma construção cadastrada")
     )
 
-    page.window_width = 450
-    page.window_height = 700
+    # page.window_width = 450
+    # page.window_height = 700
     page.window_resizable = False
 
     page.controls.clear()
@@ -185,9 +178,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                                     weight=ft.FontWeight.BOLD,
                                     color=ft.Colors.BLUE_700,
                                 ),
-                                ft.Text(
-                                    projeto.nome, size=16, color=ft.Colors.BLUE_GREY_700
-                                ),
+                                ft.Text(projeto.nome, size=16, color=ft.Colors.BLUE_GREY_700),
                             ],  # spacing=1
                         ),
                         padding=10,
@@ -240,9 +231,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                                         gsm.create_button(
                                             text="Construir",
                                             icon=ft.Icons.ADD_HOME_WORK,
-                                            on_click=lambda _: navegar_orcamento(
-                                                page, cliente, projeto
-                                            ),
+                                            on_click=lambda _: navegar_orcamento(page, cliente, projeto),
                                             hover_color=ft.Colors.BLUE_700,
                                         ),
                                         gsm.create_button(
@@ -266,9 +255,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                                         gsm.create_button(
                                             text="Voltar",
                                             icon=ft.Icons.ARROW_BACK,
-                                            on_click=lambda _: listar_projetos.projetos_cliente(
-                                                page, cliente
-                                            ),
+                                            on_click=lambda _: listar_projetos.projetos_cliente(page, cliente),
                                             hover_color=gsm.colors.VOLTAR,
                                         ),
                                     ],

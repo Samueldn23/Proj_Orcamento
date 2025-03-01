@@ -1,8 +1,9 @@
 """Model de usuário"""
 
-from sqlalchemy import Column, BigInteger, String, Date, TIMESTAMP, func
+from sqlalchemy import TIMESTAMP, BigInteger, Column, Date, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 

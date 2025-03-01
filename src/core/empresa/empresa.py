@@ -1,12 +1,11 @@
 """modulo da tela da empresa"""
 
 import time
-from typing import Optional
 
 import flet as ft
 
-from src.navigation.router import navegar_principal
 from src.custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_principal
 
 gsm = get_style_manager()
 
@@ -16,8 +15,8 @@ class Cadastro:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.error_text: Optional[ft.Text] = None
-        self.success_text: Optional[ft.Text] = None
+        self.error_text: ft.Text | None = None
+        self.success_text: ft.Text | None = None
         self._init_controls()
 
     def _init_controls(self):

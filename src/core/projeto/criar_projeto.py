@@ -4,12 +4,12 @@
 # from typing import Optional
 
 import flet as ft
-from src.infrastructure.database.repositories import projeto_repository
+
 from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
-
 from src.infrastructure.database.repositories import (
     client_repository,
+    projeto_repository,
 )
 
 gsm = get_style_manager()
@@ -80,7 +80,7 @@ def criar_projeto(page, cliente):
         except Exception as error:
             page.open(
                 ft.SnackBar(
-                    content=ft.Text(f"Erro ao criar projeto: {str(error)}"),
+                    content=ft.Text(f"Erro ao criar projeto: {error!s}"),
                     bgcolor=ft.Colors.ERROR,
                 )
             )

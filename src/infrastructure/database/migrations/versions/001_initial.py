@@ -4,23 +4,23 @@ Revision ID: 001_initial
 Create Date: 2024-01-23 13:25:00.000000
 
 """
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '001_initial'
-down_revision: Union[str, None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
     # Verifica se a tabela existe
     conn = op.get_bind()
     inspector = sa.inspect(conn)
-    
+
     # Cria ou atualiza a tabela paredes
     if 'paredes' not in inspector.get_table_names():
         op.create_table(
@@ -49,7 +49,7 @@ def upgrade() -> None:
             'custo_mao_obra': sa.Numeric(10, 2),
             'custo_total': sa.Numeric(10, 2)
         }
-        
+
         for col_name, col_type in new_columns.items():
             if col_name not in existing_columns:
                 op.add_column('paredes', sa.Column(col_name, col_type, nullable=False, server_default='0'))

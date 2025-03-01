@@ -26,5 +26,22 @@
 
   "[python]": {
     "editor.formatOnSave": true
-  }
+  },
+
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.fixAll": ["source.unusedImports"],
+  "editor.defaultFormatter": "charliermarsh.ruff",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.cache": true,
+    "**/.coverage": true,
+    "**/.coverage.*": true,
+    "**/.hypothesis": true,
+    "**/.mypy_cache": true,
+    "**/.nox": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.tox": true
+  },
+  "editor.inlineSuggest.suppressSuggestions": true
 }

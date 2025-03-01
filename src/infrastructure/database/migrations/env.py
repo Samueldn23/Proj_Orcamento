@@ -11,8 +11,8 @@ root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(curr
 sys.path.append(root_path)
 
 try:
-    from src.infrastructure.database.models.base import Base
     from src.infrastructure.config.settings import settings
+    from src.infrastructure.database.models.base import Base
 except ImportError as e:
     print(f"Erro ao importar módulos: {e}")
     print(f"Path atual: {sys.path}")

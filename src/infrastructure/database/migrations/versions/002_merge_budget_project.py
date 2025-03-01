@@ -3,15 +3,16 @@
 Revision ID: 002_merge_budget_project
 Create Date: 2024-02-25 00:15:00
 """
-from alembic import op
+from collections.abc import Sequence
+
 import sqlalchemy as sa
-from typing import Sequence, Union
+from alembic import op
 
 # revision identifiers
 revision: str = '002_merge_budget_project'
-down_revision: Union[str, None] = '001_initial'  # Conecta com a migração anterior
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = '001_initial'  # Conecta com a migração anterior
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade():
@@ -28,11 +29,11 @@ def upgrade():
 
     # 3. Atualizar foreign keys nas tabelas relacionadas
     tabelas = ['fundacoes', 'contrapisos', 'lajes', 'telhados', 'eletricas', 'paredes']
-    
+
     for tabela in tabelas:
         # Renomear coluna
         op.alter_column(tabela, 'orcamento_id', new_column_name='projeto_id')
-        
+
         # Atualizar foreign key
         op.drop_constraint(f'{tabela}_orcamento_id_fkey', tabela)
         op.create_foreign_key(

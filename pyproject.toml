@@ -7,3 +7,31 @@ requires-python = ">=3.13"
 dependencies = [
     "ruff>=0.9.7",
 ]
+
+[tool.ruff]
+# Mesmo limite de linha que o Black
+line-length = 160
+
+# Habilita todas as regras recomendadas pelo Ruff
+select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "RUF"]
+
+# Ignorar arquivos e diretórios específicos
+exclude = [
+    ".git",
+    ".ruff_cache",
+    "__pycache__",
+    "venv",
+    ".env",
+]
+
+# Configurações de formatação
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# Configurações para imports
+[tool.ruff.isort]
+combine-as-imports = true
+force-wrap-aliases = true

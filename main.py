@@ -1,6 +1,5 @@
 """Aplicativo de Orçamentos com Flet e SQLAlchemy, com autenticação de usuários. main.py"""
 
-from typing import Optional
 import os
 import sys
 
@@ -20,7 +19,7 @@ class OrcamentoApp:
     """Classe principal do aplicativo de orçamentos"""
 
     def __init__(self):
-        self.page: Optional[ft.Page] = None
+        self.page: ft.Page | None = None
 
     def configure_page(self, page: ft.Page):
         """Configura a página principal do aplicativo"""
@@ -66,7 +65,7 @@ class OrcamentoApp:
             mostrar_tela(page)
             page.update()
         except ValueError as e:
-            error_message = f"Erro ao inicializar o aplicativo: {str(e)}"
+            error_message = f"Erro ao inicializar o aplicativo: {e!s}"
             page.add(ft.Text(error_message, color=ft.Colors.RED_600))
             page.update()
             print(error_message)

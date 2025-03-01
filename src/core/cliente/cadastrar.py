@@ -1,13 +1,11 @@
 """Modulo de cadastro de clientes. cadastro.py"""
 
 import time
-from typing import Optional
 
 import flet as ft
 
 from src.core.orcamento import menu_orc
 from src.custom.styles_utils import get_style_manager
-
 from src.infrastructure.database.repositories import ClientRepository, UserRepository
 
 gsm = get_style_manager()
@@ -20,8 +18,8 @@ class Cadastro:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.error_text: Optional[ft.Text] = None
-        self.success_text: Optional[ft.Text] = None
+        self.error_text: ft.Text | None = None
+        self.success_text: ft.Text | None = None
         self._init_controls()
 
     def _init_controls(self):

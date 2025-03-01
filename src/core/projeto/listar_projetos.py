@@ -5,7 +5,7 @@ import pytz
 
 from src.core.projeto import criar_projeto
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import ProjetoRepository, ClientRepository
+from src.infrastructure.database.repositories import ClientRepository, ProjetoRepository
 
 # Instanciar as classes dos repositórios
 projeto_repo = ProjetoRepository()  # Criar instância
@@ -55,7 +55,7 @@ def projetos_cliente(page: ft.Page, cliente):
         def criar_card_projeto(projeto):
             """Cria um card para exibir as informações do projeto"""
             # Converter para horário de Brasília
-            tz_brasil = pytz.timezone("America/Sao_Paulo")
+            tz_brasil = pytz.timezone("America/chicago")
 
             criado_em_br = projeto.criado_em.astimezone(tz_brasil)
             atualizado_em_br = projeto.atualizado_em.astimezone(tz_brasil)
@@ -143,15 +143,11 @@ def projetos_cliente(page: ft.Page, cliente):
                     offset=ft.Offset(2, 2),
                 ),
                 # Adiciona hover e clique
-                on_click=lambda _, cliente=cliente: criar_projeto.criar_projeto(
-                    page, cliente
-                ),
+                on_click=lambda _, cliente=cliente: criar_projeto.criar_projeto(page, cliente),
                 # Efeito hover
                 animate=ft.animation.Animation(300, ft.AnimationCurve.EASE_IN_OUT),
                 scale=1.0,
-                on_hover=lambda e: handle_hover(
-                    e, container
-                ),  # Passamos o container atual
+                on_hover=lambda e: handle_hover(e, container),  # Passamos o container atual
             )
             projetos_cards = [container]
 
@@ -167,10 +163,7 @@ def projetos_cliente(page: ft.Page, cliente):
                         [
                             gsm.create_button(
                                 text="Novo Projeto",
-                                on_click=lambda _,
-                                cliente=cliente: criar_projeto.criar_projeto(
-                                    page, cliente
-                                ),
+                                on_click=lambda _, cliente=cliente: criar_projeto.criar_projeto(page, cliente),
                                 icon=ft.Icons.ADD,
                                 hover_color=gsm.colors.PRIMARY,
                             ),
@@ -202,9 +195,5 @@ def projetos_cliente(page: ft.Page, cliente):
     except Exception as e:
         print(f"Erro ao listar projetos: {e}")
         # Mostrar mensagem de erro para o usuário
-        page.show_snack_bar(
-            ft.SnackBar(
-                content=ft.Text("Erro ao carregar projetos"), bgcolor=ft.colors.ERROR
-            )
-        )
+        page.show_snack_bar(ft.SnackBar(content=ft.Text("Erro ao carregar projetos"), bgcolor=ft.colors.ERROR))
         return []

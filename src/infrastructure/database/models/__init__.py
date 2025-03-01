@@ -1,24 +1,24 @@
 """Módulo de models do banco de dados"""
 
 from .base import Base
-from .user import User
 from .client import Client
-from .project import Project
-from .module import Module
-from .construction import Foundation, Floor, Slab, Roof, Electrical, Wall
+from .construction import Electrical, Floor, Foundation, Roof, Slab, Wall
 from .feedback import Feedback
+from .module import Module
+from .project import Project
+from .user import User
 
 __all__ = [
     "Base",
-    "User",
     "Client",
-    "Project",
-    "Module",
-    "Foundation",
-    "Floor",
-    "Slab",
-    "Roof",
     "Electrical",
-    "Wall",
     "Feedback",
+    "Floor",
+    "Foundation",
+    "Module",
+    "Project",
+    "Roof",
+    "Slab",
+    "User",
+    "Wall",
 ]

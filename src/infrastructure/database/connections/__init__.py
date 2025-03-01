@@ -3,4 +3,4 @@
 from .postgres import PostgresConnection, Session
 from .supabase import SupabaseConnection
 
-__all__ = ["PostgresConnection", "SupabaseConnection", "Session"]
+__all__ = ["PostgresConnection", "Session", "SupabaseConnection"]

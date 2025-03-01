@@ -1,8 +1,9 @@
 """Módulo para cálculo de orçamento de fundação. fundacao.py"""
 
 import flet as ft
-from src.navigation.router import navegar_orcamento
+
 from src.custom.styles_utils import get_style_manager
+from src.navigation.router import navegar_orcamento
 
 gsm = get_style_manager()
 

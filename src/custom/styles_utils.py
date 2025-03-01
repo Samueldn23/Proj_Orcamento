@@ -1,7 +1,8 @@
 """Arquivo para armazenar os estilos e botões customizados. custom/styles_utils.py"""
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Dict
+from typing import Any
 
 import flet as ft
 
@@ -314,7 +315,7 @@ class StyleManager:
         return container
 
     @property
-    def input_style(self) -> Dict[str, Any]:
+    def input_style(self) -> dict[str, Any]:
         """Estilo modernizado para inputs"""
         return {
             "bgcolor": ft.Colors.with_opacity(0.95, self.colors.IMPUT),
@@ -331,7 +332,7 @@ class StyleManager:
         }
 
     @property
-    def button_style(self) -> Dict[str, Any]:
+    def button_style(self) -> dict[str, Any]:
         """Estilo padrão para botões"""
         return {
             "width": 200,
@@ -341,7 +342,7 @@ class StyleManager:
         }
 
     @property
-    def container_style(self) -> Dict[str, Any]:
+    def container_style(self) -> dict[str, Any]:
         """Estilo modernizado para containers"""
         return {
             "bgcolor": ft.Colors.with_opacity(0.15, self.colors.CONTAINER),
@@ -366,7 +367,7 @@ class StyleManager:
         }
 
     @property
-    def dropdown_style(self) -> Dict[str, Any]:
+    def dropdown_style(self) -> dict[str, Any]:
         """Estilo específico para dropdowns"""
         return {
             "bgcolor": ft.Colors.with_opacity(0.95, self.colors.IMPUT),

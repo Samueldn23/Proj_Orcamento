@@ -1,21 +1,22 @@
 """Importações necessárias para o funcionamento do menu principal. menu.py"""
 
 # 1. Módulos padrão
-from typing import Callable
+from collections.abc import Callable
 
 # 2. Módulos de terceiros
 import flet as ft
 
+from _tests import teste_btn
+from examples import exemplos
+
 # 3. Módulos locais
 from src.core.cliente import clientes
-from src.core.empresa import empresa
 
 # from base.SPDA import SPDA
 from src.core.configuracao import configuracao
-from examples import exemplos
-from src.infrastructure.database.repositories import UserRepository
-from _tests import teste_btn
+from src.core.empresa import empresa
 from src.custom.styles_utils import get_style_manager
+from src.infrastructure.database.repositories import UserRepository
 from src.navigation.router import navigate_to_login  # Nova importação
 
 gsm = get_style_manager()

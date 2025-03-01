@@ -1,9 +1,10 @@
 """Repositório de projetos"""
 
-from typing import Optional, List
-from ..models.project import Project
+from typing import Optional
+
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
+from ..models.project import Project
 
 
 class ProjetoRepository:
@@ -17,9 +18,9 @@ class ProjetoRepository:
         self,
         nome: str,
         cliente_id: int,
-        descricao: str = None,
-        custo_estimado: float = None,
-    ) -> Optional[Project]:
+        descricao: Optional["str"] = None,
+        custo_estimado: Optional["float"] = None,
+    ) -> Project | None:
         """Adiciona um novo projeto"""
         try:
             with self.db.get_session() as session:
@@ -36,7 +37,7 @@ class ProjetoRepository:
             print(f"Erro ao criar projeto: {e}")
             return None
 
-    def get_by_id(self, projeto_id: int) -> Optional[Project]:
+    def get_by_id(self, projeto_id: int) -> Project | None:
         """Busca um projeto pelo ID"""
         try:
             with self.db.get_session() as session:
@@ -45,16 +46,11 @@ class ProjetoRepository:
             print(f"Erro ao buscar projeto: {e}")
             return None
 
-    def list_by_client(self, cliente_id: int) -> List[Project]:
+    def list_by_client(self, cliente_id: int) -> list[Project]:
         """Lista todos os projetos de um cliente ordenados por data de atualização"""
         try:
             with self.db.get_session() as session:
-                return (
-                    session.query(Project)
-                    .filter_by(cliente_id=cliente_id)
-                    .order_by(Project.atualizado_em.desc())
-                    .all()
-                )
+                return session.query(Project).filter_by(cliente_id=cliente_id).order_by(Project.atualizado_em.desc()).all()
         except Exception as e:
             print(f"Erro ao listar projetos do cliente: {e}")
             return []
@@ -62,11 +58,11 @@ class ProjetoRepository:
     def update(
         self,
         projeto_id: int,
-        nome: str = None,
-        descricao: str = None,
-        custo_estimado: float = None,
-        valor_total: float = None,  # Adicionando valor_total
-    ) -> Optional[Project]:
+        nome: Optional["str"] = None,
+        descricao: Optional["str"] = None,
+        custo_estimado: Optional["float"] = None,
+        valor_total: Optional["float"] = None,  # Adicionando valor_total
+    ) -> Project | None:
         """Atualiza um projeto existente"""
         try:
             with self.db.get_session() as session:

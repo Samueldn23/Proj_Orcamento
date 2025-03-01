@@ -1,5 +1,5 @@
-# from .login import *  # noqa: F403
-# from .signup import *  # noqa: F403
+# from .login import *
+# from .signup import *
 
 # também pode definir um __all__ se quiser controlar o que é exportado
 # __all__ = [

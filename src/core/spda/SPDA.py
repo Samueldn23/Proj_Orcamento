@@ -1,6 +1,7 @@
 """Módulo para a tela de inspeção de edificação. base/SPDA/SPDA.py"""
 
 import flet as ft
+
 from src.custom.styles_utils import get_style_manager
 from src.navigation.router import navegar_orcamento
 

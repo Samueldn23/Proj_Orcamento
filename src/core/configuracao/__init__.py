@@ -1,6 +1,6 @@
 """Módulo de configurações"""
 
-from .configuracao import tela_config, atualizar_tabelas
+from .configuracao import atualizar_tabelas, tela_config
 from .modulos import GerenciadorModulos
 
-__all__ = ["tela_config", "atualizar_tabelas", "GerenciadorModulos"]
+__all__ = ["GerenciadorModulos", "atualizar_tabelas", "tela_config"]

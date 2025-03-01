@@ -1,6 +1,7 @@
 """Conexão com Supabase"""
 
 from supabase import Client, create_client
+
 from ...config.settings import settings
 
 

@@ -1,11 +1,11 @@
 """Módulo de customizações e estilos"""
 
-from .styles_utils import get_style_manager, StyleManager, ThemeColors
+from .styles_utils import StyleManager, ThemeColors, get_style_manager
 
-__all__ = ["get_style_manager", "StyleManager", "ThemeColors"]
+__all__ = ["StyleManager", "ThemeColors", "get_style_manager"]
 
-# from .styles import * # noqa: F403
-# from .button import * # noqa: F403
+# from .styles import *
+# from .button import *
 
 
 # também pode definir um __all__ se quiser controlar o que é exportado

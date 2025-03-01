@@ -1,15 +1,14 @@
 """Módulo para cálculo de orçamento de paredes"""
 
 import locale
-from typing import Optional
 
 import flet as ft
 
-from src.navigation.router import navegar_orcamento
 from src.custom.styles_utils import get_style_manager
 from src.data.tijolos import carregar_tijolos, salvar_tijolos
 from src.infrastructure.database.connections import Session
 from src.infrastructure.database.models.construction import Wall
+from src.navigation.router import navegar_orcamento
 
 # Configurações
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -25,7 +24,7 @@ class ParedeCalculator:
         self.page = page
         self.cliente = cliente
         self.projeto = projeto
-        self.resultado_text: Optional[ft.Text] = None
+        self.resultado_text: ft.Text | None = None
         self._init_controls()
 
     def _init_controls(self):
@@ -58,7 +57,7 @@ class ParedeCalculator:
             label="Tipo de Tijolo",
             leading_icon=ft.Icons.GRID_VIEW,
             options=[ft.dropdown.Option(key=tipo) for tipo in TIPOS_TIJOLOS.keys()],
-            value=list(TIPOS_TIJOLOS.keys())[0],  # Seleciona o primeiro por padrão
+            value=next(iter(TIPOS_TIJOLOS.keys())),  # Seleciona o primeiro por padrão
             expand=True,  # Adicione esta linha
             **gsm.input_style,
         )
@@ -130,18 +129,14 @@ class ParedeCalculator:
             f"{locale.currency(custo_tijolos, grouping=True)}\n"
             f"Custo mão de obra: {locale.currency(mao_obra, grouping=True)}"
         )
-        self.resultado_text.value = (
-            f"Custo Total estimado: {locale.currency(custo_total, grouping=True)}"
-        )
+        self.resultado_text.value = f"Custo Total estimado: {locale.currency(custo_total, grouping=True)}"
         self.page.update()
 
     def calcular(self, _):
         """Manipula o evento de cálculo"""
         valid, message = self._validate_inputs()
         if not valid:
-            self.page.open(
-                ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
-            )
+            self.page.open(ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR))
             self.resultado_text.value = ""
             self.area_text.value = ""
             self.qtd_tijolos_text.value = ""
@@ -158,7 +153,7 @@ class ParedeCalculator:
         except ValueError as e:
             self.page.open(
                 ft.SnackBar(
-                    content=ft.Text(f"Erro ao calcular: {str(e)}"),
+                    content=ft.Text(f"Erro ao calcular: {e!s}"),
                     bgcolor=ft.Colors.ERROR,
                 )
             )
@@ -169,9 +164,7 @@ class ParedeCalculator:
             # Validar e calcular
             valid, message = self._validate_inputs()
             if not valid:
-                self.page.open(
-                    ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR)
-                )
+                self.page.open(ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.ERROR))
                 return
 
             area, mao_obra, quantidade_tijolos = self._calcular_orcamento()
@@ -208,12 +201,7 @@ class ParedeCalculator:
             navegar_orcamento(self.page, self.cliente, self.projeto)
 
         except Exception as error:
-            self.page.open(
-                ft.SnackBar(
-                    content=ft.Text(f"Erro ao salvar: {str(error)}"),
-                    bgcolor=ft.Colors.ERROR
-                )
-            )
+            self.page.open(ft.SnackBar(content=ft.Text(f"Erro ao salvar: {error!s}"), bgcolor=ft.Colors.ERROR))
 
     def _abrir_dialog_preco(self, e):
         tijolo_selecionado = self.tipo_tijolo_dropdown.value
@@ -226,12 +214,8 @@ class ParedeCalculator:
                 keyboard_type=ft.KeyboardType.NUMBER,
             ),
             actions=[
-                ft.TextButton(
-                    "Cancelar", on_click=lambda e: self.page.close(dlg_preco)
-                ),
-                ft.TextButton(
-                    "Confirmar", on_click=lambda e: self._confirmar_preco(e, dlg_preco)
-                ),
+                ft.TextButton("Cancelar", on_click=lambda e: self.page.close(dlg_preco)),
+                ft.TextButton("Confirmar", on_click=lambda e: self._confirmar_preco(e, dlg_preco)),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
@@ -247,17 +231,11 @@ class ParedeCalculator:
             self.page.close(dlg)
 
             # Recalcula os valores se houver dados nos campos
-            if (
-                self.altura_input.value
-                and self.comprimento_input.value
-                and self.valor_m2_input.value
-            ):
+            if self.altura_input.value and self.comprimento_input.value and self.valor_m2_input.value:
                 self.calcular(None)
 
         except ValueError:
-            self.page.open(
-                ft.SnackBar(content=ft.Text("Por favor, insira um valor válido"))
-            )
+            self.page.open(ft.SnackBar(content=ft.Text("Por favor, insira um valor válido")))
 
     def build(self):
         """Constrói a interface da página"""
@@ -367,9 +345,7 @@ class ParedeCalculator:
                             ),
                             gsm.create_button(
                                 text="Voltar",
-                                on_click=lambda _: navegar_orcamento(
-                                    self.page, self.cliente, self.projeto
-                                ),
+                                on_click=lambda _: navegar_orcamento(self.page, self.cliente, self.projeto),
                                 icon=ft.Icons.ARROW_BACK,
                                 hover_color=gsm.colors.VOLTAR,
                                 width=130,

@@ -1,7 +1,8 @@
 """Model de fundação"""
 
-from sqlalchemy import Column, BigInteger, String, Numeric, ForeignKey, Text
+from sqlalchemy import BigInteger, Column, ForeignKey, Numeric, String, Text
 from sqlalchemy.orm import relationship
+
 from .base import Base
 
 

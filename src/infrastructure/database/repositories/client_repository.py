@@ -1,11 +1,12 @@
 """Repositório de clientes"""
 
-from typing import Optional, List, Dict, Any
+from typing import Any
 
 from src.infrastructure.cache.cache_config import cache_query
-from ..models.client import Client
+
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
+from ..models.client import Client
 
 
 class ClientRepository:
@@ -28,7 +29,7 @@ class ClientRepository:
         cep: int,
         bairro: str,
         numero: str,
-    ) -> Optional[Client]:
+    ) -> Client | None:
         """Adiciona um novo cliente"""
         try:
             with self.db.get_session() as session:
@@ -53,7 +54,7 @@ class ClientRepository:
             return None
 
     @cache_query
-    def list_by_user(self, user_id: str) -> List[Dict[str, Any]]:
+    def list_by_user(self, user_id: str) -> list[dict[str, Any]]:
         """Lista clientes de um usuário"""
         try:
             response = (
@@ -108,7 +109,7 @@ class ClientRepository:
             return False
 
     @cache_query
-    def get_by_id(self, client_id: int) -> Optional[Client]:
+    def get_by_id(self, client_id: int) -> Client | None:
         """Busca um cliente pelo ID"""
         try:
             with self.db.get_session() as session:

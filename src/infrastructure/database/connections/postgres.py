@@ -1,8 +1,13 @@
 """Conexão com PostgreSQL"""
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session as SQLAlchemySession
+from sqlalchemy.orm import (
+    Session as SQLAlchemySession,
+    sessionmaker,
+)
+
 from ...config.settings import settings
+
 
 class PostgresConnection:
     """Gerenciador de conexão PostgreSQL"""

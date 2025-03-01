@@ -2,10 +2,8 @@
 
 import flet as ft
 
-
-from src.navigation.router import navegar_principal
 from src.custom.styles_utils import get_style_manager
-
+from src.navigation.router import navegar_principal
 
 gsm = get_style_manager()
 

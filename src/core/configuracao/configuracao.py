@@ -3,11 +3,11 @@
 import flet as ft
 from sqlalchemy import create_engine
 
-from src.navigation.router import navegar_principal
+from src.core.configuracao.modulos import GerenciadorModulos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.config.settings import settings
 from src.infrastructure.database.models import Base
-from src.core.configuracao.modulos import GerenciadorModulos
+from src.navigation.router import navegar_principal
 
 gsm = get_style_manager()
 

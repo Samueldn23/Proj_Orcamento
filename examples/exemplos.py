@@ -5,11 +5,11 @@ import locale
 from typing import List, Optional  # pylint: disable=W0611 # noqa: F401
 
 import flet as ft
-# import pandas as pd
 
-from src.navigation import router
 from src.custom.styles_utils import get_style_manager
 
+# import pandas as pd
+from src.navigation import router
 
 # from models.db import Feedback, Orcamento
 
@@ -31,7 +31,7 @@ class ParedeCalculator:
     def __init__(self, page: ft.Page):
         self.page = page
         self.cliente = None
-        self.resultado_text: Optional[ft.Text] = None
+        self.resultado_text: ft.Text | None = None
         self.material_selecionado = "Tinta Acrílica"  # Material padrão
         self._init_controls()
 
@@ -188,7 +188,7 @@ class ParedeCalculator:
             self._salvar_orcamento(area, custo_total)  # Salva o orçamento
             self._gerar_relatorio()  # Gera relatório
         except ValueError as e:
-            self.resultado_text.value = f"Erro ao calcular: {str(e)}"
+            self.resultado_text.value = f"Erro ao calcular: {e!s}"
             self.area_text.value = ""
             self.page.update()
 

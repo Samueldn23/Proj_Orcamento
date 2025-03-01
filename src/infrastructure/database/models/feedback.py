@@ -1,6 +1,7 @@
 """Model de feedback"""
 
-from sqlalchemy import Column, BigInteger, String, Text
+from sqlalchemy import BigInteger, Column, String, Text
+
 from .base import Base
 
 

@@ -1,9 +1,10 @@
 """Módulo para a tela de edição de cadastro do cliente. atuualizar.py"""
 
 import flet as ft
-from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import UserRepository, ClientRepository
+
 from src.core.cliente import clientes
+from src.custom.styles_utils import get_style_manager
+from src.infrastructure.database.repositories import ClientRepository, UserRepository
 
 gsm = get_style_manager()
 Usuario = UserRepository()
