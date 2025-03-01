@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 import flet as ft
 
@@ -70,9 +70,7 @@ class StyleManager:
         )
 
     @staticmethod
-    def create_button_hover_effect(
-        button: ft.Control, text_color: str, hover_color: str
-    ) -> Callable:
+    def create_button_hover_effect(button: ft.Control, text_color: str, hover_color: str) -> Callable:
         """Cria efeito hover para botões"""
 
         def on_hover(e):
@@ -117,13 +115,13 @@ class StyleManager:
         self,
         text: str,
         on_click: Callable,
-        icon: str = None,
-        width: int = None,  # Largura opcional
+        icon: Optional["str"] = None,
+        width: Optional["int"] = None,  # Largura opcional
         icon_color: str = ThemeColors.PRIMARY,
         hover_icon_color: str = ThemeColors.SECONDARY,
         text_color: str = ThemeColors.SECONDARY,
         hover_color: str = ThemeColors.PRIMARY,  # Permite None explicitamente
-        hover_color_button: str = None,  # Agora é opcional
+        hover_color_button: Optional["str"] = None,  # Agora é opcional
     ) -> ft.Container:
         """Cria um botão customizado com container"""
 
@@ -145,9 +143,7 @@ class StyleManager:
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             on_click=on_click,
-            width=width
-            if width is not None
-            else None,  # Deixa o layout ajustar a largura
+            width=width if width is not None else None,  # Deixa o layout ajustar a largura
         )
 
         # Define a função de hover personalizada para o botão e o ícone
@@ -164,9 +160,7 @@ class StyleManager:
         # Adiciona o efeito hover para o botão e o ícone
         button.on_hover = lambda e: (
             self.create_button_hover_effect(button, text_color, hover_color_button)(e),
-            button_hover_effect(e)
-            if icon
-            else None,  # Só chama o efeito do ícone se ele existir
+            button_hover_effect(e) if icon else None,  # Só chama o efeito do ícone se ele existir
         )
 
         # Cria o container para o botão
@@ -254,11 +248,11 @@ class StyleManager:
         self,
         icon: str,
         on_click: Callable,
-        tooltip: str = None,
+        tooltip: Optional["str"] = None,
         icon_color: str = ThemeColors.PRIMARY,
         hover_icon_color: str = ThemeColors.SECONDARY,
         hover_color: str = ThemeColors.PRIMARY,
-        hover_color_container: str = None,
+        hover_color_container: Optional["str"] = None,
     ) -> ft.Container:
         """
         Cria um botão de ícone customizado com container e efeitos de hover
@@ -352,9 +346,7 @@ class StyleManager:
             "width": 450,  # Container mais largo
             "border_radius": 15,
             "border": ft.Border(
-                bottom=ft.BorderSide(
-                    2, ft.Colors.with_opacity(0.2, self.colors.PRIMARY)
-                ),
+                bottom=ft.BorderSide(2, ft.Colors.with_opacity(0.2, self.colors.PRIMARY)),
             ),
             "shadow": ft.BoxShadow(
                 spread_radius=1,

@@ -24,7 +24,7 @@ class PostgresConnection:
 
     def _initialize(self):
         """Inicializa a conexão"""
-        self._engine = create_engine(settings.DATABASE_URL, echo=False)
+        self._engine = create_engine(settings.database_url, echo=False)
         self._session_maker = sessionmaker(bind=self._engine)
 
     def get_session(self) -> SQLAlchemySession:
@@ -35,6 +35,7 @@ class PostgresConnection:
     def engine(self):
         """Retorna o engine SQLAlchemy"""
         return self._engine
+
 
 postgres = PostgresConnection()
 Session = postgres.get_session

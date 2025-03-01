@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from typing import ClassVar
 from urllib.parse import quote
 
 from dotenv import load_dotenv
@@ -32,14 +33,12 @@ class Settings:
     SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
     @property
-    def DATABASE_URL(self) -> str:
+    def database_url(self) -> str:
         """Retorna a URL de conexão PostgreSQL"""
-        return (
-            f"postgresql://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}/{self.DB_NAME}"
-        )
+        return f"postgresql://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}/{self.DB_NAME}"
 
     # Configurações de tema
-    THEME = {
+    THEME: ClassVar[dict[str, str]] = {
         "PRIMARY_COLOR": "#1565C0",
         "SECONDARY_COLOR": "#FFA726",
         "ERROR_COLOR": "#D32F2F",

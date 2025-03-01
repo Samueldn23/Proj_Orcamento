@@ -179,14 +179,30 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                                     color=ft.Colors.BLUE_700,
                                 ),
                                 ft.Text(projeto.nome, size=16, color=ft.Colors.BLUE_GREY_700),
-                            ],  # spacing=1
+                            ],
+                            spacing=15,
+                            alignment=ft.MainAxisAlignment.CENTER,
                         ),
                         padding=10,
                     ),
-                    ft.Text(
-                        f"Criado em: {projeto.criado_em.strftime('%d/%m/%Y')}",
-                        color=ft.Colors.GREY_700,
-                        size=12,
+                    ft.Container(
+                        content=ft.Row(
+                            [
+                                ft.Text(
+                                    f"Criado em: {projeto.criado_em.strftime('%d/%m/%Y')}",
+                                    color=ft.Colors.GREY_700,
+                                    size=12,
+                                ),
+                                ft.Text("|", color=ft.Colors.GREY_700, size=12),
+                                ft.Text(
+                                    f"Última atualização: {projeto.atualizado_em.strftime('%d/%m/%Y')}",
+                                    color=ft.Colors.GREY_700,
+                                    size=12,
+                                ),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                        ),
+                        padding=10,
                     ),
                     ft.Divider(height=1, color=ft.Colors.BLUE_100),
                     ft.Container(

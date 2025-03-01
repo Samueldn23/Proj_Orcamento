@@ -1,11 +1,4 @@
 {
-    "Tijolo 8 Furos ": {
-        "nome": "Tijolo 8 Furos",
-        "largura": 0.19,
-        "altura": 0.19,
-        "profundidade": 0.09,
-        "preco_unitario": 1.2
-    },
     "Tijolo 6 Furos ": {
         "nome": "Tijolo 6 Furos",
         "largura": 0.24,
@@ -13,6 +6,13 @@
         "profundidade": 0.09,
         "preco_unitario": 0.9
     },
+    "Tijolo 8 Furos ": {
+        "nome": "Tijolo 8 Furos",
+        "largura": 0.19,
+        "altura": 0.19,
+        "profundidade": 0.09,
+        "preco_unitario": 1.2
+    },    
     "Bloco Cerâmico ": {
         "nome": "Bloco Cerâmico",
         "largura": 0.29,

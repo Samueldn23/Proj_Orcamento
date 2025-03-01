@@ -1,5 +1,3 @@
-"""Módulo para a tela de inspeção de edificação. base/SPDA/SPDA.py"""
-
 import flet as ft
 
 from src.custom.styles_utils import get_style_manager
@@ -65,9 +63,7 @@ def mostrar_inspecao(page):
     page.update()
 
 
-def salvar_inspecao(
-    razao_social, endereco, telefone, email, tecnico, observacoes, itens
-):
+def salvar_inspecao(razao_social, endereco, telefone, email, tecnico, observacoes, itens):
     # Função que salva a inspeção no banco de dados usando os modelos definidos
     print("Salvando inspeção...")
     # Adicione lógica para salvar no banco

@@ -2,7 +2,7 @@
 
 # pylint: disable=file-ignored
 import locale
-from typing import List, Optional  # pylint: disable=W0611 # noqa: F401
+from typing import Optional  # pylint: disable=W0611 # noqa: F401
 
 import flet as ft
 
@@ -155,9 +155,7 @@ class ParedeCalculator:
     def _update_resultado(self, area: float, custo_total: float):
         """Atualiza o texto de resultado"""
         self.area_text.value = f"Área total: {area:.2f} m²"
-        self.resultado_text.value = (
-            f"Custo Total: {locale.currency(custo_total, grouping=True)}"
-        )
+        self.resultado_text.value = f"Custo Total: {locale.currency(custo_total, grouping=True)}"
         quantidade_material = self._calcular_materiais(area)
         self.materiais_text.value = f"Custo dos Materiais ({self.material_selecionado}): {locale.currency(quantidade_material, grouping=True)}"  # pylint: disable=C0301
         self.page.update()
@@ -247,11 +245,7 @@ class ParedeCalculator:
                         modal=True,
                         title=ft.Text("Feedback Enviado"),
                         content=ft.Text("Obrigado pelo seu feedback!"),
-                        actions=[
-                            ft.TextButton(
-                                "OK", on_click=lambda _: self.page.close_dialog()
-                            )
-                        ],
+                        actions=[ft.TextButton("OK", on_click=lambda _: self.page.close_dialog())],
                     ),
                     gsm.create_button(
                         text="Voltar",

@@ -2,7 +2,7 @@
 
 from .models import Edificacao, Inspecao, ItemInspecao
 from .relatorio import gerar_relatorio
-from .SPDA import mostrar_inspecao, salvar_inspecao
+from .spda_inicio import mostrar_inspecao, salvar_inspecao
 
 __all__ = [
     "Edificacao",
