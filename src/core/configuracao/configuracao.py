@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from src.core.configuracao.modulos import GerenciadorModulos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.config.settings import settings
+from src.infrastructure.database.migrations import create_tables
 from src.infrastructure.database.models import Base
 from src.navigation.router import navegar_principal
 
@@ -16,10 +17,12 @@ def atualizar_tabelas(e):
     """Função para atualizar as tabelas no banco de dados"""
     try:
         # Criar engine do SQLAlchemy usando a URL do banco
-        engine = create_engine(settings.DATABASE_URL)
+        engine = create_engine(settings.database_url)
 
         # Criar todas as tabelas definidas nos models
         Base.metadata.create_all(engine)
+        create_tables.update_usuarios_table()
+        create_tables.update_paredes_table()
 
         return True
     except Exception as error:
@@ -43,11 +46,7 @@ def tela_config(page):
         # Exibe mensagem de sucesso/erro
         page.open(
             ft.SnackBar(
-                content=ft.Text(
-                    "Tabelas atualizadas com sucesso!"
-                    if sucesso
-                    else "Erro ao atualizar tabelas!"
-                ),
+                content=ft.Text("Tabelas atualizadas com sucesso!" if sucesso else "Erro ao atualizar tabelas!"),
                 bgcolor=ft.Colors.GREEN if sucesso else ft.Colors.RED,
             )
         )
@@ -67,9 +66,7 @@ def tela_config(page):
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.Text(
-                                "Banco de Dados", size=18, weight=ft.FontWeight.BOLD
-                            ),
+                            ft.Text("Banco de Dados", size=18, weight=ft.FontWeight.BOLD),
                             gsm.create_button(
                                 text="Atualizar Tabelas",
                                 hover_color=ft.Colors.AMBER,
@@ -89,9 +86,7 @@ def tela_config(page):
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.Text(
-                                "Dados da Empresa", size=18, weight=ft.FontWeight.BOLD
-                            ),
+                            ft.Text("Dados da Empresa", size=18, weight=ft.FontWeight.BOLD),
                             ft.TextField(
                                 label="Razão Social",
                                 prefix_icon=ft.Icons.BUSINESS,

@@ -5,7 +5,6 @@ from typing import Any
 from src.infrastructure.cache.cache_config import cache_query
 
 from ..connections.postgres import postgres
-from ..connections.supabase import supabase
 from ..models.client import Client
 
 
@@ -14,7 +13,6 @@ class ClientRepository:
 
     def __init__(self):
         self.db = postgres
-        self.supabase = supabase.client
 
     def create(
         self,
@@ -57,24 +55,29 @@ class ClientRepository:
     def list_by_user(self, user_id: str) -> list[dict[str, Any]]:
         """Lista clientes de um usuário"""
         try:
-            response = (
-                self.supabase.table("clientes")
-                .select("*")
-                .eq("user_id", user_id)
-                .execute()
-            )
+            with self.db.get_session() as session:
+                clients_query = session.query(Client).filter(Client.user_id == user_id).all()
 
-            # Garantir que os campos numéricos sejam strings
-            clients = []
-            for client in response.data:
-                client["telefone"] = (
-                    str(client["telefone"]) if client["telefone"] else ""
-                )
-                client["cpf"] = str(client["cpf"]) if client["cpf"] else ""
-                client["cep"] = str(client["cep"]) if client["cep"] else ""
-                clients.append(client)
+                # Converter objetos Client para dicionários
+                clients = []
+                for client in clients_query:
+                    client_dict = {
+                        "id": client.id,
+                        "user_id": str(client.user_id),
+                        "nome": client.nome,
+                        "cpf": str(client.cpf) if client.cpf else "",
+                        "telefone": str(client.telefone) if client.telefone else "",
+                        "email": client.email,
+                        "endereco": client.endereco,
+                        "cidade": client.cidade,
+                        "estado": client.estado,
+                        "cep": str(client.cep) if client.cep else "",
+                        "bairro": client.bairro,
+                        "numero": client.numero,
+                    }
+                    clients.append(client_dict)
 
-            return clients
+                return clients
         except Exception as e:
             print(f"Erro ao listar clientes: {e}")
             return []

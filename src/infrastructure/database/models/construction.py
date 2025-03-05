@@ -12,9 +12,7 @@ class Foundation(Base):
     __tablename__ = "fundacoes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
     espessura = Column(Numeric(10, 2), nullable=False)
@@ -30,9 +28,7 @@ class Floor(Base):
     __tablename__ = "contrapisos"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
     espessura = Column(Numeric(10, 2), nullable=True)
@@ -48,9 +44,7 @@ class Slab(Base):
     __tablename__ = "lajes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
     espessura = Column(Numeric(10, 2), nullable=False)
@@ -66,9 +60,7 @@ class Roof(Base):
     __tablename__ = "telhados"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     largura = Column(Numeric(10, 2), nullable=False)
     valor_metro = Column(Numeric(10, 2), nullable=False)
@@ -83,9 +75,7 @@ class Electrical(Base):
     __tablename__ = "eletricas"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(
-        BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False
-    )
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     pontos_eletricos = Column(BigInteger, nullable=False)
     valor_por_ponto = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
@@ -99,7 +89,7 @@ class Wall(Base):
     __tablename__ = "paredes"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    projeto_id = Column(BigInteger, ForeignKey("projetos.id"), nullable=False)
+    projeto_id = Column(BigInteger, ForeignKey("projetos.id", ondelete="CASCADE"), nullable=False)
     altura = Column(Numeric(10, 2), nullable=False)
     comprimento = Column(Numeric(10, 2), nullable=False)
     area = Column(Numeric(10, 2), nullable=False)

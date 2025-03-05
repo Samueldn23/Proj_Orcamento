@@ -19,10 +19,9 @@ class User(Base):
     telefone = Column(String(15), nullable=True)
     endereco = Column(String, nullable=True)
     data_nascimento = Column(Date, nullable=True)
+    # As colunas email e password_hash foram removidas pois o Supabase Auth já gerencia esses dados
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=True)
-    updated_at = Column(
-        TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=True
-    )
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=True)
 
     # Relacionamentos
     clientes = relationship("Client", back_populates="usuario")

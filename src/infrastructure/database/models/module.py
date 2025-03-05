@@ -1,5 +1,7 @@
 """Model de módulos"""
 
+from typing import ClassVar
+
 from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -21,6 +23,11 @@ class Module(Base):
     fundacao = Column(Boolean, default=False)
     laje = Column(Boolean, default=False)
     telhado = Column(Boolean, default=False)
+
+    # Definir explicitamente as propriedades a serem mapeadas
+    __mapper_args__: ClassVar[dict[str, list[str]]] = {
+        "include_properties": ["id", "user_id", "user_name", "parede", "contrapiso", "eletrica", "fundacao", "laje", "telhado"]
+    }
 
     # Relacionamentos
     usuario = relationship("User", back_populates="modulos")

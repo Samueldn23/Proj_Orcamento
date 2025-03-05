@@ -4,7 +4,7 @@ from typing import Any
 
 # from sqlalchemy.orm import Session
 # from src.user import login
-from ...cache.cache_config import cache_query
+from ...cache.cache_config import cache_query, clear_cache
 from ..connections.postgres import postgres
 from ..connections.supabase import supabase
 from ..models import Module
@@ -22,9 +22,7 @@ class UserRepository:
         """Cadastra um novo usuário"""
         try:
             # Registrar no Supabase Auth
-            auth_response = self.supabase.auth.sign_up(
-                {"email": email, "password": password}
-            )
+            auth_response = self.supabase.auth.sign_up({"email": email, "password": password})
 
             if not auth_response.user:
                 raise ValueError("Erro ao registrar usuário no Supabase Auth")
@@ -73,14 +71,10 @@ class UserRepository:
             print(f"Erro ao criar módulos: {e}")
             return False
 
-    def login_with_password(
-        self, email: str, password: str
-    ) -> dict[str, Any] | None:
+    def login_with_password(self, email: str, password: str) -> dict[str, Any] | None:
         """Realiza login com email e senha"""
         try:
-            response = self.supabase.auth.sign_in_with_password(
-                {"email": email, "password": password}
-            )
+            response = self.supabase.auth.sign_in_with_password({"email": email, "password": password})
             return response
         except Exception as e:
             print(f"Erro no login: {e}")
@@ -107,10 +101,49 @@ class UserRepository:
             print(f"Erro ao obter usuário atual: {e}")
             return None
 
+    @cache_query
+    def get_current_user_email(self) -> str | None:
+        """Obtém o email do usuário atual diretamente do Supabase Auth"""
+        try:
+            response = self.supabase.auth.get_user()
+            if response and response.user:
+                return response.user.email
+            return None
+        except Exception as e:
+            print(f"Erro ao obter email do usuário atual: {e}")
+            return None
+
+    @cache_query
+    def get_user_email(self) -> str | None:
+        """Alias para obter o email do usuário atual"""
+        return self.get_current_user_email()
+
     def logout(self) -> bool:
         """Realiza o logout do usuário"""
         try:
-            self.supabase.auth.sign_out()
+            print("Executando logout no supabase...")
+
+            # Tenta o logout normal
+            try:
+                self.supabase.auth.sign_out()
+                print("Logout do supabase realizado")
+            except Exception as e:
+                print(f"Aviso no sign_out: {e}")
+
+            # Força a limpeza do cache
+            clear_cache()
+            print("Cache limpo")
+
+            # Tenta uma nova conexão para garantir que a sessão atual foi descartada
+            try:
+                # Recria a instância do cliente
+                from ..connections.supabase import supabase
+
+                self.supabase = supabase.client
+                print("Cliente Supabase reinicializado")
+            except Exception as e:
+                print(f"Aviso na reinicialização do cliente: {e}")
+
             return True
         except Exception as e:
             print(f"Erro ao realizar logout: {e}")
@@ -129,9 +162,7 @@ class UserRepository:
         """Atualiza os módulos do usuário"""
         try:
             with self.db.get_session() as session:
-                modules = (
-                    session.query(Module).filter(Module.user_id == user_id).first()
-                )
+                modules = session.query(Module).filter(Module.user_id == user_id).first()
                 if modules:
                     for key, value in module_data.items():
                         setattr(modules, key, value)

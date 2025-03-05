@@ -22,3 +22,9 @@ def cache_query(f):
         return result
 
     return wrapper
+
+
+def clear_cache():
+    """Limpa todo o cache de consultas"""
+    query_cache.clear()
+    print("Cache de consultas limpo")

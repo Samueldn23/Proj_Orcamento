@@ -1,6 +1,8 @@
 """Model de cliente"""
 
-from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, Text, func
+from typing import ClassVar
+
+from sqlalchemy import BigInteger, Column, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -24,14 +26,16 @@ class Client(Base):
     cep = Column(String, nullable=True)
     bairro = Column(String, nullable=True)
     numero = Column(String, nullable=True)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    # Tornando as colunas de data opcionais para compatibilidade
+    # Se as colunas não existirem no banco, o SQLAlchemy não tentará acessá-las
+    __mapper_args__: ClassVar[dict[str, list[str]]] = {
+        "include_properties": ["id", "user_id", "nome", "cpf", "telefone", "email", "endereco", "cidade", "estado", "cep", "bairro", "numero"]
+    }
 
     # Relacionamentos - remover referência a orçamentos
     usuario = relationship("User", back_populates="clientes")
-    projetos = relationship(
-        "Project", back_populates="cliente", cascade="all, delete-orphan"
-    )
+    projetos = relationship("Project", back_populates="cliente", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Cliente(id={self.id}, nome={self.nome})"

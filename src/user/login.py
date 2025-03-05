@@ -77,9 +77,20 @@ class LoginPage:
         self.page.update()
 
         try:
-            if user_repo.login_with_password(
-                self.email_input.value, self.password_input.value
-            ):
+            # Força logout de qualquer sessão existente
+            try:
+                user_repo.logout()
+                print("Sessão anterior encerrada antes do novo login")
+            except Exception as e:
+                print(f"Aviso ao limpar sessão anterior: {e}")
+
+            # Tenta fazer login com as novas credenciais
+            login_result = user_repo.login_with_password(self.email_input.value, self.password_input.value)
+
+            print(f"Resultado do login: {login_result}")
+
+            if login_result:
+                print(f"Login realizado com sucesso. Usuário: {user_repo.get_current_user()}")
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text(
@@ -96,7 +107,7 @@ class LoginPage:
             self.mostrar_erro(f"Erro ao fazer login: {e!s}")
             print(f"Erro ao fazer login: {e!s}")
         finally:
-            self.page.show_loading = True
+            self.page.show_loading = False
             self.page.update()
 
     def build(self):

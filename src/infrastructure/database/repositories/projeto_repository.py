@@ -3,7 +3,6 @@
 from typing import Optional
 
 from ..connections.postgres import postgres
-from ..connections.supabase import supabase
 from ..models.project import Project
 
 
@@ -12,7 +11,6 @@ class ProjetoRepository:
 
     def __init__(self):
         self.db = postgres
-        self.supabase = supabase.client
 
     def create(
         self,
