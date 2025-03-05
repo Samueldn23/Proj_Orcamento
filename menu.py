@@ -253,7 +253,7 @@ class MenuPrincipalPage:
             "Sair",
             on_click=self._handle_logout,
             width=120,
-            icon=ft.icons.LOGOUT,
+            icon=ft.Icons.LOGOUT,
             hover_color=ft.Colors.RED_500,
             text_color=ft.Colors.WHITE,
         )
