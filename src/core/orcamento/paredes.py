@@ -4,6 +4,7 @@ import locale
 
 import flet as ft
 
+from src.core.projeto.detalhes_projeto import atualizar_custo_estimado
 from src.custom.styles_utils import get_style_manager
 from src.data.tijolos import carregar_tijolos, salvar_tijolos
 from src.infrastructure.database.connections import Session
@@ -188,6 +189,9 @@ class ParedeCalculator:
 
             session.add(nova_parede)
             session.commit()
+
+            # Atualizar o custo estimado do projeto
+            atualizar_custo_estimado(self.projeto.id)
 
             # Mostrar mensagem de sucesso
             self.page.open(

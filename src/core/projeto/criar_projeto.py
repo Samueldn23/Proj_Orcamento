@@ -37,9 +37,7 @@ def criar_projeto(page, cliente):
         try:
             # Validar campos obrigatórios
             if not nome_input.value:
-                page.open(
-                    ft.SnackBar(content=ft.Text("Nome do projeto é obrigatório!"))
-                )
+                page.open(ft.SnackBar(content=ft.Text("Nome do projeto é obrigatório!")))
                 return
 
             # Converter valor para float se existir
@@ -104,7 +102,6 @@ def criar_projeto(page, cliente):
         nome_input,
         descricao_input,
         endereco_input,
-        valor_input,
         ft.Row(
             [btn_salvar, btn_voltar],
             alignment=ft.MainAxisAlignment.CENTER,

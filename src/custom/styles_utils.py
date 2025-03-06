@@ -35,15 +35,16 @@ class StyleManager:
 
         # Configuração da janela
         window_config = {
-            "width": 450,
+            "width": 500,
             "height": 700,
             "title_bar_hidden": False,
             "frameless": False,
             "opacity": 1.0,
         }
+
         for prop, value in window_config.items():
             setattr(self.page.window, prop, value)
-        # self.page.window.center()
+        self.page.window.center()
 
         # Configuração do layout
         self.page.scroll = ft.ScrollMode.ADAPTIVE
@@ -62,7 +63,7 @@ class StyleManager:
         )
 
         # Configuração do fundo
-        self.page.bgcolor = ft.Colors.with_opacity(0.1, self.colors.SOMBRA_CTR)
+        self.page.bgcolor = ft.Colors.with_opacity(0.8, ft.Colors.GREY_900)
         self.page.gradient = ft.LinearGradient(
             colors=[self.colors.SOMBRA_CTR, self.colors.CONTAINER],
             begin=ft.alignment.top_center,
@@ -113,8 +114,8 @@ class StyleManager:
 
     def create_button(
         self,
-        text: str,
-        on_click: Callable,
+        text: Optional["str"] = None,
+        on_click: Optional["Callable"] = None,
         icon: Optional["str"] = None,
         width: Optional["int"] = None,  # Largura opcional
         icon_color: str = ThemeColors.PRIMARY,
@@ -134,7 +135,9 @@ class StyleManager:
         if icon:  # Adiciona o ícone apenas se estiver definido
             icone = ft.Icon(name=icon, color=icon_color)
             button_contents.append(icone)
-        button_contents.append(ft.Text(text, size=15))  # Adiciona o texto
+        if text:
+            text = ft.Text(text, size=15)
+            button_contents.append(text)
 
         # Cria o botão
         button = ft.ElevatedButton(
@@ -169,7 +172,7 @@ class StyleManager:
                 controls=[button],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             ),
-            padding=2,
+            # padding=0,
             border_radius=25,
             animate=ft.animation.Animation(500, ft.AnimationCurve.EASE_IN_OUT),
             on_hover=self.create_container_hover_effect(hover_color),

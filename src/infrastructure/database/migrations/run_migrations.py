@@ -1,6 +1,7 @@
 """Script para executar todas as migrações"""
 
-from create_tables import create_clients_table
+from src.infrastructure.database.migrations.create_tables import create_clients_table
+from src.infrastructure.database.migrations.update_cascade_delete import update_cascade_delete
 
 
 def run_migrations():
@@ -10,6 +11,7 @@ def run_migrations():
     # Lista de funções de migração
     migrations = [
         create_clients_table,
+        update_cascade_delete,
         # Adicione outras funções de migração aqui
     ]
 

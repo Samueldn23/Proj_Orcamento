@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import UserRepository
 from src.navigation.router import navigate_to_menu
+from src.user import Usuario
 
 from .signup import tela_cadastro
 
@@ -79,7 +80,7 @@ class LoginPage:
         try:
             # Força logout de qualquer sessão existente
             try:
-                user_repo.logout()
+                Usuario.sair()
                 print("Sessão anterior encerrada antes do novo login")
             except Exception as e:
                 print(f"Aviso ao limpar sessão anterior: {e}")
@@ -87,10 +88,10 @@ class LoginPage:
             # Tenta fazer login com as novas credenciais
             login_result = user_repo.login_with_password(self.email_input.value, self.password_input.value)
 
-            print(f"Resultado do login: {login_result}")
+            # print(f"Resultado do login: {login_result}")
 
             if login_result:
-                print(f"Login realizado com sucesso. Usuário: {user_repo.get_current_user()}")
+                print(f"Login realizado com sucesso. Usuário: {Usuario.obter_usuario_atual()}")
                 self.page.open(
                     ft.SnackBar(
                         content=ft.Text(

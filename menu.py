@@ -17,7 +17,6 @@ from src.core.configuracao import configuracao
 from src.core.empresa import empresa
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import UserRepository
-from src.navigation.router import navigate_to_login  # Nova importação
 
 gsm = get_style_manager()
 Usuario = UserRepository()  # Instanciar o repositório
@@ -55,7 +54,7 @@ class MenuPrincipalPage:
             self.user_email = None
             try:
                 self.user_email = Usuario.get_user_email()
-                print(f"Email obtido: {self.user_email}")
+                # print(f"Email obtido: {self.user_email}")
             except Exception as e:
                 print(f"Erro ao obter email: {e}")
 
@@ -118,21 +117,21 @@ class MenuPrincipalPage:
 
     def _handle_logout(self, _):
         """Função para lidar com o logout"""
-        print("Tentando fazer logout...")
+        # print("Tentando fazer logout...")
         try:
             # Obtém o ID do usuário atual antes do logout
-            user_id_before = Usuario.get_current_user()
-            print(f"Usuário antes do logout: {user_id_before}")
+            # user_id_before = Usuario.get_current_user()
+            # print(f"Usuário antes do logout: {user_id_before}")
 
-            logout_success = Usuario.logout()
-            print(f"Resultado do logout: {logout_success}")
+            # logout_success = Usuario.logout()
+            # print(f"Resultado do logout: {logout_success}")
 
             # Verifica novamente o ID do usuário após o logout
-            user_id_after = Usuario.get_current_user()
-            print(f"Usuário após o logout: {user_id_after}")
+            # user_id_after = Usuario.get_current_user()
+            # print(f"Usuário após o logout: {user_id_after}")
 
             # Força o redirecionamento independente do resultado
-            print("Redirecionando para tela de login")
+            # print("Redirecionando para tela de login")
 
             # Limpar completamente a página e reconstruir a tela de login
             self.page.controls.clear()
@@ -144,7 +143,7 @@ class MenuPrincipalPage:
             self.page.update()
 
         except Exception as e:
-            print(f"Exceção durante o logout: {e}")
+            # print(f"Exceção durante o logout: {e}")
             self.page.open(ft.SnackBar(content=ft.Text(f"Erro inesperado: {e}"), bgcolor=ft.Colors.ERROR))
 
     def _create_menu_button(self, item: dict) -> ft.Container:
@@ -161,8 +160,6 @@ class MenuPrincipalPage:
 
     def build(self):
         """Constrói o layout do menu principal"""
-        # Aplicar tema de fundo escuro
-        self.page.bgcolor = ft.Colors.GREY_900
 
         # Logotipo e cabeçalho
         logo = ft.Container(

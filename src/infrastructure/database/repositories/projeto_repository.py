@@ -66,15 +66,37 @@ class ProjetoRepository:
             with self.db.get_session() as session:
                 projeto = session.query(Project).filter_by(id=projeto_id).first()
                 if projeto:
-                    if nome:
+                    # Log para debug
+                    print(f"Repository - Atualizando projeto {projeto_id}")
+                    print(f"Valores recebidos: nome='{nome}', descricao='{descricao}', tipo descricao={type(descricao)}")
+                    print(f"Valores atuais: nome='{projeto.nome}', descricao='{projeto.descricao}'")
+
+                    # Atualizar nome se não for None (mesmo que seja string vazia)
+                    if nome is not None:
                         projeto.nome = nome
-                    if descricao:
-                        projeto.descricao = descricao
+                        print(f"Nome atualizado para: '{nome}'")
+
+                    # Atualizar descrição - pode ser None ou string (mesmo vazia)
+                    # descricao is None significa que o campo deve ser NULL no banco
+                    # descricao = "" significa que o campo deve ser uma string vazia no banco
+                    projeto.descricao = descricao
+                    print(f"Descrição atualizada para: '{descricao}', tipo={type(descricao)}")
+
+                    # Atualizar custo estimado se não for None
                     if custo_estimado is not None:
                         projeto.custo_estimado = custo_estimado
+
+                    # Atualizar valor total se não for None
                     if valor_total is not None:
                         projeto.valor_total = valor_total
+
+                    # Commit das alterações
                     session.commit()
+
+                    # Recarrega o objeto do banco para confirmar as mudanças
+                    session.refresh(projeto)
+                    print(f"Após commit: nome='{projeto.nome}', descricao='{projeto.descricao}', tipo descricao={type(projeto.descricao)}")
+
                 return projeto
         except Exception as e:
             print(f"Erro ao atualizar projeto: {e}")
@@ -86,8 +108,20 @@ class ProjetoRepository:
             with self.db.get_session() as session:
                 projeto = session.query(Project).filter_by(id=projeto_id).first()
                 if projeto:
+                    print(f"Atualizando apenas valor total: {valor_total} para projeto {projeto_id}")
+                    print(f"Valores antes: nome='{projeto.nome}', descricao='{projeto.descricao}'")
+
+                    # Atualiza apenas o valor total e o custo estimado
                     projeto.valor_total = valor_total
+                    projeto.custo_estimado = valor_total  # Atualiza também o custo estimado
+
+                    # Commit das alterações
                     session.commit()
+
+                    # Verifica os valores após o commit
+                    session.refresh(projeto)
+                    print(f"Valores após: nome='{projeto.nome}', descricao='{projeto.descricao}'")
+
                     return True
                 return False
         except Exception as e:

@@ -31,12 +31,12 @@ class Project(Base):
 
     # Relacionamentos - remover qualquer referência a orçamentos
     cliente = relationship("Client", back_populates="projetos")
-    fundacoes = relationship("Foundation", back_populates="projeto")
-    contrapisos = relationship("Floor", back_populates="projeto")
-    lajes = relationship("Slab", back_populates="projeto")
-    telhados = relationship("Roof", back_populates="projeto")
-    eletricas = relationship("Electrical", back_populates="projeto")
-    paredes = relationship("Wall", back_populates="projeto")
+    fundacoes = relationship("Foundation", back_populates="projeto", cascade="all, delete-orphan")
+    contrapisos = relationship("Floor", back_populates="projeto", cascade="all, delete-orphan")
+    lajes = relationship("Slab", back_populates="projeto", cascade="all, delete-orphan")
+    telhados = relationship("Roof", back_populates="projeto", cascade="all, delete-orphan")
+    eletricas = relationship("Electrical", back_populates="projeto", cascade="all, delete-orphan")
+    paredes = relationship("Wall", back_populates="projeto", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Project(id={self.id}, nome={self.nome})"

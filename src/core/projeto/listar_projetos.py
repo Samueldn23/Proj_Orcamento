@@ -185,6 +185,7 @@ def projetos_cliente(page: ft.Page, cliente):
                             spacing=10,
                         ),
                         padding=3,
+                        alignment=ft.alignment.center,
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -195,5 +196,5 @@ def projetos_cliente(page: ft.Page, cliente):
     except Exception as e:
         print(f"Erro ao listar projetos: {e}")
         # Mostrar mensagem de erro para o usuário
-        page.show_snack_bar(ft.SnackBar(content=ft.Text("Erro ao carregar projetos"), bgcolor=ft.colors.ERROR))
+        page.open(ft.SnackBar(content=ft.Text("Erro ao carregar projetos"), bgcolor=ft.Colors.ERROR))
         return []

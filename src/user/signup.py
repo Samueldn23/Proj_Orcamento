@@ -5,11 +5,9 @@ import time
 import flet as ft
 
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import UserRepository
-from src.user import login
+from src.user import cadastrar_usuario, login
 
 gsm = get_style_manager()
-Usuario = UserRepository()
 
 
 class SignupPage:
@@ -132,12 +130,8 @@ class SignupPage:
             return
 
         try:
-            if Usuario.create(
-                self.email_input.value, self.senha_input.value, self.nome_input.value
-            ):
-                self._show_message(
-                    f"Usuário {self.nome_input.value} cadastrado com sucesso!", False
-                )
+            if cadastrar_usuario(self.nome_input.value, self.email_input.value, self.senha_input.value):
+                self._show_message(f"Usuário {self.nome_input.value} cadastrado com sucesso!", False)
                 time.sleep(2)
                 login.mostrar_tela(self.page)
             else:
