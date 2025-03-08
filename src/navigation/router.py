@@ -17,7 +17,7 @@ def navigate_to_login(page: ft.Page):
     print("Tela de login carregada")
 
 
-def navigate_to_menu(page: ft.Page):
+def navegar_para_menu(page: ft.Page):
     """Navega para o menu principal"""
     from menu import mostrar_menu
 

@@ -1,4 +1,4 @@
-"""Base para os models do SQLAlchemy"""
+"""Base para os modelos do SQLAlchemy"""
 
 from sqlalchemy.orm import declarative_base
 

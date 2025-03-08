@@ -5,7 +5,7 @@ from typing import Any
 from src.infrastructure.cache.cache_config import cache_query
 
 from ..connections.postgres import postgres
-from ..models.client import Client
+from ..models.clientes import Cliente
 
 
 class ClientRepository:
@@ -27,11 +27,11 @@ class ClientRepository:
         cep: int,
         bairro: str,
         numero: str,
-    ) -> Client | None:
+    ) -> Cliente | None:
         """Adiciona um novo cliente"""
         try:
             with self.db.get_session() as session:
-                client = Client(
+                cliente = Cliente(
                     user_id=user_id,
                     nome=nome,
                     cpf=cpf,
@@ -44,9 +44,9 @@ class ClientRepository:
                     bairro=bairro,
                     numero=numero,
                 )
-                session.add(client)
+                session.add(cliente)
                 session.commit()
-                return client
+                return cliente
         except Exception as e:
             print(f"Erro ao criar cliente: {e}")
             return None
@@ -56,40 +56,43 @@ class ClientRepository:
         """Lista clientes de um usuário"""
         try:
             with self.db.get_session() as session:
-                clients_query = session.query(Client).filter(Client.user_id == user_id).all()
+                clientes_query = session.query(Cliente).filter(Cliente.user_id == user_id).all()
 
-                # Converter objetos Client para dicionários
-                clients = []
-                for client in clients_query:
-                    client_dict = {
-                        "id": client.id,
-                        "user_id": str(client.user_id),
-                        "nome": client.nome,
-                        "cpf": str(client.cpf) if client.cpf else "",
-                        "telefone": str(client.telefone) if client.telefone else "",
-                        "email": client.email,
-                        "endereco": client.endereco,
-                        "cidade": client.cidade,
-                        "estado": client.estado,
-                        "cep": str(client.cep) if client.cep else "",
-                        "bairro": client.bairro,
-                        "numero": client.numero,
+                # Converter objetos Cliente para dicionários
+                clientes = []
+                for cliente in clientes_query:
+                    cliente_dict = {
+                        "id": cliente.id,
+                        "user_id": str(cliente.user_id),
+                        "nome": cliente.nome,
+                        "cpf": str(cliente.cpf) if cliente.cpf else "",
+                        "telefone": str(cliente.telefone) if cliente.telefone else "",
+                        "email": cliente.email,
+                        "endereco": cliente.endereco,
+                        "cidade": cliente.cidade,
+                        "estado": cliente.estado,
+                        "cep": str(cliente.cep) if cliente.cep else "",
+                        "bairro": cliente.bairro,
+                        "numero": cliente.numero,
                     }
-                    clients.append(client_dict)
+                    clientes.append(cliente_dict)
 
-                return clients
+                return clientes
         except Exception as e:
             print(f"Erro ao listar clientes: {e}")
             return []
 
-    def update(self, client_id: int, client_data: dict) -> bool:
+    # Alias para o método traduzido
+    listar_por_usuario = list_by_user
+
+    def update(self, cliente_id: int, cliente_data: dict) -> bool:
         """Atualiza os dados de um cliente"""
         try:
             with self.db.get_session() as session:
-                client = session.query(Client).filter(Client.id == client_id).first()
-                if client:
-                    for key, value in client_data.items():
-                        setattr(client, key, value)
+                cliente = session.query(Cliente).filter(Cliente.id == cliente_id).first()
+                if cliente:
+                    for key, value in cliente_data.items():
+                        setattr(cliente, key, value)
                     session.commit()
                     return True
                 return False
@@ -97,13 +100,13 @@ class ClientRepository:
             print(f"Erro ao atualizar cliente: {e}")
             return False
 
-    def delete(self, client_id: int) -> bool:
+    def delete(self, cliente_id: int) -> bool:
         """Remove um cliente"""
         try:
             with self.db.get_session() as session:
-                client = session.query(Client).filter(Client.id == client_id).first()
-                if client:
-                    session.delete(client)
+                cliente = session.query(Cliente).filter(Cliente.id == cliente_id).first()
+                if cliente:
+                    session.delete(cliente)
                     session.commit()
                     return True
                 return False
@@ -112,11 +115,11 @@ class ClientRepository:
             return False
 
     @cache_query
-    def get_by_id(self, client_id: int) -> Client | None:
+    def get_by_id(self, cliente_id: int) -> Cliente | None:
         """Busca um cliente pelo ID"""
         try:
             with self.db.get_session() as session:
-                return session.query(Client).filter(Client.id == client_id).first()
+                return session.query(Cliente).filter(Cliente.id == cliente_id).first()
         except Exception as e:
             print(f"Erro ao buscar cliente: {e}")
             return None

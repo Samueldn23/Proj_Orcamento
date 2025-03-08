@@ -1,4 +1,4 @@
-"""Model de cliente"""
+"""Modelo de cliente"""
 
 from typing import ClassVar
 
@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 
-class Client(Base):
+class Cliente(Base):
     """Modelo de cliente no banco de dados"""
 
     __tablename__ = "clientes"
@@ -34,8 +34,8 @@ class Client(Base):
     }
 
     # Relacionamentos - remover referência a orçamentos
-    usuario = relationship("User", back_populates="clientes")
-    projetos = relationship("Project", back_populates="cliente", cascade="all, delete-orphan")
+    usuario = relationship("Usuario", back_populates="clientes")
+    projetos = relationship("Projeto", back_populates="cliente", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Cliente(id={self.id}, nome={self.nome})"

@@ -5,11 +5,11 @@ import time
 import flet as ft
 
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import ClientRepository, UserRepository
+from src.infrastructure.database.repositories import RepositorioCliente, RepositorioUsuario
 
 gsm = get_style_manager()
-Cliente = ClientRepository()
-Usuario = UserRepository()
+Cliente = RepositorioCliente()
+Usuario = RepositorioUsuario()
 
 
 def formatar_telefone(telefone: str) -> str:
@@ -215,7 +215,7 @@ class Cadastro:
         if not validar:
             self._message(message, True)
             return
-        user_id = Usuario.get_current_user()
+        user_id = Usuario.obter_usuario_atual()
         if user_id is None:
             self._message("Usuário não encontrado", True)
             return

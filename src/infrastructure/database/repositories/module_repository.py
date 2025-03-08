@@ -3,7 +3,7 @@
 from typing import Any, Optional  # noqa: F401
 
 from ..connections.postgres import postgres
-from ..models.module import Module
+from ..models.modulos import Modulo
 
 
 class ModuleRepository:
@@ -16,7 +16,7 @@ class ModuleRepository:
         """Obtém os módulos do usuário"""
         try:
             with self.db.get_session() as session:
-                modules = session.query(Module).filter(Module.user_id == user_id).all()
+                modules = session.query(Modulo).filter(Modulo.user_id == user_id).all()
 
                 # Converter objetos Module para dicionários
                 result = []
@@ -24,7 +24,7 @@ class ModuleRepository:
                     module_dict = {
                         "id": module.id,
                         "user_id": str(module.user_id),
-                        "user_name": module.user_name,
+                        "nome_usuario": module.nome_usuario,
                         "parede": module.parede,
                         "contrapiso": module.contrapiso,
                         "eletrica": module.eletrica,
@@ -39,11 +39,13 @@ class ModuleRepository:
             print(f"Erro ao obter módulos: {e}")
             return []
 
-    def create_default_modules(self, user_id: str, user_name: str) -> bool:
+    def create_default_modules(self, user_id: str, nome_usuario: str) -> bool:
         """Cria os módulos padrão para um novo usuário"""
         try:
             with self.db.get_session() as session:
-                module = Module(user_id=user_id, user_name=user_name, parede=True, contrapiso=False, eletrica=False, fundacao=False, laje=False, telhado=False)
+                module = Modulo(
+                    user_id=user_id, nome_usuario=nome_usuario, parede=True, contrapiso=False, eletrica=False, fundacao=False, laje=False, telhado=False
+                )
                 session.add(module)
                 session.commit()
                 return True
@@ -55,7 +57,7 @@ class ModuleRepository:
         """Atualiza os módulos de um usuário"""
         try:
             with self.db.get_session() as session:
-                module = session.query(Module).filter(Module.user_id == user_id).first()
+                module = session.query(Modulo).filter(Modulo.user_id == user_id).first()
                 if module:
                     for key, value in module_data.items():
                         if hasattr(module, key):

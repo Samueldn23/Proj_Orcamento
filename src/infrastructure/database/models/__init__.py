@@ -1,24 +1,31 @@
-"""Módulo de models do banco de dados"""
+"""Módulo de modelos do banco de dados"""
 
 from .base import Base
-from .client import Client
-from .construction import Electrical, Floor, Foundation, Roof, Slab, Wall
+from .clientes import Cliente
+from .construcoes import (
+    Contrapisos as Contrapiso,
+    Eletricas as Eletrica,
+    Fundacoes as Fundacao,
+    Lajes as Laje,
+    Paredes as Parede,
+    Telhados as Telhado,
+)
 from .feedback import Feedback
-from .module import Module
-from .project import Project
-from .user import User
+from .modulos import Modulo
+from .projetos import Projeto
+from .usuarios import Usuario
 
 __all__ = [
     "Base",
-    "Client",
-    "Electrical",
+    "Cliente",
+    "Contrapiso",
+    "Eletrica",
     "Feedback",
-    "Floor",
-    "Foundation",
-    "Module",
-    "Project",
-    "Roof",
-    "Slab",
-    "User",
-    "Wall",
+    "Fundacao",
+    "Laje",
+    "Modulo",
+    "Parede",
+    "Projeto",
+    "Telhado",
+    "Usuario",
 ]

@@ -6,14 +6,14 @@ import flet as ft
 from dotenv import load_dotenv
 
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import UserRepository
-from src.navigation.router import navigate_to_menu
+from src.infrastructure.database.repositories import RepositorioUsuario
+from src.navigation.router import navegar_para_menu
 from src.user import Usuario
 
 from .signup import tela_cadastro
 
 gsm = get_style_manager()
-user_repo = UserRepository()
+repositorio_usuario = RepositorioUsuario()
 load_dotenv()
 
 
@@ -86,7 +86,7 @@ class LoginPage:
                 print(f"Aviso ao limpar sessão anterior: {e}")
 
             # Tenta fazer login com as novas credenciais
-            login_result = user_repo.login_with_password(self.email_input.value, self.password_input.value)
+            login_result = repositorio_usuario.login_com_senha(self.email_input.value, self.password_input.value)
 
             # print(f"Resultado do login: {login_result}")
 
@@ -101,7 +101,7 @@ class LoginPage:
                         bgcolor=ft.Colors.GREEN,
                     ),
                 )
-                navigate_to_menu(self.page)
+                navegar_para_menu(self.page)
             else:
                 self.mostrar_erro("Usuário ou senha inválidos")
         except ValueError as e:
@@ -111,7 +111,7 @@ class LoginPage:
             self.page.show_loading = False
             self.page.update()
 
-    def build(self):
+    def construir(self):
         """Constrói a interface da página de login"""
         return ft.Container(
             content=ft.Column(
@@ -136,9 +136,9 @@ def mostrar_tela(page: ft.Page):
     """Mostra a tela de login"""
 
     def handle_login_success(_):
-        navigate_to_menu(page)
+        navegar_para_menu(page)
 
     page.controls.clear()
     login_page = LoginPage(page)
-    page.add(login_page.build())
+    page.add(login_page.construir())
     page.update()

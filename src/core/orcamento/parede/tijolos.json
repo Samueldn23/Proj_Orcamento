@@ -11,8 +11,8 @@
         "largura": 0.19,
         "altura": 0.19,
         "profundidade": 0.09,
-        "preco_unitario": 1.2
-    },    
+        "preco_unitario": 1.5
+    },
     "Bloco Cerâmico ": {
         "nome": "Bloco Cerâmico",
         "largura": 0.29,
@@ -20,18 +20,18 @@
         "profundidade": 0.14,
         "preco_unitario": 1.5
     },
-    "Bloco Concreto 2 Furos":{
-        "nome":"Bloco Concreto 2 furos",
-        "largura":0.39,
-        "altura":0.19,
-        "profundidade":0.14,
-        "preco_unitario":7.99
+    "Bloco Concreto 2 Furos": {
+        "nome": "Bloco Concreto 2 furos",
+        "largura": 0.39,
+        "altura": 0.19,
+        "profundidade": 0.14,
+        "preco_unitario": 7.99
     },
-    "Bloco Concreto 3 Furos":{
-        "nome":"Bloco Concreto 3 furos",
-        "largura":0.54,
-        "altura":0.19,
-        "profundidade":0.14,
-        "preco_unitario":5.50
+    "Bloco Concreto 3 Furos": {
+        "nome": "Bloco Concreto 3 furos",
+        "largura": 0.54,
+        "altura": 0.19,
+        "profundidade": 0.14,
+        "preco_unitario": 6.2
     }
 }

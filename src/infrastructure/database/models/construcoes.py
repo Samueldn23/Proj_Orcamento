@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 
-class Foundation(Base):
+class Fundacoes(Base):
     """Modelo de fundação no banco de dados"""
 
     __tablename__ = "fundacoes"
@@ -19,10 +19,13 @@ class Foundation(Base):
     valor_m3 = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="fundacoes")
+    projeto = relationship("Projeto", back_populates="fundacoes")
+
+    def __repr__(self):
+        return f"Fundacao(id={self.id}, projeto_id={self.projeto_id})"
 
 
-class Floor(Base):
+class Contrapisos(Base):
     """Modelo de contrapiso no banco de dados"""
 
     __tablename__ = "contrapisos"
@@ -35,10 +38,10 @@ class Floor(Base):
     valor_metro = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="contrapisos")
+    projeto = relationship("Projeto", back_populates="contrapisos")
 
 
-class Slab(Base):
+class Lajes(Base):
     """Modelo de laje no banco de dados"""
 
     __tablename__ = "lajes"
@@ -51,10 +54,10 @@ class Slab(Base):
     valor_m3 = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="lajes")
+    projeto = relationship("Projeto", back_populates="lajes")
 
 
-class Roof(Base):
+class Telhados(Base):
     """Modelo de telhado no banco de dados"""
 
     __tablename__ = "telhados"
@@ -66,10 +69,10 @@ class Roof(Base):
     valor_metro = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="telhados")
+    projeto = relationship("Projeto", back_populates="telhados")
 
 
-class Electrical(Base):
+class Eletricas(Base):
     """Modelo de elétrica no banco de dados"""
 
     __tablename__ = "eletricas"
@@ -80,10 +83,10 @@ class Electrical(Base):
     valor_por_ponto = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="eletricas")
+    projeto = relationship("Projeto", back_populates="eletricas")
 
 
-class Wall(Base):
+class Paredes(Base):
     """Modelo de parede no banco de dados"""
 
     __tablename__ = "paredes"
@@ -100,4 +103,4 @@ class Wall(Base):
     custo_mao_obra = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
 
-    projeto = relationship("Project", back_populates="paredes")
+    projeto = relationship("Projeto", back_populates="paredes")

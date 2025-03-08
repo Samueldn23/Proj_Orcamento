@@ -2,12 +2,12 @@
 
 import flet as ft
 
-# from src.infrastructure.database.models import Module
+# from src.infrastructure.database.models import Modulo
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories.user_repository import UserRepository
+from src.infrastructure.database.repositories import RepositorioUsuario
 
 gsm = get_style_manager()
-user_repo = UserRepository()
+repositorio_usuario = RepositorioUsuario()
 
 
 class GerenciadorModulos:
@@ -20,15 +20,16 @@ class GerenciadorModulos:
             "laje": ft.Switch(label="Módulo Laje", value=False),
             "telhado": ft.Switch(label="Módulo Telhado", value=False),
         }
+        self.page = None
 
     def carregar_modulos(self):
         """Carrega o estado dos módulos do banco de dados"""
         try:
-            user_id = user_repo.get_current_user()
+            user_id = repositorio_usuario.obter_usuario_atual()
             if not user_id:
                 return False
 
-            modulos = user_repo.get_modules(user_id)
+            modulos = repositorio_usuario.obter_modulos(user_id)
             if modulos:
                 # Atualiza os switches com os valores do banco
                 self.switches["parede"].value = modulos.parede
@@ -43,10 +44,10 @@ class GerenciadorModulos:
             print(f"Erro ao carregar módulos: {error}")
             return False
 
-    def salvar_modulos(self):
+    def salvar_modulos(self, e):
         """Salva o estado dos módulos no banco de dados"""
         try:
-            user_id = user_repo.get_current_user()
+            user_id = repositorio_usuario.obter_usuario_atual()
             if not user_id:
                 return False
 
@@ -59,10 +60,29 @@ class GerenciadorModulos:
                 "telhado": self.switches["telhado"].value,
             }
 
-            success = user_repo.update_modules(user_id, modulos_data)
+            success = repositorio_usuario.atualizar_modulos(user_id, modulos_data)
+
+            # Mostra mensagem de sucesso/erro
+            if e and e.page:
+                e.page.open(
+                    ft.SnackBar(
+                        content=ft.Text("Módulos salvos com sucesso!" if success else "Erro ao salvar módulos!"),
+                        bgcolor=ft.Colors.GREEN if success else ft.Colors.RED,
+                    )
+                )
+                e.page.update()
+
             return success
         except Exception as error:
             print(f"Erro ao salvar módulos: {error}")
+            if e and e.page:
+                e.page.open(
+                    ft.SnackBar(
+                        content=ft.Text(f"Erro ao salvar módulos: {error}"),
+                        bgcolor=ft.Colors.RED,
+                    )
+                )
+                e.page.update()
             return False
 
     def build(self):
@@ -97,7 +117,7 @@ class GerenciadorModulos:
                             gsm.create_button(
                                 text="Salvar Módulos",
                                 icon=ft.Icons.SAVE,
-                                on_click=lambda _: self.salvar_modulos(),
+                                on_click=self.salvar_modulos,
                                 hover_color=ft.Colors.GREEN,
                             )
                         ],

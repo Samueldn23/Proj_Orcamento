@@ -16,10 +16,10 @@ from src.core.cliente import clientes
 from src.core.configuracao import configuracao
 from src.core.empresa import empresa
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import UserRepository
+from src.infrastructure.database.repositories import RepositorioUsuario
 
 gsm = get_style_manager()
-Usuario = UserRepository()  # Instanciar o repositório
+Usuario = RepositorioUsuario()  # Instanciar o repositório
 
 
 class MenuButton(ft.ElevatedButton):
@@ -44,38 +44,57 @@ class MenuPrincipalPage:
     def _get_user_info(self):
         """Obtém informações do usuário atual"""
         try:
-            self.user_id = Usuario.get_current_user()
-            self.user_data = Usuario.get_by_id(self.user_id) if self.user_id else None
-
-            # Obtém o nome do usuário
-            self.user_name = self.user_data.nome if self.user_data else "Usuário"
-
-            # Obtém o email do usuário atual usando o Supabase Auth
+            # Inicializa os atributos com valores padrão
+            self.user_name = "Usuário"
+            self.user_display = "Usuário"
             self.user_email = None
-            try:
-                self.user_email = Usuario.get_user_email()
-                # print(f"Email obtido: {self.user_email}")
-            except Exception as e:
-                print(f"Erro ao obter email: {e}")
+            self.modulos = None
 
-            # Cria a informação de exibição do usuário com nome e email
-            if self.user_email:
-                self.user_display = f"{self.user_name} ({self.user_email})"
-            else:
-                self.user_display = self.user_name
-                print("Email não disponível, usando apenas o nome")
+            # Tenta obter o ID do usuário atual
+            self.user_id = Usuario.obter_usuario_atual()
+            print(f"ID do usuário obtido: {self.user_id}")
 
-            # Verifica se é o primeiro acesso
             if self.user_id:
-                self.modulos = Usuario.get_modules(self.user_id)
-            else:
-                self.modulos = None
+                # Tenta obter os dados do usuário
+                self.user_data = Usuario.obter_por_id(self.user_id)
+                print(f"Dados do usuário obtidos: {self.user_data}")
 
-            return {"nome": self.user_name}
+                if self.user_data:
+                    self.user_name = self.user_data.nome
+                    print(f"Nome do usuário: {self.user_name}")
+
+                # Tenta obter o email do usuário
+                try:
+                    self.user_email = Usuario.obter_email_usuario()
+                    print(f"Email do usuário: {self.user_email}")
+                except Exception as e:
+                    print(f"Erro ao obter email: {e}")
+                    self.user_email = None
+
+                # Atualiza a informação de exibição
+                if self.user_email:
+                    self.user_display = f"{self.user_name} ({self.user_email})"
+                else:
+                    self.user_display = self.user_name
+                    print("Email não disponível, usando apenas o nome")
+
+                # Tenta obter os módulos
+                try:
+                    self.modulos = Usuario.obter_modulos(self.user_id)
+                    print(f"Módulos obtidos: {self.modulos}")
+                except Exception as e:
+                    print(f"Erro ao obter módulos: {e}")
+                    self.modulos = None
+
+            return {"nome": self.user_name, "email": self.user_email, "display": self.user_display, "modulos": self.modulos}
         except Exception as e:
             print(f"Erro ao obter informações do usuário: {e}")
+            # Garante que os atributos estejam definidos mesmo em caso de erro
+            self.user_name = "Usuário"
             self.user_display = "Usuário"
-            return {"nome": "Usuário"}
+            self.user_email = None
+            self.modulos = None
+            return {"nome": "Usuário", "email": None, "display": "Usuário", "modulos": None}
 
     def _init_buttons(self):
         """Inicializa os botões do menu principal"""
@@ -117,34 +136,46 @@ class MenuPrincipalPage:
 
     def _handle_logout(self, _):
         """Função para lidar com o logout"""
-        # print("Tentando fazer logout...")
+        print("🔄 Iniciando processo de logout...")
         try:
             # Obtém o ID do usuário atual antes do logout
-            # user_id_before = Usuario.get_current_user()
-            # print(f"Usuário antes do logout: {user_id_before}")
+            user_id_before = Usuario.obter_usuario_atual()
+            print(f"👤 Usuário antes do logout: {user_id_before}")
 
-            # logout_success = Usuario.logout()
-            # print(f"Resultado do logout: {logout_success}")
+            # Tenta fazer logout
+            print("🔑 Tentando fazer logout...")
+            logout_success = Usuario.logout()
+            print(f"📝 Resultado do logout: {logout_success}")
 
             # Verifica novamente o ID do usuário após o logout
-            # user_id_after = Usuario.get_current_user()
-            # print(f"Usuário após o logout: {user_id_after}")
-
-            # Força o redirecionamento independente do resultado
-            # print("Redirecionando para tela de login")
+            user_id_after = Usuario.obter_usuario_atual()
+            print(f"👤 Usuário após o logout: {user_id_after}")
 
             # Limpar completamente a página e reconstruir a tela de login
+            print("🔄 Redirecionando para tela de login...")
             self.page.controls.clear()
             from src.user.login import LoginPage
 
             # Cria uma nova instância da página de login
             login_page = LoginPage(self.page)
-            self.page.add(login_page.build())
+            self.page.add(login_page.construir())
             self.page.update()
+            print("✅ Redirecionamento concluído com sucesso!")
 
         except Exception as e:
-            # print(f"Exceção durante o logout: {e}")
-            self.page.open(ft.SnackBar(content=ft.Text(f"Erro inesperado: {e}"), bgcolor=ft.Colors.ERROR))
+            print(f"❌ Erro durante o logout: {e!s}")
+            print(f"❌ Tipo do erro: {type(e)}")
+            import traceback
+
+            print(f"❌ Traceback completo: {traceback.format_exc()}")
+
+            self.page.open(
+                ft.SnackBar(
+                    content=ft.Text(f"Erro durante o logout: {e!s}"),
+                    bgcolor=ft.Colors.RED,
+                )
+            )
+            self.page.update()
 
     def _create_menu_button(self, item: dict) -> ft.Container:
         """Cria um botão de menu estilizado"""

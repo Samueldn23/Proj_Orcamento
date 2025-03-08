@@ -6,12 +6,12 @@ from src.core.cliente import atualizar, cadastrar
 from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.cache.cache_config import clear_cache
-from src.infrastructure.database.repositories import client_repository, user_repository
+from src.infrastructure.database.repositories import RepositorioCliente, user_repository
 from src.navigation.router import navegar_principal
 
 gsm = get_style_manager()
-user_repo = user_repository.UserRepository()
-client_repo = client_repository.ClientRepository()
+repositorio_usuario = user_repository.RepositorioUsuario()
+repositorio_cliente = RepositorioCliente()
 
 # Variável global para armazenar todos os clientes
 todos_clientes = []
@@ -49,7 +49,7 @@ def excluir_cliente(cliente, page=None):
     print(f"Excluindo cliente com ID: {cliente_id}")
 
     # Tenta excluir o cliente
-    if client_repo.delete(cliente_id):
+    if repositorio_cliente.delete(cliente_id):
         print(f"Cliente {cliente_id} excluído com sucesso!")
         # Limpa o cache
         clear_cache()
@@ -215,10 +215,10 @@ def listar_clientes(page):
     clear_cache()
 
     # Obtém o ID do usuário atual
-    user_id = user_repo.get_current_user()
+    user_id = repositorio_usuario.obter_usuario_atual()
 
     # Busca os clientes do usuário
-    todos_clientes = client_repo.list_by_user(user_id)
+    todos_clientes = repositorio_cliente.listar_por_usuario(user_id)
     atualizar_lista_clientes(page, todos_clientes)
 
 

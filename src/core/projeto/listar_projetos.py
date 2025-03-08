@@ -5,11 +5,11 @@ import pytz
 
 from src.core.projeto import criar_projeto
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import ClientRepository, ProjetoRepository
+from src.infrastructure.database.repositories import RepositorioCliente, RepositorioProjeto
 
 # Instanciar as classes dos repositórios
-projeto_repo = ProjetoRepository()  # Criar instância
-cliente_repo = ClientRepository()  # Criar instância
+repositorio_projeto = RepositorioProjeto()
+repositorio_cliente = RepositorioCliente()
 
 gsm = get_style_manager()
 
@@ -21,7 +21,7 @@ def projetos_cliente(page: ft.Page, cliente):
         cliente_id = cliente.get("id") if isinstance(cliente, dict) else cliente.id
 
         # Buscar projetos do cliente
-        projetos_list = projeto_repo.list_by_client(cliente_id=cliente_id)
+        projetos_list = repositorio_projeto.list_by_client(cliente_id=cliente_id)
 
         from src.core.cliente.clientes import (
             tela_clientes,

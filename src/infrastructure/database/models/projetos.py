@@ -1,4 +1,4 @@
-"""Model de projeto"""
+"""Modelo de projeto"""
 
 from sqlalchemy import (
     TIMESTAMP,
@@ -13,9 +13,17 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from .base import Base
+from .construcoes import (
+    Contrapisos as Contrapiso,
+    Eletricas as Eletrica,
+    Fundacoes as Fundacao,
+    Lajes as Laje,
+    Paredes as Parede,
+    Telhados as Telhado,
+)
 
 
-class Project(Base):
+class Projeto(Base):
     """Modelo de projeto no banco de dados"""
 
     __tablename__ = "projetos"
@@ -30,13 +38,13 @@ class Project(Base):
     valor_total = Column(Numeric(10, 2), nullable=True)
 
     # Relacionamentos - remover qualquer referência a orçamentos
-    cliente = relationship("Client", back_populates="projetos")
-    fundacoes = relationship("Foundation", back_populates="projeto", cascade="all, delete-orphan")
-    contrapisos = relationship("Floor", back_populates="projeto", cascade="all, delete-orphan")
-    lajes = relationship("Slab", back_populates="projeto", cascade="all, delete-orphan")
-    telhados = relationship("Roof", back_populates="projeto", cascade="all, delete-orphan")
-    eletricas = relationship("Electrical", back_populates="projeto", cascade="all, delete-orphan")
-    paredes = relationship("Wall", back_populates="projeto", cascade="all, delete-orphan")
+    cliente = relationship("Cliente", back_populates="projetos")
+    fundacoes = relationship(Fundacao, back_populates="projeto", cascade="all, delete-orphan")
+    contrapisos = relationship(Contrapiso, back_populates="projeto", cascade="all, delete-orphan")
+    lajes = relationship(Laje, back_populates="projeto", cascade="all, delete-orphan")
+    telhados = relationship(Telhado, back_populates="projeto", cascade="all, delete-orphan")
+    eletricas = relationship(Eletrica, back_populates="projeto", cascade="all, delete-orphan")
+    paredes = relationship(Parede, back_populates="projeto", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"Project(id={self.id}, nome={self.nome})"
+        return f"Projeto(id={self.id}, nome={self.nome})"

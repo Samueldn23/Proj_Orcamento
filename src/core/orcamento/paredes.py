@@ -4,11 +4,11 @@ import locale
 
 import flet as ft
 
+from src.core.orcamento.parede.tijolos import carregar_tijolos, salvar_tijolos
 from src.core.projeto.detalhes_projeto import atualizar_custo_estimado
 from src.custom.styles_utils import get_style_manager
-from src.data.tijolos import carregar_tijolos, salvar_tijolos
 from src.infrastructure.database.connections import Session
-from src.infrastructure.database.models.construction import Wall
+from src.infrastructure.database.models.construcoes import Paredes
 from src.navigation.router import navegar_orcamento
 
 # Configurações
@@ -174,7 +174,7 @@ class ParedeCalculator:
             custo_total = mao_obra + custo_tijolos
 
             # Criar nova parede no banco
-            nova_parede = Wall(
+            nova_parede = Paredes(
                 projeto_id=self.projeto.id,  # Corrigido de orcamento_id para projeto_id
                 altura=float(self.altura_input.value),
                 comprimento=float(self.comprimento_input.value),

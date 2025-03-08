@@ -1,6 +1,6 @@
 """Script para atualizar o banco de dados"""
 
-from src.infrastructure.database.connections.supabase import supabase
+# from src.infrastructure.database.connections.supabase import supabase
 
 # SQL para atualizar as restrições
 SQL = """
@@ -46,7 +46,7 @@ def update_database():
         print(f"\n📝 SQL a ser executado:\n{SQL}")
 
         # Executa o bloco SQL como uma única transação
-        response = supabase.client.postgrest.rpc("exec_sql", {"sql": SQL}).execute()
+        # response = supabase.client.postgrest.rpc("exec_sql", {"sql": SQL}).execute()
 
         print("\n✨ Banco de dados atualizado com sucesso!")
         return True

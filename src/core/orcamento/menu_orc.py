@@ -7,11 +7,10 @@ import flet as ft
 from src.core.orcamento import contrapiso, eletrica, fundacao, laje, paredes, telhado
 from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories.module_repository import ModuleRepository
+from src.infrastructure.database.repositories.module_repository import ModuleRepository as RepositorioModulo
 
 gsm = get_style_manager()
-module_repo = ModuleRepository()
-
+repositorio_modulo = RepositorioModulo()
 
 
 class MenuButton(ft.ElevatedButton):
@@ -42,7 +41,18 @@ class OrcamentoPage:
         self.page = page
         self.cliente = _cliente
         self.projeto = projeto
-        self.modulo = module_repo.get_modules(self.cliente["user_id"])
+        self.modulo = repositorio_modulo.get_modules(self.cliente["user_id"])
+        self.menu_buttons = []  # Inicializa a lista de botões vazia
+
+        # Inicializa o botão voltar
+        self.voltar_button = gsm.create_button(
+            text="Voltar",
+            icon=ft.Icons.ARROW_BACK,
+            on_click=lambda _: tela_detalhes_projeto(self.page, self.projeto, self.cliente),
+            hover_color=gsm.colors.VOLTAR,
+            width=130,
+        )
+
         self._init_buttons()
 
     def _init_buttons(self):
@@ -51,27 +61,19 @@ class OrcamentoPage:
         # Certifique-se de que `self.modulo` é iterável
         if self.modulo:
             for modulo in self.modulo:
-                if modulo.get(
-                    "parede", False
-                ):  # Verifica se o módulo tem `parede` = True
+                if modulo.get("parede", False):  # Verifica se o módulo tem `parede` = True
                     self.menu_items.append(
                         {
                             "text": "Parede",
-                            "action": lambda _: paredes.mostrar_parede(
-                                self.page, self.cliente, self.projeto
-                            ),
+                            "action": lambda _: paredes.mostrar_parede(self.page, self.cliente, self.projeto),
                             "icon": "icons/parede.png",
                         }
                     )
-                if modulo.get(
-                    "contrapiso", False
-                ):  # Verifica se o módulo tem `contrapiso` = True
+                if modulo.get("contrapiso", False):  # Verifica se o módulo tem `contrapiso` = True
                     self.menu_items.append(
                         {
                             "text": "Contrapiso",
-                            "action": lambda _: contrapiso.mostrar_contrapiso(
-                                self.page, self.cliente
-                            ),
+                            "action": lambda _: contrapiso.mostrar_contrapiso(self.page, self.cliente, self.projeto),
                             "icon": "icons/contrapiso.png",
                         }
                     )
@@ -79,63 +81,37 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Laje",
-                            "action": lambda _: laje.mostrar_laje(
-                                self.page, self.cliente
-                            ),
+                            "action": lambda _: laje.mostrar_laje(self.page, self.cliente, self.projeto),
                             "icon": "icons/laje.png",
                         }
                     )
-                if modulo.get(
-                    "telhado", False
-                ):  # Verifica se o módulo tem `telhado` = True
+                if modulo.get("telhado", False):  # Verifica se o módulo tem `telhado` = True
                     self.menu_items.append(
                         {
                             "text": "Telhado",
-                            "action": lambda _: telhado.mostrar_telhado(
-                                self.page, self.cliente
-                            ),
+                            "action": lambda _: telhado.mostrar_telhado(self.page, self.cliente, self.projeto),
                             "icon": "icons/telhado.png",
                         }
                     )
-                if modulo.get(
-                    "eletrica", False
-                ):  # Verifica se o módulo tem `eletrica` = True
+                if modulo.get("eletrica", False):  # Verifica se o módulo tem `eletrica` = True
                     self.menu_items.append(
                         {
                             "text": "Elétrica",
-                            "action": lambda _: eletrica.mostrar_eletrica(
-                                self.page, self.cliente
-                            ),
+                            "action": lambda _: eletrica.mostrar_eletrica(self.page, self.cliente, self.projeto),
                             "icon": "icons/eletrica.png",
                         }
                     )
-                if modulo.get(
-                    "fundacao", False
-                ):  # Verifica se o módulo tem `fundacao` = True
+                if modulo.get("fundacao", False):  # Verifica se o módulo tem `fundacao` = True
                     self.menu_items.append(
                         {
                             "text": "Fundação",
-                            "action": lambda _: fundacao.mostrar_fundacao(
-                                self.page, self.cliente
-                            ),
+                            "action": lambda _: fundacao.mostrar_fundacao(self.page, self.cliente, self.projeto),
                             "icon": "icons/fundacao.png",
                         }
                     )
 
             # Cria os botões do menu
-            # self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
-            self.menu_buttons = [
-                self._create_menu_button(item) for item in self.menu_items
-            ]
-
-            # Botão voltar
-            self.voltar_button = gsm.create_button(
-                text="Voltar",
-                icon=ft.Icons.ARROW_BACK,
-                on_click=lambda _: tela_detalhes_projeto(self.page, self.projeto, self.cliente),
-                hover_color=gsm.colors.VOLTAR,
-                width=130,
-            )
+            self.menu_buttons = [self._create_menu_button(item) for item in self.menu_items]
 
     def _create_menu_button(self, item: dict) -> ft.Container:
         """Cria um botão de menu estilizado"""

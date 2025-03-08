@@ -8,14 +8,14 @@ import flet as ft
 from src.core.projeto import listar_projetos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories import (
-    client_repository,
-    projeto_repository,
+    RepositorioCliente,
+    RepositorioProjeto,
 )
 
 gsm = get_style_manager()
 
-projeto_repo = projeto_repository.ProjetoRepository()
-client_repo = client_repository.ClientRepository()
+repositorio_projeto = RepositorioProjeto()
+repositorio_cliente = RepositorioCliente()
 
 
 def criar_projeto(page, cliente):
@@ -44,7 +44,7 @@ def criar_projeto(page, cliente):
             custo_estimado = float(valor_input.value) if valor_input.value else None
 
             # Criar novo projeto
-            novo_projeto = projeto_repo.create(
+            novo_projeto = repositorio_projeto.create(
                 nome=nome_input.value,
                 cliente_id=cliente["id"],
                 descricao=descricao_input.value,

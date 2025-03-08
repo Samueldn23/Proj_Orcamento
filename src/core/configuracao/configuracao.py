@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from src.core.configuracao.modulos import GerenciadorModulos
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.config.settings import settings
-from src.infrastructure.database.migrations import create_tables
+from src.infrastructure.database.migrations import criar_tabelas
 from src.infrastructure.database.models import Base
 from src.navigation.router import navegar_principal
 
@@ -21,8 +21,8 @@ def atualizar_tabelas(e):
 
         # Criar todas as tabelas definidas nos models
         Base.metadata.create_all(engine)
-        create_tables.update_usuarios_table()
-        create_tables.update_paredes_table()
+        criar_tabelas.update_usuarios_table()
+        criar_tabelas.update_paredes_table()
 
         return True
     except Exception as error:

@@ -2,14 +2,14 @@
 
 from .connections import PostgresConnection, Session, SupabaseConnection
 from .models import *  # noqa: F403
-from .repositories import ClientRepository, ModuleRepository, ProjetoRepository, UserRepository
+from .repositories import RepositorioCliente, RepositorioModulo, RepositorioProjeto, RepositorioUsuario
 
 __all__ = [
-    "ClientRepository",
-    "ModuleRepository",
     "PostgresConnection",
-    "ProjetoRepository",
+    "RepositorioCliente",
+    "RepositorioModulo",
+    "RepositorioProjeto",
+    "RepositorioUsuario",
     "Session",
     "SupabaseConnection",
-    "UserRepository",
 ]

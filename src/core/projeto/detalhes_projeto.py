@@ -8,15 +8,15 @@ from src.core.projeto import listar_projetos
 from src.core.projeto.construcao import Parede
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.connections import Session
-from src.infrastructure.database.models.construction import Wall
-from src.infrastructure.database.repositories import ProjetoRepository
+from src.infrastructure.database.models.construcoes import Paredes
+from src.infrastructure.database.repositories import RepositorioProjeto
 from src.navigation.router import navegar_orcamento
 
 # Configuração da localização para formatação de moeda
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 gsm = get_style_manager()  # Instância do gerenciador de estilos
-projeto_repo = ProjetoRepository()  # Instância do repositório de projetos
+repositorio_projeto = RepositorioProjeto()  # Instância do repositório de projetos
 session = Session()  # Instância da sessão do banco de dados
 
 
@@ -24,12 +24,12 @@ def atualizar_custo_estimado(projeto_id):
     """Atualiza o custo estimado do projeto somando o custo de todas as construções"""
     try:
         # Obtém as construções associadas ao projeto
-        construcoes = session.query(Wall).filter_by(projeto_id=projeto_id).all()
+        construcoes = session.query(Paredes).filter_by(projeto_id=projeto_id).all()
         custo_total = sum(construcao.custo_total for construcao in construcoes)
 
         # Utiliza o método específico para atualizar apenas o valor total/custo estimado
         # sem modificar os outros campos (nome e descrição)
-        resultado = projeto_repo.atualizar_valor_total(projeto_id, custo_total)
+        resultado = repositorio_projeto.atualizar_valor_total(projeto_id, custo_total)
 
         # Log para debug
         if resultado:
@@ -47,7 +47,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     """Função para exibir detalhes do projeto e opções de edição/exclusão"""
 
     # Atualiza o projeto com os dados mais recentes do banco de dados
-    projeto_atualizado = projeto_repo.get_by_id(projeto.id)
+    projeto_atualizado = repositorio_projeto.get_by_id(projeto.id)
     if projeto_atualizado:
         projeto = projeto_atualizado
         print(f"Projeto atualizado - ID: {projeto.id}, Nome: {projeto.nome}, Custo: {projeto.custo_estimado}")
@@ -59,7 +59,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
             dlg_confirmacao.open = False
             page.update()
             try:
-                if projeto_repo.delete(projeto.id):
+                if repositorio_projeto.delete(projeto.id):
                     page.open(
                         ft.SnackBar(
                             content=ft.Text("Projeto excluído com sucesso!"),
@@ -117,7 +117,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                 custo_estimado = projeto.custo_estimado
                 print(f"Mantendo custo estimado existente: {custo_estimado}")
 
-            projeto_atualizado = projeto_repo.update(
+            projeto_atualizado = repositorio_projeto.update(
                 projeto_id=projeto.id,
                 nome=nome_input.value,
                 descricao=descricao_input.value,
@@ -242,7 +242,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     )
 
     # Adicionar lista de construções
-    construcoes_parede = session.query(Wall).filter_by(projeto_id=projeto.id).all()
+    construcoes_parede = session.query(Paredes).filter_by(projeto_id=projeto.id).all()
 
     # Cria um card para o título da seção de construções
     titulo_construcoes = ft.Container(

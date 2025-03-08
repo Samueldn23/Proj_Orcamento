@@ -3,7 +3,7 @@
 from typing import Optional
 
 from ..connections.postgres import postgres
-from ..models.project import Project
+from ..models.projetos import Projeto
 
 
 class ProjetoRepository:
@@ -18,11 +18,11 @@ class ProjetoRepository:
         cliente_id: int,
         descricao: Optional["str"] = None,
         custo_estimado: Optional["float"] = None,
-    ) -> Project | None:
+    ) -> Projeto | None:
         """Adiciona um novo projeto"""
         try:
             with self.db.get_session() as session:
-                projeto = Project(
+                projeto = Projeto(
                     nome=nome,
                     cliente_id=cliente_id,
                     descricao=descricao,
@@ -35,20 +35,20 @@ class ProjetoRepository:
             print(f"Erro ao criar projeto: {e}")
             return None
 
-    def get_by_id(self, projeto_id: int) -> Project | None:
+    def get_by_id(self, projeto_id: int) -> Projeto | None:
         """Busca um projeto pelo ID"""
         try:
             with self.db.get_session() as session:
-                return session.query(Project).filter_by(id=projeto_id).first()
+                return session.query(Projeto).filter_by(id=projeto_id).first()
         except Exception as e:
             print(f"Erro ao buscar projeto: {e}")
             return None
 
-    def list_by_client(self, cliente_id: int) -> list[Project]:
+    def list_by_client(self, cliente_id: int) -> list[Projeto]:
         """Lista todos os projetos de um cliente ordenados por data de atualização"""
         try:
             with self.db.get_session() as session:
-                return session.query(Project).filter_by(cliente_id=cliente_id).order_by(Project.atualizado_em.desc()).all()
+                return session.query(Projeto).filter_by(cliente_id=cliente_id).order_by(Projeto.atualizado_em.desc()).all()
         except Exception as e:
             print(f"Erro ao listar projetos do cliente: {e}")
             return []
@@ -60,11 +60,11 @@ class ProjetoRepository:
         descricao: Optional["str"] = None,
         custo_estimado: Optional["float"] = None,
         valor_total: Optional["float"] = None,  # Adicionando valor_total
-    ) -> Project | None:
+    ) -> Projeto | None:
         """Atualiza um projeto existente"""
         try:
             with self.db.get_session() as session:
-                projeto = session.query(Project).filter_by(id=projeto_id).first()
+                projeto = session.query(Projeto).filter_by(id=projeto_id).first()
                 if projeto:
                     # Log para debug
                     print(f"Repository - Atualizando projeto {projeto_id}")
@@ -106,7 +106,7 @@ class ProjetoRepository:
         """Atualiza o valor total do projeto"""
         try:
             with self.db.get_session() as session:
-                projeto = session.query(Project).filter_by(id=projeto_id).first()
+                projeto = session.query(Projeto).filter_by(id=projeto_id).first()
                 if projeto:
                     print(f"Atualizando apenas valor total: {valor_total} para projeto {projeto_id}")
                     print(f"Valores antes: nome='{projeto.nome}', descricao='{projeto.descricao}'")
@@ -132,7 +132,7 @@ class ProjetoRepository:
         """Remove um projeto"""
         try:
             with self.db.get_session() as session:
-                projeto = session.query(Project).filter_by(id=projeto_id).first()
+                projeto = session.query(Projeto).filter_by(id=projeto_id).first()
                 if projeto:
                     session.delete(projeto)
                     session.commit()

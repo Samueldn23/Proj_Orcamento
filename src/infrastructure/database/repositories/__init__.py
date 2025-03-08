@@ -1,13 +1,13 @@
 """Módulo de repositórios"""
 
-from .client_repository import ClientRepository
-from .module_repository import ModuleRepository
-from .projeto_repository import ProjetoRepository
-from .user_repository import UserRepository
+from .client_repository import ClientRepository as RepositorioCliente
+from .module_repository import ModuleRepository as RepositorioModulo
+from .projeto_repository import ProjetoRepository as RepositorioProjeto
+from .user_repository import RepositorioUsuario
 
 __all__ = [
-    "ClientRepository",
-    "ModuleRepository",
-    "ProjetoRepository",
-    "UserRepository",
+    "RepositorioCliente",
+    "RepositorioModulo",
+    "RepositorioProjeto",
+    "RepositorioUsuario",
 ]

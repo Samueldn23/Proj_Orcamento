@@ -4,11 +4,11 @@ import flet as ft
 
 from src.core.cliente import clientes
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.repositories import ClientRepository, UserRepository
+from src.infrastructure.database.repositories import RepositorioCliente, RepositorioUsuario
 
 gsm = get_style_manager()
-Usuario = UserRepository()
-Cliente = ClientRepository()
+Usuario = RepositorioUsuario()
+Cliente = RepositorioCliente()
 
 
 def tela_editar_cliente(page, cliente):
@@ -96,11 +96,7 @@ def tela_editar_cliente(page, cliente):
         # Configura e exibe o SnackBar
         page.open(
             ft.SnackBar(
-                content=ft.Text(
-                    "Cliente atualizado com sucesso!"
-                    if sucesso
-                    else "Erro ao atualizar cliente!"
-                ),
+                content=ft.Text("Cliente atualizado com sucesso!" if sucesso else "Erro ao atualizar cliente!"),
                 bgcolor=ft.Colors.GREEN if sucesso else ft.Colors.RED,
             )
         )
