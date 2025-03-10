@@ -50,7 +50,13 @@ def projetos_cliente(page: ft.Page, cliente):
                     blur_radius=4,
                     offset=ft.Offset(2, 2),
                 )
-            container.update()
+
+            # Verifica se o container está na página antes de atualizar
+            try:
+                container.update()
+            except AssertionError:
+                # Container não está na página, ignora o erro
+                pass
 
         def criar_card_projeto(projeto):
             """Cria um card para exibir as informações do projeto"""

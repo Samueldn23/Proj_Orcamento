@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS clientes (
+    id BIGSERIAL PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    telefone VARCHAR(20),
+    endereco TEXT,
+    observacoes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

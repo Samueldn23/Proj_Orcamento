@@ -1,14 +1,15 @@
 """Módulo para exibir e gerenciar detalhes de um projeto"""
 
 import locale
+from decimal import Decimal
 
 import flet as ft
 
 from src.core.projeto import listar_projetos
-from src.core.projeto.construcao import Parede
+from src.core.projeto.construcao import Laje, Parede
 from src.custom.styles_utils import get_style_manager
-from src.infrastructure.database.connections import Session
-from src.infrastructure.database.models.construcoes import Paredes
+from src.infrastructure.database.connections import Session, postgres
+from src.infrastructure.database.models.construcoes import Lajes, Paredes
 from src.infrastructure.database.repositories import RepositorioProjeto
 from src.navigation.router import navegar_orcamento
 
@@ -23,12 +24,23 @@ session = Session()  # Instância da sessão do banco de dados
 def atualizar_custo_estimado(projeto_id):
     """Atualiza o custo estimado do projeto somando o custo de todas as construções"""
     try:
-        # Obtém as construções associadas ao projeto
-        construcoes = session.query(Paredes).filter_by(projeto_id=projeto_id).all()
-        custo_total = sum(construcao.custo_total for construcao in construcoes)
+        custo_paredes = 0
+        custo_lajes = 0
 
-        # Utiliza o método específico para atualizar apenas o valor total/custo estimado
-        # sem modificar os outros campos (nome e descrição)
+        # Usa o session_scope para obter os dados com reconexão automática
+        with postgres.session_scope() as session:
+            # Obtém as construções associadas ao projeto
+            paredes = session.query(Paredes).filter_by(projeto_id=projeto_id).all()
+            lajes = session.query(Lajes).filter_by(projeto_id=projeto_id).all()
+
+            # Calcula os custos dentro da sessão
+            custo_paredes = sum(parede.custo_total for parede in paredes)
+            custo_lajes = sum(laje.custo_total for laje in lajes)
+
+        # Soma os custos das paredes e lajes
+        custo_total = custo_paredes + custo_lajes
+
+        # Atualiza o valor total
         resultado = repositorio_projeto.atualizar_valor_total(projeto_id, custo_total)
 
         # Log para debug
@@ -242,7 +254,61 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
     )
 
     # Adicionar lista de construções
-    construcoes_parede = session.query(Paredes).filter_by(projeto_id=projeto.id).all()
+    construcoes_parede = []
+    construcoes_laje = []
+
+    # Usa session_scope para obter as construções com reconexão automática
+    with postgres.session_scope() as session:
+        # Busca as construções do banco
+        paredes_originais = session.query(Paredes).filter_by(projeto_id=projeto.id).all()
+        lajes_originais = session.query(Lajes).filter_by(projeto_id=projeto.id).all()
+
+        # Desacopla os objetos Paredes
+        for parede in paredes_originais:
+            # Carrega todos os atributos necessários
+            area = parede.area
+            custo_total = parede.custo_total
+            tipo_tijolo = parede.tipo_tijolo
+            quantidade_tijolos = parede.quantidade_tijolos
+            parede_id = parede.id
+
+            # Armazena como uma tupla de valores (não depende da sessão)
+            construcoes_parede.append(
+                {"id": parede_id, "area": area, "custo_total": custo_total, "tipo_tijolo": tipo_tijolo, "quantidade_tijolos": quantidade_tijolos}
+            )
+
+        # Desacopla os objetos Lajes
+        for laje in lajes_originais:
+            # Carrega todos os atributos necessários
+            comprimento = laje.comprimento
+            largura = laje.largura
+            custo_total = laje.custo_total
+            espessura = laje.espessura
+            laje_id = laje.id
+
+            # Tenta obter atributos opcionais
+            tipo_laje = getattr(laje, "tipo_laje", None)
+            volume = getattr(laje, "volume", None)
+
+            if volume is None:
+                # Calcula o volume se não estiver disponível
+                volume = comprimento * largura * espessura * Decimal("0.01")
+
+            # Armazena como um dicionário (não depende da sessão)
+            construcoes_laje.append(
+                {
+                    "id": laje_id,
+                    "comprimento": comprimento,
+                    "largura": largura,
+                    "custo_total": custo_total,
+                    "tipo_laje": tipo_laje,
+                    "volume": volume,
+                    "area": comprimento * largura,
+                }
+            )
+
+    # Calcula se existem construções de qualquer tipo
+    tem_construcoes = bool(construcoes_parede) or bool(construcoes_laje)
 
     # Cria um card para o título da seção de construções
     titulo_construcoes = ft.Container(
@@ -264,7 +330,16 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                     titulo_construcoes,
                     ft.Divider(height=1, color=ft.Colors.BLUE_100),
                     ft.Container(
-                        content=ft.Column([Parede(c.area, c.custo_total, c.tipo_tijolo, c.quantidade_tijolos).criar_card() for c in construcoes_parede]),
+                        content=ft.Column(
+                            # Lista de paredes
+                            [
+                                Parede(p["area"], p["custo_total"], p["tipo_tijolo"], p["quantidade_tijolos"], p["id"], projeto.id).criar_card()
+                                for p in construcoes_parede
+                            ]
+                            +
+                            # Lista de lajes
+                            [Laje(l["area"], l["custo_total"], l["tipo_laje"], l["volume"], l["id"], projeto.id).criar_card() for l in construcoes_laje]
+                        ),
                         padding=10,
                     ),
                 ],
@@ -274,7 +349,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
             border_radius=8,
             margin=ft.margin.only(top=10),
         )
-        if construcoes_parede
+        if tem_construcoes
         else ft.Container(
             content=ft.Column(
                 [
@@ -432,3 +507,66 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
         )
     )
     page.update()
+
+
+def carregar_detalhes_projeto(page, projeto_id):
+    """
+    Carrega os detalhes do projeto e exibe na página.
+    Função auxiliar para recarregar a página após edições ou exclusões.
+    """
+    print(f"[DEBUG] Iniciando carregar_detalhes_projeto para projeto_id={projeto_id}")
+    print(f"[DEBUG] Page: {page}")
+
+    if page is None:
+        print(f"[DEBUG] ERRO: Page é None em carregar_detalhes_projeto!")
+        return
+
+    if not hasattr(page, "update"):
+        print(f"[DEBUG] ERRO: Page não possui método update em carregar_detalhes_projeto!")
+        return
+
+    try:
+        # Buscar o projeto atualizado
+        print(f"[DEBUG] Buscando projeto com ID={projeto_id}")
+        projeto = repositorio_projeto.get_by_id(projeto_id)
+        print(f"[DEBUG] Projeto encontrado: {projeto is not None}")
+
+        if projeto:
+            # Buscar dados do cliente associado ao projeto
+            from src.infrastructure.database.repositories import RepositorioCliente
+
+            print(f"[DEBUG] Buscando dados do cliente com ID={projeto.cliente_id}")
+            cliente_repo = RepositorioCliente()
+            cliente = cliente_repo.get_by_id(projeto.cliente_id)
+            print(f"[DEBUG] Cliente encontrado: {cliente is not None}")
+
+            # Exibir a tela de detalhes com os dados atualizados
+            print(f"[DEBUG] Chamando tela_detalhes_projeto com projeto_id={projeto_id}")
+            tela_detalhes_projeto(page, projeto, cliente)
+            print(f"[DEBUG] tela_detalhes_projeto concluído")
+        else:
+            # Se o projeto não for encontrado, mostrar mensagem e voltar para a lista
+            print(f"[DEBUG] Projeto não encontrado com ID={projeto_id}")
+            page.snack_bar = ft.SnackBar(content=ft.Text("Projeto não encontrado."), bgcolor=ft.colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+
+            # Volta para a lista de projetos
+            from src.core.cliente.clientes import tela_clientes
+
+            print(f"[DEBUG] Voltando para a tela_clientes")
+            tela_clientes(page)
+
+    except Exception as e:
+        print(f"[DEBUG] Exceção em carregar_detalhes_projeto: {e}")
+        import traceback
+
+        print(f"[DEBUG] Traceback: {traceback.format_exc()}")
+
+        # Tentar exibir mensagem de erro para o usuário
+        try:
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao carregar detalhes: {e}"), bgcolor=ft.colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+        except:
+            print("[DEBUG] Não foi possível exibir erro na interface")

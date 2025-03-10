@@ -5,7 +5,7 @@ import locale
 import flet as ft
 
 from src.core.orcamento.parede.tijolos import carregar_tijolos, salvar_tijolos
-from src.core.projeto.detalhes_projeto import atualizar_custo_estimado
+from src.core.projeto.detalhes_projeto import atualizar_custo_estimado, carregar_detalhes_projeto
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.connections import Session
 from src.infrastructure.database.models.construcoes import Paredes
@@ -16,6 +16,140 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 gsm = get_style_manager()
 TIPOS_TIJOLOS = carregar_tijolos()
 session = Session()
+
+
+def editar_parede(page, parede_id, projeto_id):
+    """Abre um diálogo para edição de parede existente"""
+    from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto
+    from src.infrastructure.database.connections.postgres import postgres
+
+    # Busca dados da parede existente
+    with postgres.session_scope() as session:
+        parede = session.query(Paredes).filter_by(id=parede_id).first()
+        if not parede:
+            page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada."), bgcolor=ft.colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+            return
+
+        altura = float(parede.altura)
+        comprimento = float(parede.comprimento)
+        tipo_tijolo = parede.tipo_tijolo
+
+    # Controles para o formulário de edição
+    titulo = ft.Text("Editar Parede", size=20, weight=ft.FontWeight.BOLD)
+
+    altura_field = ft.TextField(
+        label="Altura (m)",
+        value=str(altura),
+        width=200,
+        keyboard_type=ft.KeyboardType.NUMBER,
+    )
+
+    comprimento_field = ft.TextField(
+        label="Comprimento (m)",
+        value=str(comprimento),
+        width=200,
+        keyboard_type=ft.KeyboardType.NUMBER,
+    )
+
+    tipo_tijolo_dropdown = ft.Dropdown(
+        label="Tipo de Tijolo",
+        width=200,
+        options=[ft.dropdown.Option(key=tipo, text=dados["nome"]) for tipo, dados in TIPOS_TIJOLOS.items()],
+        value=tipo_tijolo,
+    )
+
+    # Função para salvar as alterações
+    def salvar_alteracoes(e):
+        try:
+            # Validação dos dados
+            nova_altura = float(altura_field.value)
+            novo_comprimento = float(comprimento_field.value)
+            novo_tipo_tijolo = tipo_tijolo_dropdown.value
+
+            if nova_altura <= 0 or novo_comprimento <= 0:
+                page.snack_bar = ft.SnackBar(content=ft.Text("Altura e comprimento devem ser maiores que zero."), bgcolor=ft.colors.RED_700)
+                page.snack_bar.open = True
+                page.update()
+                return
+
+            # Recalcula os valores com base nos novos dados
+            tijolo_info = TIPOS_TIJOLOS.get(novo_tipo_tijolo, TIPOS_TIJOLOS["tijolo_comum"])
+            area = nova_altura * novo_comprimento
+            tijolos_por_m2 = tijolo_info["tijolos_por_m2"]
+            quantidade_tijolos = int(area * tijolos_por_m2)
+            valor_m2 = tijolo_info["valor_m2"]
+            custo_tijolos = area * valor_m2
+            custo_mao_obra = area * 25.00  # Valor fixo para mão de obra
+            custo_total = custo_tijolos + custo_mao_obra
+
+            # Atualiza a parede no banco de dados
+            with postgres.session_scope() as session:
+                parede = session.query(Paredes).filter_by(id=parede_id).first()
+                if parede:
+                    parede.altura = nova_altura
+                    parede.comprimento = novo_comprimento
+                    parede.area = area
+                    parede.tipo_tijolo = novo_tipo_tijolo
+                    parede.quantidade_tijolos = quantidade_tijolos
+                    parede.valor_m2 = valor_m2
+                    parede.custo_tijolos = custo_tijolos
+                    parede.custo_mao_obra = custo_mao_obra
+                    parede.custo_total = custo_total
+
+                    # Fecha o diálogo
+                    dialog.open = False
+                    page.update()
+
+                    # Atualiza o custo estimado do projeto
+                    atualizar_custo_estimado(projeto_id)
+
+                    # Exibe mensagem de sucesso
+                    page.snack_bar = ft.SnackBar(content=ft.Text("Parede atualizada com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                    page.snack_bar.open = True
+
+                    # Recarrega os detalhes do projeto
+                    carregar_detalhes_projeto(page, projeto_id)
+        except ValueError:
+            page.snack_bar = ft.SnackBar(content=ft.Text("Por favor, informe valores numéricos válidos."), bgcolor=ft.colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+        except Exception as e:
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao atualizar parede: {e}"), bgcolor=ft.colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+
+    # Função para fechar o diálogo
+    def fechar_dialogo(e):
+        dialog.open = False
+        page.update()
+
+    # Criação do diálogo
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=titulo,
+        content=ft.Column(
+            [
+                ft.Row([altura_field, comprimento_field], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                ft.Container(height=10),
+                tipo_tijolo_dropdown,
+                ft.Container(height=10),
+            ],
+            spacing=10,
+            width=500,
+        ),
+        actions=[
+            ft.TextButton("Cancelar", on_click=fechar_dialogo),
+            ft.TextButton("Salvar", on_click=salvar_alteracoes),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    # Exibe o diálogo
+    page.dialog = dialog
+    dialog.open = True
+    page.update()
 
 
 class ParedeCalculator:

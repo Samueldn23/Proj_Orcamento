@@ -1,6 +1,16 @@
-"""Módulo de orçamentos"""
+"""Pacote para os módulos de orçamento."""
 
-from .menu_orc import MenuButton, OrcamentoPage
+# Importações de submódulos para serem acessíveis via src.core.orcamento
+import src.core.orcamento.contrapiso
+import src.core.orcamento.eletrica
+import src.core.orcamento.fundacao
+
+# Garante que os módulos sejam importados de forma correta
+import src.core.orcamento.laje
+import src.core.orcamento.paredes
+import src.core.orcamento.telhado
+
+from .menu_orc import MenuButton, OrcamentoPage, mostrar_orcamento
 from .paredes import ParedeCalculator
 from .service import ProjetoService
 

@@ -1,0 +1,26 @@
+{
+    "Laje Maciça": {
+        "nome": "Laje Maciça", 
+        "descricao": "Laje de concreto armado maciço",
+        "densidade": 2500,
+        "espessura_recomendada": 10.0,
+        "preco_medio_m3": 500.0
+    },
+    "Laje Nervurada": {
+        "nome": "Laje Nervurada",
+        "descricao": "Laje com nervuras e elementos de enchimento",
+        "densidade": 1800,
+        "espessura_recomendada": 25.0,
+        "preco_medio_m3": 450.0,
+        "espessura_mesa": 5.0,
+        "dist_nervuras": 50.0
+    },
+    "Laje Pré-Moldada": {
+        "nome": "Laje Pré-Moldada",
+        "descricao": "Laje com vigotas pré-moldadas e elementos de enchimento",
+        "densidade": 1600,
+        "espessura_recomendada": 12.0,
+        "preco_medio_m3": 400.0,
+        "tamanho_padrao": {"largura": 1.25, "comprimento": 5.0}
+    }
+} 

@@ -4,7 +4,13 @@ from collections.abc import Callable
 
 import flet as ft
 
-from src.core.orcamento import contrapiso, eletrica, fundacao, laje, paredes, telhado
+# Importações diretas das funções mostrar_
+from src.core.orcamento.contrapiso import mostrar_contrapiso
+from src.core.orcamento.eletrica import mostrar_eletrica
+from src.core.orcamento.fundacao import mostrar_fundacao
+from src.core.orcamento.laje import mostrar_laje
+from src.core.orcamento.paredes import mostrar_parede
+from src.core.orcamento.telhado import mostrar_telhado
 from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.repositories.module_repository import ModuleRepository as RepositorioModulo
@@ -35,7 +41,7 @@ class MenuButton(ft.ElevatedButton):
 
 
 class OrcamentoPage:
-    """Classe para gerenciar a página de orçamentos"""
+    """Classe para a página de orçamentos"""
 
     def __init__(self, page: ft.Page, _cliente, projeto):
         self.page = page
@@ -65,7 +71,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Parede",
-                            "action": lambda _: paredes.mostrar_parede(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_parede(self.page, self.cliente, self.projeto),
                             "icon": "icons/parede.png",
                         }
                     )
@@ -73,7 +79,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Contrapiso",
-                            "action": lambda _: contrapiso.mostrar_contrapiso(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_contrapiso(self.page, self.cliente, self.projeto),
                             "icon": "icons/contrapiso.png",
                         }
                     )
@@ -81,7 +87,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Laje",
-                            "action": lambda _: laje.mostrar_laje(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_laje(self.page, self.cliente, self.projeto),
                             "icon": "icons/laje.png",
                         }
                     )
@@ -89,7 +95,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Telhado",
-                            "action": lambda _: telhado.mostrar_telhado(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_telhado(self.page, self.cliente, self.projeto),
                             "icon": "icons/telhado.png",
                         }
                     )
@@ -97,7 +103,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Elétrica",
-                            "action": lambda _: eletrica.mostrar_eletrica(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_eletrica(self.page, self.cliente, self.projeto),
                             "icon": "icons/eletrica.png",
                         }
                     )
@@ -105,7 +111,7 @@ class OrcamentoPage:
                     self.menu_items.append(
                         {
                             "text": "Fundação",
-                            "action": lambda _: fundacao.mostrar_fundacao(self.page, self.cliente, self.projeto),
+                            "action": lambda _: mostrar_fundacao(self.page, self.cliente, self.projeto),
                             "icon": "icons/fundacao.png",
                         }
                     )
@@ -123,15 +129,32 @@ class OrcamentoPage:
         )
 
     def build(self):
-        """Constrói a interface da página de orçamentos"""
+        """Constrói a página de orçamentos"""
         return ft.Container(
             content=ft.Column(
-                controls=[
-                    ft.Text(
-                        f"Novo Orçamentos para o cliente {self.cliente['nome']}",
-                        size=24,
-                        weight=ft.FontWeight.BOLD,
-                        color=ft.Colors.BLUE,
+                [
+                    ft.Row(
+                        [
+                            ft.Text(
+                                "Orçamento de Construção",
+                                size=22,
+                                weight=ft.FontWeight.BOLD,
+                                color=ft.Colors.BLUE,
+                                text_align=ft.TextAlign.CENTER,
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    ft.Row(
+                        [
+                            ft.Text(
+                                f"Projeto: {self.projeto.nome}",
+                                size=18,
+                                color=ft.Colors.BLUE_GREY,
+                                text_align=ft.TextAlign.CENTER,
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     ft.Divider(height=20, color=ft.Colors.BLUE_GREY_100),
                     ft.Row(
@@ -143,10 +166,10 @@ class OrcamentoPage:
                     self.voltar_button,
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
+                spacing=10,
             ),
-            padding=ft.padding.all(20),
-            alignment=ft.alignment.top_center,
+            padding=20,
+            alignment=ft.alignment.center,
         )
 
 
