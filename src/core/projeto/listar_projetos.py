@@ -62,7 +62,8 @@ def projetos_cliente(page: ft.Page, cliente):
             """Cria um card para exibir as informações do projeto"""
             # Converter para horário de Brasília
             tz_brasil = pytz.timezone("America/chicago")
-
+            print(f"<==DEBUG==>  {projeto}")
+            print(f"<==DEBUG==>  {projeto.id}")
             criado_em_br = projeto.criado_em.astimezone(tz_brasil)
             atualizado_em_br = projeto.atualizado_em.astimezone(tz_brasil)
 

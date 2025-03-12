@@ -37,7 +37,7 @@ class Laje(Construcao):
 
         from sqlalchemy import text
 
-        from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto, tela_detalhes_projeto
+        from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
         from src.infrastructure.database.connections.postgres import postgres
         from src.infrastructure.database.models.construcoes import Lajes
         from src.infrastructure.database.repositories import RepositorioCliente, RepositorioProjeto
@@ -47,7 +47,7 @@ class Laje(Construcao):
 
         # Verificação adicional para garantir que temos uma página válida
         if page is None:
-            print(f"ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
+            print("ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
             return
 
         # Mostrar mensagem de processamento
@@ -58,12 +58,12 @@ class Laje(Construcao):
 
         try:
             # Executa a exclusão diretamente via SQL para garantir
-            print(f"[DEBUG] Executando exclusão direta via SQL")
+            print("[DEBUG] Executando exclusão direta via SQL")
             with postgres.session_scope() as session:
                 # Primeiro obtém o projeto_id para posterior atualização da interface
                 laje = session.query(Lajes).filter_by(id=self.id).first()
                 if not laje:
-                    print(f"[DEBUG] Laje não encontrada no banco de dados")
+                    print("[DEBUG] Laje não encontrada no banco de dados")
                     if hasattr(page, "snack_bar") and hasattr(page, "update"):
                         page.snack_bar = ft.SnackBar(content=ft.Text("Laje não encontrada no banco de dados"), bgcolor=ft.colors.RED_700)
                         page.snack_bar.open = True
@@ -79,13 +79,13 @@ class Laje(Construcao):
                 session.execute(sql)
                 session.commit()
 
-                print(f"[DEBUG] Exclusão realizada com sucesso")
+                print("[DEBUG] Exclusão realizada com sucesso")
 
                 # Verifica se a exclusão foi bem-sucedida usando o método delete para maior segurança
-                print(f"[DEBUG] Verificando exclusão com ORM")
+                print("[DEBUG] Verificando exclusão com ORM")
                 verificacao = session.query(Lajes).filter_by(id=self.id).first()
                 if verificacao:
-                    print(f"[ALERTA] Laje ainda existe! Tentando excluir com ORM diretamente")
+                    print("[ALERTA] Laje ainda existe! Tentando excluir com ORM diretamente")
                     session.delete(verificacao)
                     session.commit()
 
@@ -100,7 +100,7 @@ class Laje(Construcao):
                     time.sleep(0.5)
 
                     # Limpa completamente a página para recarregar do zero
-                    print(f"[DEBUG] Limpando página para recarregar completamente")
+                    print("[DEBUG] Limpando página para recarregar completamente")
                     page.controls.clear()
 
                     # Preserva apenas a barra de navegação e appbar, se existirem
@@ -123,14 +123,14 @@ class Laje(Construcao):
                         cliente = repo_cliente.get_by_id(projeto_atualizado.cliente_id)
 
                         # Carrega a tela de detalhes do projeto do zero
-                        print(f"[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
+                        print("[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
                         tela_detalhes_projeto(page, projeto_atualizado, cliente)
 
                         # Força mais uma atualização
                         page.update()
-                        print(f"[DEBUG] Página recarregada completamente após exclusão")
+                        print("[DEBUG] Página recarregada completamente após exclusão")
                     else:
-                        print(f"[ERRO] Não foi possível encontrar o projeto atualizado")
+                        print("[ERRO] Não foi possível encontrar o projeto atualizado")
 
         except Exception as e:
             print(f"[DEBUG] Erro ao excluir laje: {e}")
@@ -140,7 +140,7 @@ class Laje(Construcao):
 
             # Tenta uma abordagem alternativa usando ORM diretamente
             try:
-                print(f"[DEBUG] Tentando abordagem alternativa com ORM")
+                print("[DEBUG] Tentando abordagem alternativa com ORM")
                 with postgres.session_scope() as session:
                     laje = session.query(Lajes).filter_by(id=self.id).first()
                     if laje:
@@ -159,7 +159,7 @@ class Laje(Construcao):
                             time.sleep(0.5)
 
                             # Limpa completamente a página para recarregar do zero
-                            print(f"[DEBUG] Limpando página para recarregar completamente")
+                            print("[DEBUG] Limpando página para recarregar completamente")
                             page.controls.clear()
 
                             # Preserva apenas a barra de navegação e appbar, se existirem
@@ -182,14 +182,14 @@ class Laje(Construcao):
                                 cliente = repo_cliente.get_by_id(projeto_atualizado.cliente_id)
 
                                 # Carrega a tela de detalhes do projeto do zero
-                                print(f"[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
+                                print("[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
                                 tela_detalhes_projeto(page, projeto_atualizado, cliente)
 
                                 # Força mais uma atualização
                                 page.update()
-                                print(f"[DEBUG] Página recarregada completamente após exclusão")
+                                print("[DEBUG] Página recarregada completamente após exclusão")
                             else:
-                                print(f"[ERRO] Não foi possível encontrar o projeto atualizado")
+                                print("[ERRO] Não foi possível encontrar o projeto atualizado")
                             return
             except Exception as orm_error:
                 print(f"[DEBUG] Erro na abordagem alternativa com ORM: {orm_error}")

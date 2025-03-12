@@ -11,7 +11,6 @@ from src.core.orcamento.laje.calculo import (
     calcular_volume_laje,
 )
 from src.core.orcamento.laje.tipos_laje import (
-    CM_TO_M,
     MAX_COMPRIMENTO,
     MAX_ESPESSURA,
     MAX_LARGURA,
@@ -146,7 +145,7 @@ class LajeCalculator:
             f"Volume: {volume:.2f} m³",
             f"Custo Total: {locale.currency(custo_total, grouping=True)}",
             f"Peso estimado: {peso:.0f} kg",
-            f"\nMateriais estimados:",
+            "\nMateriais estimados:",
             f"- Aço: {materiais['aco']:.1f} kg",
             f"- Cimento: {materiais['cimento']:.1f} kg",
             f"- Areia: {materiais['areia']:.2f} m³",

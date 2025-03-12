@@ -20,7 +20,6 @@ session = Session()
 
 def editar_parede(page, parede_id, projeto_id):
     """Abre um diálogo para edição de parede existente"""
-    from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto
     from src.infrastructure.database.connections.postgres import postgres
 
     # Busca dados da parede existente

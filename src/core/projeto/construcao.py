@@ -105,7 +105,7 @@ class Construcao:
 
         # Verificar se temos o ID da parede
         if not self.id:
-            print(f"ERRO: ID da parede não encontrado")
+            print("ERRO: ID da parede não encontrado")
             return
 
         # Tentamos obter a página da maneira mais confiável
@@ -145,7 +145,8 @@ class Construcao:
                 # Executamos a exclusão
                 print(f"Executando exclusão de {instancia_atual.tipo}, ID={instancia_atual.id}")
                 instancia_atual.realizar_exclusao(page)
-                print(f"Exclusão concluída com sucesso")
+                print("Exclusão concluída com sucesso")
+
             except Exception as erro:
                 print(f"ERRO AO EXCLUIR: {erro}")
                 import traceback
@@ -169,7 +170,7 @@ class Construcao:
             page.update()
 
         # Criamos o diálogo com botões de confirmação e cancelamento
-        print(f"Criando diálogo de confirmação")
+        print("Criando diálogo de confirmação")
         dlg_confirmacao = ft.AlertDialog(
             modal=True,
             title=ft.Text(f"Excluir {self.tipo}", size=18, weight=ft.FontWeight.BOLD),
@@ -189,19 +190,19 @@ class Construcao:
         )
 
         # Adicionamos o diálogo ao overlay da página
-        print(f"Adicionando diálogo ao overlay da página")
+        print("Adicionando diálogo ao overlay da página")
         if hasattr(page, "overlay"):
             page.overlay.append(dlg_confirmacao)
             dlg_confirmacao.open = True
             page.update()
-            print(f"Diálogo adicionado ao overlay e aberto")
+            print("Diálogo adicionado ao overlay e aberto")
         else:
-            print(f"ERRO: Page não possui overlay")
+            print("ERRO: Page não possui overlay")
             # Tentativa alternativa usando page.dialog
             page.dialog = dlg_confirmacao
             dlg_confirmacao.open = True
             page.update()
-            print(f"Tentativa alternativa: usando page.dialog")
+            print("Tentativa alternativa: usando page.dialog")
 
     def realizar_exclusao(self, page):
         """Método para realizar a exclusão efetiva. Deve ser implementado pelas subclasses."""
@@ -222,7 +223,7 @@ class Construcao:
             print(f"ERRO: Página não encontrada no evento para editar {self.tipo}")
             # Tente encontrar a página através do control
             if hasattr(e, "control") and hasattr(e.control, "page"):
-                print(f"Tentando usar a página do control para editar")
+                print("Tentando usar a página do control para editar")
                 # Chamamos diretamente os métodos específicos para cada tipo
                 if self.tipo == "Parede":
                     from src.core.orcamento.paredes import editar_parede
@@ -246,7 +247,7 @@ class Construcao:
             print(f"ERRO: Página não encontrada no evento para excluir {self.tipo}")
             # Tente encontrar a página através do control
             if hasattr(e, "control") and hasattr(e.control, "page"):
-                print(f"Tentando usar a página do control para excluir")
+                print("Tentando usar a página do control para excluir")
                 e.page = e.control.page  # Adicione a página ao evento
                 self.excluir_construcao(e)
 
@@ -338,7 +339,7 @@ class Parede(Construcao):
 
         # Verificar se temos o ID da parede
         if not self.id:
-            print(f"ERRO: ID da parede não encontrado")
+            print("ERRO: ID da parede não encontrado")
             return
 
         # Tentamos obter a página da maneira mais confiável
@@ -361,7 +362,7 @@ class Parede(Construcao):
 
         from sqlalchemy import text
 
-        from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto, tela_detalhes_projeto
+        from src.core.projeto.detalhes_projeto import tela_detalhes_projeto
         from src.infrastructure.database.connections.postgres import postgres
         from src.infrastructure.database.models.construcoes import Paredes
         from src.infrastructure.database.repositories import RepositorioCliente, RepositorioProjeto
@@ -371,7 +372,7 @@ class Parede(Construcao):
 
         # Verificação adicional para garantir que temos uma página válida
         if page is None:
-            print(f"ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
+            print("ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
             return
 
         # Mostrar mensagem de processamento
@@ -382,12 +383,12 @@ class Parede(Construcao):
 
         try:
             # Executa a exclusão diretamente via SQL para garantir
-            print(f"[DEBUG] Executando exclusão direta via SQL")
+            print("[DEBUG] Executando exclusão direta via SQL")
             with postgres.session_scope() as session:
                 # Primeiro obtém o projeto_id para posterior atualização da interface
                 parede = session.query(Paredes).filter_by(id=self.id).first()
                 if not parede:
-                    print(f"[DEBUG] Parede não encontrada no banco de dados")
+                    print("[DEBUG] Parede não encontrada no banco de dados")
                     if hasattr(page, "snack_bar") and hasattr(page, "update"):
                         page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada no banco de dados"), bgcolor=ft.colors.RED_700)
                         page.snack_bar.open = True
@@ -403,13 +404,13 @@ class Parede(Construcao):
                 session.execute(sql)
                 session.commit()
 
-                print(f"[DEBUG] Exclusão realizada com sucesso")
+                print("[DEBUG] Exclusão realizada com sucesso")
 
                 # Verifica se a exclusão foi bem-sucedida usando o método delete para maior segurança
-                print(f"[DEBUG] Verificando exclusão com ORM")
+                print("[DEBUG] Verificando exclusão com ORM")
                 verificacao = session.query(Paredes).filter_by(id=self.id).first()
                 if verificacao:
-                    print(f"[ALERTA] Parede ainda existe! Tentando excluir com ORM diretamente")
+                    print("[ALERTA] Parede ainda existe! Tentando excluir com ORM diretamente")
                     session.delete(verificacao)
                     session.commit()
 
@@ -424,7 +425,7 @@ class Parede(Construcao):
                     time.sleep(0.5)
 
                     # Limpa completamente a página para recarregar do zero
-                    print(f"[DEBUG] Limpando página para recarregar completamente")
+                    print("[DEBUG] Limpando página para recarregar completamente")
                     page.controls.clear()
 
                     # Preserva apenas a barra de navegação e appbar, se existirem
@@ -447,14 +448,14 @@ class Parede(Construcao):
                         cliente = repo_cliente.get_by_id(projeto_atualizado.cliente_id)
 
                         # Carrega a tela de detalhes do projeto do zero
-                        print(f"[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
+                        print("[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
                         tela_detalhes_projeto(page, projeto_atualizado, cliente)
 
                         # Força mais uma atualização
                         page.update()
-                        print(f"[DEBUG] Página recarregada completamente após exclusão")
+                        print("[DEBUG] Página recarregada completamente após exclusão")
                     else:
-                        print(f"[ERRO] Não foi possível encontrar o projeto atualizado")
+                        print("[ERRO] Não foi possível encontrar o projeto atualizado")
 
         except Exception as e:
             print(f"[DEBUG] Erro ao excluir parede: {e}")
@@ -464,7 +465,7 @@ class Parede(Construcao):
 
             # Tenta uma abordagem alternativa usando ORM diretamente
             try:
-                print(f"[DEBUG] Tentando abordagem alternativa com ORM")
+                print("[DEBUG] Tentando abordagem alternativa com ORM")
                 with postgres.session_scope() as session:
                     parede = session.query(Paredes).filter_by(id=self.id).first()
                     if parede:
@@ -483,7 +484,7 @@ class Parede(Construcao):
                             time.sleep(0.5)
 
                             # Limpa completamente a página para recarregar do zero
-                            print(f"[DEBUG] Limpando página para recarregar completamente")
+                            print("[DEBUG] Limpando página para recarregar completamente")
                             page.controls.clear()
 
                             # Preserva apenas a barra de navegação e appbar, se existirem
@@ -506,14 +507,14 @@ class Parede(Construcao):
                                 cliente = repo_cliente.get_by_id(projeto_atualizado.cliente_id)
 
                                 # Carrega a tela de detalhes do projeto do zero
-                                print(f"[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
+                                print("[DEBUG] Recarregando tela_detalhes_projeto com dados atualizados")
                                 tela_detalhes_projeto(page, projeto_atualizado, cliente)
 
                                 # Força mais uma atualização
                                 page.update()
-                                print(f"[DEBUG] Página recarregada completamente após exclusão")
+                                print("[DEBUG] Página recarregada completamente após exclusão")
                             else:
-                                print(f"[ERRO] Não foi possível encontrar o projeto atualizado")
+                                print("[ERRO] Não foi possível encontrar o projeto atualizado")
                             return
             except Exception as orm_error:
                 print(f"[DEBUG] Erro na abordagem alternativa com ORM: {orm_error}")
@@ -613,7 +614,7 @@ class Laje(Construcao):
 
         # Verificar se temos o ID da laje
         if not self.id:
-            print(f"ERRO: ID da laje não encontrado")
+            print("ERRO: ID da laje não encontrado")
             return
 
         # Tentamos obter a página da maneira mais confiável
@@ -632,7 +633,6 @@ class Laje(Construcao):
 
     def realizar_exclusao(self, page):
         """Realiza a exclusão da laje no banco de dados"""
-        import time
 
         from sqlalchemy import text
 
@@ -645,7 +645,7 @@ class Laje(Construcao):
 
         # Verificação adicional para garantir que temos uma página válida
         if page is None:
-            print(f"ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
+            print("ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
             return
 
         # Mostrar mensagem de processamento
@@ -656,12 +656,12 @@ class Laje(Construcao):
 
         try:
             # Executa a exclusão diretamente via SQL para garantir
-            print(f"[DEBUG] Executando exclusão direta via SQL")
+            print("[DEBUG] Executando exclusão direta via SQL")
             with postgres.session_scope() as session:
                 # Primeiro obtém o projeto_id para posterior atualização da interface
                 laje = session.query(Lajes).filter_by(id=self.id).first()
                 if not laje:
-                    print(f"[DEBUG] Laje não encontrada no banco de dados")
+                    print("[DEBUG] Laje não encontrada no banco de dados")
                     if hasattr(page, "snack_bar") and hasattr(page, "update"):
                         page.snack_bar = ft.SnackBar(content=ft.Text("Laje não encontrada no banco de dados"), bgcolor=ft.colors.RED_700)
                         page.snack_bar.open = True
@@ -677,13 +677,13 @@ class Laje(Construcao):
                 session.execute(sql)
                 session.commit()
 
-                print(f"[DEBUG] Exclusão realizada com sucesso")
+                print("[DEBUG] Exclusão realizada com sucesso")
 
                 # Verifica se a exclusão foi bem-sucedida usando o método delete para maior segurança
-                print(f"[DEBUG] Verificando exclusão com ORM")
+                print("[DEBUG] Verificando exclusão com ORM")
                 verificacao = session.query(Lajes).filter_by(id=self.id).first()
                 if verificacao:
-                    print(f"[ALERTA] Laje ainda existe! Tentando excluir com ORM diretamente")
+                    print("[ALERTA] Laje ainda existe! Tentando excluir com ORM diretamente")
                     session.delete(verificacao)
                     session.commit()
 
@@ -694,14 +694,14 @@ class Laje(Construcao):
                     page.snack_bar.open = True
                     page.update()
 
-                    print(f"[DEBUG] Forçando atualização da página após exclusão")
+                    print("[DEBUG] Forçando atualização da página após exclusão")
 
                     # Agora carrega os detalhes atualizados do projeto
                     print(f"[DEBUG] Chamando carregar_detalhes_projeto com projeto_id={projeto_id}")
 
                     # Limpa a página atual para garantir que tudo seja recarregado
                     if hasattr(page, "controls") and page.controls:
-                        print(f"[DEBUG] Limpando controles existentes da página")
+                        print("[DEBUG] Limpando controles existentes da página")
                         # Guarda o appbar e o navigation_bar se existirem
                         appbar = page.appbar
                         navigation_bar = page.navigation_bar
@@ -717,7 +717,7 @@ class Laje(Construcao):
 
                     # Força mais uma atualização para garantir
                     page.update()
-                    print(f"[DEBUG] Atualização forçada concluída")
+                    print("[DEBUG] Atualização forçada concluída")
                 # FIM DAS MODIFICAÇÕES
 
         except Exception as e:
@@ -728,7 +728,7 @@ class Laje(Construcao):
 
             # Tenta uma abordagem alternativa usando ORM diretamente
             try:
-                print(f"[DEBUG] Tentando abordagem alternativa com ORM")
+                print("[DEBUG] Tentando abordagem alternativa com ORM")
                 with postgres.session_scope() as session:
                     laje = session.query(Lajes).filter_by(id=self.id).first()
                     if laje:
@@ -744,7 +744,7 @@ class Laje(Construcao):
 
                             # Limpa a página atual para garantir que tudo seja recarregado
                             if hasattr(page, "controls") and page.controls:
-                                print(f"[DEBUG] Limpando controles existentes da página")
+                                print("[DEBUG] Limpando controles existentes da página")
                                 # Guarda o appbar e o navigation_bar se existirem
                                 appbar = page.appbar
                                 navigation_bar = page.navigation_bar
@@ -875,17 +875,17 @@ def confirmar_e_realizar_exclusao(instancia, page):
     print(f"[ALTO NÍVEL] Tipo da página: {type(page)}")
 
     try:
-        print(f"[ALTO NÍVEL] Chamando método realizar_exclusao da instância")
+        print("[ALTO NÍVEL] Chamando método realizar_exclusao da instância")
         # Chamando diretamente o método de exclusão da instância passada
         instancia.realizar_exclusao(page)
-        print(f"[ALTO NÍVEL] Método realizar_exclusao concluído com sucesso")
+        print("[ALTO NÍVEL] Método realizar_exclusao concluído com sucesso")
         return True
     except Exception as e:
         print(f"[ALTO NÍVEL] Erro ao executar exclusão: {e}")
         print(f"[ALTO NÍVEL] Tipo do erro: {type(e)}")
         import traceback
 
-        print(f"[ALTO NÍVEL] Traceback completo:")
+        print("[ALTO NÍVEL] Traceback completo:")
         print(traceback.format_exc())
 
         # Tenta executar a exclusão diretamente com SQL
@@ -894,7 +894,7 @@ def confirmar_e_realizar_exclusao(instancia, page):
 
             from src.infrastructure.database.connections.postgres import postgres
 
-            print(f"[ALTO NÍVEL] Tentando exclusão direta via SQL")
+            print("[ALTO NÍVEL] Tentando exclusão direta via SQL")
             tabela = ""
             if instancia.tipo == "Parede":
                 tabela = "paredes"
@@ -907,7 +907,7 @@ def confirmar_e_realizar_exclusao(instancia, page):
                     print(f"[ALTO NÍVEL] Executando SQL: {sql}")
                     session.execute(sql)
                     session.commit()
-                    print(f"[ALTO NÍVEL] Exclusão direta via SQL concluída")
+                    print("[ALTO NÍVEL] Exclusão direta via SQL concluída")
 
                     # Atualiza a interface se necessário
                     from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto

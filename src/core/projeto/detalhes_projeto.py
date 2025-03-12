@@ -518,11 +518,11 @@ def carregar_detalhes_projeto(page, projeto_id):
     print(f"[DEBUG] Page: {page}")
 
     if page is None:
-        print(f"[DEBUG] ERRO: Page é None em carregar_detalhes_projeto!")
+        print("[DEBUG] ERRO: Page é None em carregar_detalhes_projeto!")
         return
 
     if not hasattr(page, "update"):
-        print(f"[DEBUG] ERRO: Page não possui método update em carregar_detalhes_projeto!")
+        print("[DEBUG] ERRO: Page não possui método update em carregar_detalhes_projeto!")
         return
 
     try:
@@ -543,7 +543,7 @@ def carregar_detalhes_projeto(page, projeto_id):
             # Exibir a tela de detalhes com os dados atualizados
             print(f"[DEBUG] Chamando tela_detalhes_projeto com projeto_id={projeto_id}")
             tela_detalhes_projeto(page, projeto, cliente)
-            print(f"[DEBUG] tela_detalhes_projeto concluído")
+            print("[DEBUG] tela_detalhes_projeto concluído")
         else:
             # Se o projeto não for encontrado, mostrar mensagem e voltar para a lista
             print(f"[DEBUG] Projeto não encontrado com ID={projeto_id}")
@@ -554,7 +554,7 @@ def carregar_detalhes_projeto(page, projeto_id):
             # Volta para a lista de projetos
             from src.core.cliente.clientes import tela_clientes
 
-            print(f"[DEBUG] Voltando para a tela_clientes")
+            print("[DEBUG] Voltando para a tela_clientes")
             tela_clientes(page)
 
     except Exception as e:
