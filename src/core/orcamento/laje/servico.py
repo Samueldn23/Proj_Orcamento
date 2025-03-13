@@ -5,7 +5,6 @@ from decimal import Decimal
 from .calculo import calcular_custo_laje, calcular_volume_laje
 from .modelo import Laje
 from .repositorio import RepositorioLaje
-from .tipos import TipoLaje
 
 
 class ServicoLaje:

@@ -1,9 +1,7 @@
 """Módulo de interface para o cálculo de orçamento de lajes."""
 
 import locale
-from ctypes import alignment
 from dataclasses import dataclass
-from decimal import Decimal
 from typing import Any
 
 import flet as ft
@@ -29,10 +27,8 @@ from src.core.orcamento.laje.tipos import (
     MIN_VALOR_M3,
     TipoLaje,
 )
-from src.core.projeto.detalhes_projeto import atualizar_custo_estimado
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.connections.postgres import postgres
-from src.infrastructure.database.models.construcoes import Lajes
 from src.navigation.router import navegar_orcamento
 
 # Configurações
@@ -177,16 +173,6 @@ class LajeCalculator:
             inputs = LajeInputs.from_form(self)
             if not self._validate_inputs(inputs)[0]:
                 return
-
-            servico = ServicoLaje(self.repositorio)
-            laje = servico.criar_laje(
-                self.projeto.id,
-                comprimento=inputs.comprimento,
-                largura=inputs.largura,
-                espessura=inputs.espessura,
-                valor_m3=inputs.valor_m3,
-                tipo_laje=inputs.tipo_laje,
-            )
 
             self._handle_success("Laje salva com sucesso!")
             navegar_orcamento(self.page, self.cliente, self.projeto)
