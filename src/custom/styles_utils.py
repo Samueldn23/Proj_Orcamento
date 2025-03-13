@@ -5,21 +5,33 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 import flet as ft
+from sqlalchemy import false, true
 
 
 @dataclass
-class ThemeColors:
+class Tema:
     """Define as cores do tema da aplicação usando uma paleta mais moderna"""
 
-    PRIMARY = "#2196F3"  # Azul mais vibrante
-    SECONDARY = "#FFFFFF"
-    VOLTAR = "#F44336"  # Vermelho mais suave
-    SOMBRA_CTR = "#1A1A1A"
-    CONTAINER = "#212121"  # Cinza escuro mais suave
-    TEXTO = "#FFFFFF"
-    IMPUT = "#424242"  # Cinza mais claro para inputs
-    # Fundo = "#1a1a1a"  # Cinza escuro mais suave
-    Fundo = "#F44336"  # Cinza escuro mais suave
+    teste = false
+    if teste == true:
+        PRIMARY = "#2196F3"  # Azul mais vibrante
+        SECONDARY = "#FFFFFF"
+        VOLTAR = "#F44336"  # Vermelho mais suave
+        SOMBRA_CTR = "#1A1A1A"
+        CONTAINER = "#212121"  # Cinza escuro mais suave
+        TEXTO = "#FFFFFF"
+        IMPUT = "#424242"  # Cinza mais claro para inputs
+        Fundo = "#1a1a1a"  # Cinza escuro mais suave
+
+    else:
+        PRIMARY = "#2196F3"  # Azul mais vibrante
+        SECONDARY = "#FFFFFF"
+        VOLTAR = "#F44336"  # Vermelho mais suave
+        SOMBRA_CTR = "#1A1A1A"
+        CONTAINER = "#b9b9b9"  # Cinza escuro mais suave
+        TEXTO = "#FFFFFF"
+        IMPUT = "#424242"  # Cinza mais claro para inputs
+        Fundo = "#FFFFFF"  # Cinza escuro mais suave
 
 
 class StyleManager:
@@ -27,7 +39,7 @@ class StyleManager:
 
     def __init__(self, page: ft.Page = None):
         self.page = page
-        self.colors = ThemeColors()
+        self.colors = Tema()
 
     def apply_theme(self, page=None):
         """Aplica o tema à página"""
@@ -65,7 +77,7 @@ class StyleManager:
         )
 
         # Configuração do fundo
-        self.page.bgcolor = ft.Colors.with_opacity(0.8, ThemeColors.Fundo)
+        self.page.bgcolor = ft.Colors.with_opacity(0.8, self.colors.Fundo)
         self.page.gradient = ft.LinearGradient(
             colors=[self.colors.SOMBRA_CTR, self.colors.CONTAINER],
             begin=ft.alignment.top_center,
@@ -81,7 +93,7 @@ class StyleManager:
                 button.style = ft.ButtonStyle(
                     animation_duration=500,
                     color=text_color,
-                    icon_color=ThemeColors.TEXTO,
+                    icon_color=Tema.TEXTO,
                     overlay_color=ft.Colors.with_opacity(0.2, hover_color),
                     side={
                         ft.ControlState.DEFAULT: ft.BorderSide(1, hover_color),
@@ -120,17 +132,17 @@ class StyleManager:
         on_click: Optional["Callable"] = None,
         icon: Optional["str"] = None,
         width: Optional["int"] = None,  # Largura opcional
-        icon_color: str = ThemeColors.PRIMARY,
-        hover_icon_color: str = ThemeColors.SECONDARY,
-        text_color: str = ThemeColors.SECONDARY,
-        hover_color: str = ThemeColors.PRIMARY,  # Permite None explicitamente
+        icon_color: str = Tema.PRIMARY,
+        hover_icon_color: str = Tema.SECONDARY,
+        text_color: str = Tema.SECONDARY,
+        hover_color: str = Tema.PRIMARY,  # Permite None explicitamente
         hover_color_button: Optional["str"] = None,  # Agora é opcional
     ) -> ft.Container:
         """Cria um botão customizado com container"""
 
         # Define o hover_color_button com base em hover_color
         if hover_color_button is None:
-            hover_color_button = hover_color or ThemeColors.PRIMARY
+            hover_color_button = hover_color or Tema.PRIMARY
 
         # Cria os conteúdos do botão
         button_contents = []
@@ -188,10 +200,10 @@ class StyleManager:
         on_click: Callable,
         icon: str,
         width: int = 200,
-        icon_color: str = ThemeColors.PRIMARY,
-        hover_icon_color: str = ThemeColors.SECONDARY,  # Cor do ícone no hover
-        text_color: str = ThemeColors.SECONDARY,
-        hover_color: str = ThemeColors.PRIMARY,
+        icon_color: str = Tema.PRIMARY,
+        hover_icon_color: str = Tema.SECONDARY,  # Cor do ícone no hover
+        text_color: str = Tema.SECONDARY,
+        hover_color: str = Tema.PRIMARY,
     ) -> ft.Container:
         """Cria um botão customizado com container"""
         # Cria a imagem inicialmente com animação de cor
@@ -254,9 +266,9 @@ class StyleManager:
         icon: str,
         on_click: Callable,
         tooltip: Optional["str"] = None,
-        icon_color: str = ThemeColors.PRIMARY,
-        hover_icon_color: str = ThemeColors.SECONDARY,
-        hover_color: str = ThemeColors.PRIMARY,
+        icon_color: str = Tema.PRIMARY,
+        hover_icon_color: str = Tema.SECONDARY,
+        hover_color: str = Tema.PRIMARY,
         hover_color_container: Optional["str"] = None,
     ) -> ft.Container:
         """
@@ -273,7 +285,7 @@ class StyleManager:
         """
         # Define o hover_color_container com base em hover_color
         if hover_color_container is None:
-            hover_color_container = hover_color or ThemeColors.PRIMARY
+            hover_color_container = hover_color or Tema.PRIMARY
 
         # Cria o ícone
         # icone = ft.Icon(name=icon, color=icon_color)

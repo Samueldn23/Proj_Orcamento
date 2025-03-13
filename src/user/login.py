@@ -116,7 +116,7 @@ class LoginPage:
         return ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Bem-vindo", size=32, weight=ft.FontWeight.BOLD),
+                    ft.Text("Bem-vindo", size=32, weight=ft.FontWeight.BOLD, color=gsm.colors.PRIMARY),
                     self.email_input,
                     self.password_input,
                     self.login_button,

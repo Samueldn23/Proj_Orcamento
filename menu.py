@@ -318,11 +318,11 @@ class MenuPrincipalPage:
             width=600,
             padding=ft.padding.all(20),
             border_radius=10,
-            bgcolor=ft.Colors.GREY_900,
+            bgcolor=gsm.colors.CONTAINER,
             shadow=ft.BoxShadow(
                 spread_radius=1,
                 blur_radius=15,
-                color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK),
+                color=ft.Colors.with_opacity(0.2, gsm.colors.SOMBRA_CTR),
                 offset=ft.Offset(0, 5),
             ),
             margin=ft.margin.all(20),

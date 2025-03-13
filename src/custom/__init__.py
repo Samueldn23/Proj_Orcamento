@@ -1,8 +1,8 @@
 """Módulo de customizações e estilos"""
 
-from .styles_utils import StyleManager, ThemeColors, get_style_manager
+from .styles_utils import StyleManager, Tema, get_style_manager
 
-__all__ = ["StyleManager", "ThemeColors", "get_style_manager"]
+__all__ = ["StyleManager", "Tema", "get_style_manager"]
 
 # from .styles import *
 # from .button import *
