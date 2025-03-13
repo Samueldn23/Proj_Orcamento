@@ -239,9 +239,7 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
             parede_id = parede.id
 
             # Armazena como uma tupla de valores (não depende da sessão)
-            construcoes_parede.append(
-                {"id": parede_id, "area": area, "custo_total": custo_total, "tipo_tijolo": tipo_tijolo, "quantidade_tijolos": quantidade_tijolos}
-            )
+            construcoes_parede.append({"id": parede_id, "area": area, "custo_total": custo_total, "tipo_tijolo": tipo_tijolo, "quantidade_tijolos": quantidade_tijolos})
 
         # Desacopla os objetos Lajes
         for laje in lajes_originais:
@@ -298,13 +296,10 @@ def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
                     ft.Container(
                         content=ft.Column(
                             # Lista de paredes
-                            [
-                                Parede(p["area"], p["custo_total"], p["tipo_tijolo"], p["quantidade_tijolos"], p["id"], projeto.id).criar_card()
-                                for p in construcoes_parede
-                            ]
+                            [Parede(p["area"], p["custo_total"], p["tipo_tijolo"], p["quantidade_tijolos"], p["id"], projeto.id).criar_card() for p in construcoes_parede]
                             +
                             # Lista de lajes
-                            [Laje(l["area"], l["custo_total"], l["tipo_laje"], l["volume"], l["id"], projeto.id).criar_card() for l in construcoes_laje]
+                            [Laje(laje["area"], laje["custo_total"], laje["tipo_laje"], laje["volume"], laje["id"], projeto.id).criar_card() for laje in construcoes_laje]
                         ),
                         padding=10,
                     ),

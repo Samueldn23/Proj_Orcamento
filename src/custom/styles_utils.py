@@ -12,8 +12,8 @@ from sqlalchemy import false, true
 class Tema:
     """Define as cores do tema da aplicação usando uma paleta mais moderna"""
 
-    teste = false # true para tema escuro e false para o tema claro 
-    if teste == true: # tema escuro 
+    teste = false  # true para tema escuro e false para o tema claro
+    if teste == true:  # tema escuro
         PRIMARY = "#2196F3"  # Azul mais vibrante
         SECONDARY = "#FFFFFF"
         VOLTAR = "#F44336"  # Vermelho mais suave
@@ -23,7 +23,7 @@ class Tema:
         IMPUT = "#424242"  # Cinza mais claro para inputs
         FUNDO = "#1a1a1a"  # Cinza escuro mais suave
 
-    else: #tema claro
+    else:  # tema claro
         PRIMARY = "#2196F3"  # Azul mais vibrante
         SECONDARY = "#FFFFFF"
         VOLTAR = "#F44336"  # Vermelho mais suave
@@ -77,7 +77,7 @@ class StyleManager:
         )
 
         # Configuração do fundo
-        self.page.bgcolor = ft.Colors.with_opacity(0.8, self.colors.Fundo)
+        self.page.bgcolor = ft.Colors.with_opacity(0.8, self.colors.FUNDO)
         self.page.gradient = ft.LinearGradient(
             colors=[self.colors.SOMBRA_CTR, self.colors.CONTAINER],
             begin=ft.alignment.top_center,

@@ -10,7 +10,7 @@ dependencies = [
 
 [tool.ruff]
 # Mesmo limite de linha que o Black
-line-length = 160
+line-length = 170
 
 # Configurações gerais do Ruff permanecem aqui
 
