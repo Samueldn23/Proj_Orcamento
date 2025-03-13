@@ -1,6 +1,11 @@
 import locale
 
 import flet as ft
+from sqlalchemy import text
+
+from src.core.projeto.detalhes_projeto import atualizar_custo_estimado, carregar_detalhes_projeto
+from src.core.projeto.projeto_utils import mostrar_mensagem
+from src.infrastructure.database.connections.postgres import postgres
 
 # Configuração da localização para formatação de moeda
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -205,8 +210,50 @@ class Construcao:
             print("Tentativa alternativa: usando page.dialog")
 
     def realizar_exclusao(self, page):
-        """Método para realizar a exclusão efetiva. Deve ser implementado pelas subclasses."""
-        print(f"Exclusão não implementada para {self.tipo}, ID={self.id}")
+        """Método base para realizar a exclusão de uma construção"""
+        try:
+            with postgres.session_scope() as session:
+                tabela = self._get_table_name()
+                sql = text(f"DELETE FROM {tabela} WHERE id = {self.id}")
+                session.execute(sql)
+                session.commit()
+
+                atualizar_custo_estimado(self.projeto_id)
+                mostrar_mensagem(page, f"{self.tipo} excluído(a) com sucesso!", ft.Colors.GREEN_700)
+
+                # Importação dinâmica para evitar circular import
+                from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto
+
+                carregar_detalhes_projeto(page, self.projeto_id)
+                return True
+
+        except Exception as e:
+            mostrar_mensagem(page, f"Erro ao excluir {self.tipo}: {e}", ft.Colors.RED_700)
+            return False
+
+    def _get_table_name(self):
+        """Retorna o nome da tabela com base no tipo"""
+        return {"Parede": "paredes", "Laje": "lajes", "Telhado": "telhados"}.get(self.tipo, "")
+
+    def _atualizar_projeto(self, page):
+        """Atualiza o projeto após exclusão"""
+        atualizar_custo_estimado(self.projeto_id)
+        self._mostrar_sucesso(page)
+        carregar_detalhes_projeto(page, self.projeto_id)
+
+    def _mostrar_erro(self, page, mensagem):
+        """Exibe mensagem de erro"""
+        if hasattr(page, "snack_bar"):
+            page.snack_bar = ft.SnackBar(content=ft.Text(mensagem), bgcolor=ft.Colors.RED_700)
+            page.snack_bar.open = True
+            page.update()
+
+    def _mostrar_sucesso(self, page):
+        """Exibe mensagem de sucesso"""
+        if hasattr(page, "snack_bar"):
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"{self.tipo} excluído(a) com sucesso!"), bgcolor=ft.Colors.GREEN_700)
+            page.snack_bar.open = True
+            page.update()
 
     def log_e_chamar_editar(self, e):
         """Método auxiliar para registrar logs e chamar o método editar_construcao"""
@@ -377,7 +424,7 @@ class Parede(Construcao):
 
         # Mostrar mensagem de processamento
         if hasattr(page, "snack_bar") and hasattr(page, "update"):
-            page.snack_bar = ft.SnackBar(content=ft.Text("Excluindo parede..."), bgcolor=ft.colors.BLUE_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Excluindo parede..."), bgcolor=ft.Colors.BLUE_700)
             page.snack_bar.open = True
             page.update()
 
@@ -390,7 +437,7 @@ class Parede(Construcao):
                 if not parede:
                     print("[DEBUG] Parede não encontrada no banco de dados")
                     if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                        page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada no banco de dados"), bgcolor=ft.colors.RED_700)
+                        page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada no banco de dados"), bgcolor=ft.Colors.RED_700)
                         page.snack_bar.open = True
                         page.update()
                     return
@@ -417,7 +464,7 @@ class Parede(Construcao):
                 # NOVA ABORDAGEM PARA ATUALIZAÇÃO DA INTERFACE
                 if hasattr(page, "snack_bar") and hasattr(page, "update"):
                     # Primeiro exibe a mensagem de sucesso
-                    page.snack_bar = ft.SnackBar(content=ft.Text("Parede excluída com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                    page.snack_bar = ft.SnackBar(content=ft.Text("Parede excluída com sucesso!"), bgcolor=ft.Colors.GREEN_700)
                     page.snack_bar.open = True
                     page.update()
 
@@ -476,7 +523,7 @@ class Parede(Construcao):
 
                         # NOVA ABORDAGEM PARA ATUALIZAÇÃO DA INTERFACE (mesmo no caminho alternativo)
                         if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                            page.snack_bar = ft.SnackBar(content=ft.Text("Parede excluída com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                            page.snack_bar = ft.SnackBar(content=ft.Text("Parede excluída com sucesso!"), bgcolor=ft.Colors.GREEN_700)
                             page.snack_bar.open = True
                             page.update()
 
@@ -521,12 +568,14 @@ class Parede(Construcao):
 
             # Mostra mensagem de erro
             if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao excluir parede: {e}"), bgcolor=ft.colors.RED_700)
+                page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao excluir parede: {e}"), bgcolor=ft.Colors.RED_700)
                 page.snack_bar.open = True
                 page.update()
 
 
 class Laje(Construcao):
+    """Classe que representa uma laje"""
+
     def __init__(self, area, custo_total, tipo_laje, volume, id=None, projeto_id=None):
         super().__init__("Laje", area, custo_total, id, projeto_id)
         self.tipo_laje = tipo_laje
@@ -623,149 +672,13 @@ class Laje(Construcao):
             self.exibir_dialogo_confirmacao(e.page)
             return
 
-        # Se não houver página no evento, tentamos através do control
-        if hasattr(e, "control") and hasattr(e.control, "page"):
-            print(f"Usando página do control para excluir laje. ID={self.id}")
-            self.exibir_dialogo_confirmacao(e.control.page)
-            return
-
         print(f"ERRO: Não foi possível obter a página para excluir laje. ID={self.id}")
 
     def realizar_exclusao(self, page):
-        """Realiza a exclusão da laje no banco de dados"""
+        """Delega a exclusão para a função especializada"""
+        from src.core.orcamento.laje.interface import excluir_laje
 
-        from sqlalchemy import text
-
-        from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto
-        from src.infrastructure.database.connections.postgres import postgres
-        from src.infrastructure.database.models.construcoes import Lajes
-
-        print(f"[DEBUG] Método realizar_exclusao chamado para Laje, ID={self.id}")
-        print(f"[DEBUG] Page disponível: {page is not None}")
-
-        # Verificação adicional para garantir que temos uma página válida
-        if page is None:
-            print("ERRO CRÍTICO: Page é None, não é possível continuar com a exclusão")
-            return
-
-        # Mostrar mensagem de processamento
-        if hasattr(page, "snack_bar") and hasattr(page, "update"):
-            page.snack_bar = ft.SnackBar(content=ft.Text("Excluindo laje..."), bgcolor=ft.colors.BLUE_700)
-            page.snack_bar.open = True
-            page.update()
-
-        try:
-            # Executa a exclusão diretamente via SQL para garantir
-            print("[DEBUG] Executando exclusão direta via SQL")
-            with postgres.session_scope() as session:
-                # Primeiro obtém o projeto_id para posterior atualização da interface
-                laje = session.query(Lajes).filter_by(id=self.id).first()
-                if not laje:
-                    print("[DEBUG] Laje não encontrada no banco de dados")
-                    if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                        page.snack_bar = ft.SnackBar(content=ft.Text("Laje não encontrada no banco de dados"), bgcolor=ft.colors.RED_700)
-                        page.snack_bar.open = True
-                        page.update()
-                    return
-
-                projeto_id = laje.projeto_id
-                print(f"[DEBUG] Projeto ID obtido: {projeto_id}")
-
-                # Executa o DELETE direto para garantir exclusão
-                sql = text(f"DELETE FROM lajes WHERE id = {self.id}")
-                print(f"[DEBUG] Executando SQL: {sql}")
-                session.execute(sql)
-                session.commit()
-
-                print("[DEBUG] Exclusão realizada com sucesso")
-
-                # Verifica se a exclusão foi bem-sucedida usando o método delete para maior segurança
-                print("[DEBUG] Verificando exclusão com ORM")
-                verificacao = session.query(Lajes).filter_by(id=self.id).first()
-                if verificacao:
-                    print("[ALERTA] Laje ainda existe! Tentando excluir com ORM diretamente")
-                    session.delete(verificacao)
-                    session.commit()
-
-                # Atualiza a interface - INÍCIO DAS MODIFICAÇÕES
-                if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                    # Primeiro exibe a mensagem de sucesso
-                    page.snack_bar = ft.SnackBar(content=ft.Text("Laje excluída com sucesso!"), bgcolor=ft.colors.GREEN_700)
-                    page.snack_bar.open = True
-                    page.update()
-
-                    print("[DEBUG] Forçando atualização da página após exclusão")
-
-                    # Agora carrega os detalhes atualizados do projeto
-                    print(f"[DEBUG] Chamando carregar_detalhes_projeto com projeto_id={projeto_id}")
-
-                    # Limpa a página atual para garantir que tudo seja recarregado
-                    if hasattr(page, "controls") and page.controls:
-                        print("[DEBUG] Limpando controles existentes da página")
-                        # Guarda o appbar e o navigation_bar se existirem
-                        appbar = page.appbar
-                        navigation_bar = page.navigation_bar
-                        page.controls.clear()
-                        if appbar:
-                            page.appbar = appbar
-                        if navigation_bar:
-                            page.navigation_bar = navigation_bar
-                        page.update()
-
-                    # Chama a função para recarregar os detalhes
-                    carregar_detalhes_projeto(page, projeto_id)
-
-                    # Força mais uma atualização para garantir
-                    page.update()
-                    print("[DEBUG] Atualização forçada concluída")
-                # FIM DAS MODIFICAÇÕES
-
-        except Exception as e:
-            print(f"[DEBUG] Erro ao excluir laje: {e}")
-            import traceback
-
-            print(traceback.format_exc())
-
-            # Tenta uma abordagem alternativa usando ORM diretamente
-            try:
-                print("[DEBUG] Tentando abordagem alternativa com ORM")
-                with postgres.session_scope() as session:
-                    laje = session.query(Lajes).filter_by(id=self.id).first()
-                    if laje:
-                        projeto_id = laje.projeto_id
-                        print(f"[DEBUG] Excluindo laje com ORM, ID={self.id}")
-                        session.delete(laje)
-                        session.commit()
-
-                        # Atualiza a interface
-                        if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                            page.snack_bar = ft.SnackBar(content=ft.Text("Laje excluída com sucesso!"), bgcolor=ft.colors.GREEN_700)
-                            page.snack_bar.open = True
-
-                            # Limpa a página atual para garantir que tudo seja recarregado
-                            if hasattr(page, "controls") and page.controls:
-                                print("[DEBUG] Limpando controles existentes da página")
-                                # Guarda o appbar e o navigation_bar se existirem
-                                appbar = page.appbar
-                                navigation_bar = page.navigation_bar
-                                page.controls.clear()
-                                if appbar:
-                                    page.appbar = appbar
-                                if navigation_bar:
-                                    page.navigation_bar = navigation_bar
-                                page.update()
-
-                            carregar_detalhes_projeto(page, projeto_id)
-                            page.update()
-                            return
-            except Exception as orm_error:
-                print(f"[DEBUG] Erro na abordagem alternativa com ORM: {orm_error}")
-
-            # Mostra mensagem de erro
-            if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao excluir laje: {e}"), bgcolor=ft.colors.RED_700)
-                page.snack_bar.open = True
-                page.update()
+        excluir_laje(page, self.id, self.projeto_id)
 
 
 class Eletrica(Construcao):
@@ -913,7 +826,7 @@ def confirmar_e_realizar_exclusao(instancia, page):
                     from src.core.projeto.detalhes_projeto import carregar_detalhes_projeto
 
                     if hasattr(page, "snack_bar") and hasattr(page, "update"):
-                        page.snack_bar = ft.SnackBar(content=ft.Text(f"{instancia.tipo} excluído(a) com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                        page.snack_bar = ft.SnackBar(content=ft.Text(f"{instancia.tipo} excluído(a) com sucesso!"), bgcolor=ft.Colors.GREEN_700)
                         page.snack_bar.open = True
                         if hasattr(instancia, "projeto_id") and instancia.projeto_id:
                             carregar_detalhes_projeto(page, instancia.projeto_id)

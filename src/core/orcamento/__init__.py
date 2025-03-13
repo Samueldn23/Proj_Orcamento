@@ -10,7 +10,7 @@ import src.core.orcamento.laje
 import src.core.orcamento.paredes
 import src.core.orcamento.telhado
 
-from .menu_orc import MenuButton, OrcamentoPage, mostrar_orcamento
+from .listar_construcoes import MenuButton, OrcamentoPage, mostrar_orcamento
 from .paredes import ParedeCalculator
 from .service import ProjetoService
 

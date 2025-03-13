@@ -53,6 +53,10 @@ class Lajes(Base):
     espessura = Column(Numeric(10, 2), nullable=False)
     valor_m3 = Column(Numeric(10, 2), nullable=False)
     custo_total = Column(Numeric(10, 2), nullable=False)
+    tipo_laje = Column(String(50))
+    volume = Column(Numeric(10, 2))
+    # criado_em = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    # atualizado_em = Column(TIMESTAMP(timezone=True), onupdate=func.now())
 
     projeto = relationship("Projeto", back_populates="lajes")
 

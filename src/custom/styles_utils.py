@@ -18,6 +18,8 @@ class ThemeColors:
     CONTAINER = "#212121"  # Cinza escuro mais suave
     TEXTO = "#FFFFFF"
     IMPUT = "#424242"  # Cinza mais claro para inputs
+    # Fundo = "#1a1a1a"  # Cinza escuro mais suave
+    Fundo = "#F44336"  # Cinza escuro mais suave
 
 
 class StyleManager:
@@ -63,7 +65,7 @@ class StyleManager:
         )
 
         # Configuração do fundo
-        self.page.bgcolor = ft.Colors.with_opacity(0.8, ft.Colors.GREY_900)
+        self.page.bgcolor = ft.Colors.with_opacity(0.8, ThemeColors.Fundo)
         self.page.gradient = ft.LinearGradient(
             colors=[self.colors.SOMBRA_CTR, self.colors.CONTAINER],
             begin=ft.alignment.top_center,

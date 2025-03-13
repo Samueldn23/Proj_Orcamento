@@ -26,7 +26,7 @@ def editar_parede(page, parede_id, projeto_id):
     with postgres.session_scope() as session:
         parede = session.query(Paredes).filter_by(id=parede_id).first()
         if not parede:
-            page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada."), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Parede não encontrada."), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
             return
@@ -68,7 +68,7 @@ def editar_parede(page, parede_id, projeto_id):
             novo_tipo_tijolo = tipo_tijolo_dropdown.value
 
             if nova_altura <= 0 or novo_comprimento <= 0:
-                page.snack_bar = ft.SnackBar(content=ft.Text("Altura e comprimento devem ser maiores que zero."), bgcolor=ft.colors.RED_700)
+                page.snack_bar = ft.SnackBar(content=ft.Text("Altura e comprimento devem ser maiores que zero."), bgcolor=ft.Colors.RED_700)
                 page.snack_bar.open = True
                 page.update()
                 return
@@ -105,17 +105,17 @@ def editar_parede(page, parede_id, projeto_id):
                     atualizar_custo_estimado(projeto_id)
 
                     # Exibe mensagem de sucesso
-                    page.snack_bar = ft.SnackBar(content=ft.Text("Parede atualizada com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                    page.snack_bar = ft.SnackBar(content=ft.Text("Parede atualizada com sucesso!"), bgcolor=ft.Colors.GREEN_700)
                     page.snack_bar.open = True
 
                     # Recarrega os detalhes do projeto
                     carregar_detalhes_projeto(page, projeto_id)
         except ValueError:
-            page.snack_bar = ft.SnackBar(content=ft.Text("Por favor, informe valores numéricos válidos."), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Por favor, informe valores numéricos válidos."), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
         except Exception as e:
-            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao atualizar parede: {e}"), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao atualizar parede: {e}"), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
 

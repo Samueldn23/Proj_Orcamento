@@ -19,7 +19,7 @@ def editar_laje(page, laje_id, projeto_id):
     with postgres.session_scope() as session:
         laje = session.query(Lajes).filter_by(id=laje_id).first()
         if not laje:
-            page.snack_bar = ft.SnackBar(content=ft.Text("Laje não encontrada."), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Laje não encontrada."), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
             return
@@ -83,7 +83,7 @@ def editar_laje(page, laje_id, projeto_id):
             novo_tipo_laje = tipo_laje_dropdown.value
 
             if novo_comprimento <= 0 or nova_largura <= 0 or nova_espessura <= 0 or novo_valor_m3 <= 0:
-                page.snack_bar = ft.SnackBar(content=ft.Text("Todos os valores devem ser maiores que zero."), bgcolor=ft.colors.RED_700)
+                page.snack_bar = ft.SnackBar(content=ft.Text("Todos os valores devem ser maiores que zero."), bgcolor=ft.Colors.RED_700)
                 page.snack_bar.open = True
                 page.update()
                 return
@@ -129,17 +129,17 @@ def editar_laje(page, laje_id, projeto_id):
                     atualizar_custo_estimado(projeto_id)
 
                     # Exibe mensagem de sucesso
-                    page.snack_bar = ft.SnackBar(content=ft.Text("Laje atualizada com sucesso!"), bgcolor=ft.colors.GREEN_700)
+                    page.snack_bar = ft.SnackBar(content=ft.Text("Laje atualizada com sucesso!"), bgcolor=ft.Colors.GREEN_700)
                     page.snack_bar.open = True
 
                     # Recarrega os detalhes do projeto
                     carregar_detalhes_projeto(page, projeto_id)
         except ValueError:
-            page.snack_bar = ft.SnackBar(content=ft.Text("Por favor, informe valores numéricos válidos."), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Por favor, informe valores numéricos válidos."), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
         except Exception as e:
-            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao atualizar laje: {e}"), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao atualizar laje: {e}"), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
 

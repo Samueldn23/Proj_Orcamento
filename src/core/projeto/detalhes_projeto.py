@@ -6,57 +6,23 @@ from decimal import Decimal
 import flet as ft
 
 from src.core.projeto import listar_projetos
-from src.core.projeto.construcao import Laje, Parede
+from src.core.projeto.projeto_utils import atualizar_custo_estimado
 from src.custom.styles_utils import get_style_manager
 from src.infrastructure.database.connections import Session, postgres
 from src.infrastructure.database.models.construcoes import Lajes, Paredes
 from src.infrastructure.database.repositories import RepositorioProjeto
 from src.navigation.router import navegar_orcamento
 
-# Configuração da localização para formatação de moeda
+# Configurações iniciais
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
-
-gsm = get_style_manager()  # Instância do gerenciador de estilos
-repositorio_projeto = RepositorioProjeto()  # Instância do repositório de projetos
-session = Session()  # Instância da sessão do banco de dados
-
-
-def atualizar_custo_estimado(projeto_id):
-    """Atualiza o custo estimado do projeto somando o custo de todas as construções"""
-    try:
-        custo_paredes = 0
-        custo_lajes = 0
-
-        # Usa o session_scope para obter os dados com reconexão automática
-        with postgres.session_scope() as session:
-            # Obtém as construções associadas ao projeto
-            paredes = session.query(Paredes).filter_by(projeto_id=projeto_id).all()
-            lajes = session.query(Lajes).filter_by(projeto_id=projeto_id).all()
-
-            # Calcula os custos dentro da sessão
-            custo_paredes = sum(parede.custo_total for parede in paredes)
-            custo_lajes = sum(laje.custo_total for laje in lajes)
-
-        # Soma os custos das paredes e lajes
-        custo_total = custo_paredes + custo_lajes
-
-        # Atualiza o valor total
-        resultado = repositorio_projeto.atualizar_valor_total(projeto_id, custo_total)
-
-        # Log para debug
-        if resultado:
-            print(f"Custo estimado atualizado - Projeto ID: {projeto_id}, Novo valor: {custo_total:.2f}")
-        else:
-            print(f"Falha ao atualizar custo estimado - Projeto ID: {projeto_id}")
-
-        return resultado
-    except Exception as e:
-        print(f"Erro ao atualizar custo estimado: {e}")
-        return None
+gsm = get_style_manager()
+repositorio_projeto = RepositorioProjeto()
+session = Session()
 
 
 def tela_detalhes_projeto(page: ft.Page, projeto, cliente):
-    """Função para exibir detalhes do projeto e opções de edição/exclusão"""
+    # Importação dinâmica para evitar circular import
+    from src.core.projeto.construcao import Laje, Parede
 
     # Atualiza o projeto com os dados mais recentes do banco de dados
     projeto_atualizado = repositorio_projeto.get_by_id(projeto.id)
@@ -547,7 +513,7 @@ def carregar_detalhes_projeto(page, projeto_id):
         else:
             # Se o projeto não for encontrado, mostrar mensagem e voltar para a lista
             print(f"[DEBUG] Projeto não encontrado com ID={projeto_id}")
-            page.snack_bar = ft.SnackBar(content=ft.Text("Projeto não encontrado."), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Projeto não encontrado."), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
 
@@ -565,8 +531,8 @@ def carregar_detalhes_projeto(page, projeto_id):
 
         # Tentar exibir mensagem de erro para o usuário
         try:
-            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao carregar detalhes: {e}"), bgcolor=ft.colors.RED_700)
+            page.snack_bar = ft.SnackBar(content=ft.Text(f"Erro ao carregar detalhes: {e}"), bgcolor=ft.Colors.RED_700)
             page.snack_bar.open = True
             page.update()
-        except:
-            print("[DEBUG] Não foi possível exibir erro na interface")
+        except Exception as ui_error:
+            print(f"[DEBUG] Não foi possível exibir erro na interface: {ui_error}")
