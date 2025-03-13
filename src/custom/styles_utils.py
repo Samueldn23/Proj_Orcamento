@@ -12,8 +12,8 @@ from sqlalchemy import false, true
 class Tema:
     """Define as cores do tema da aplicação usando uma paleta mais moderna"""
 
-    teste = false
-    if teste == true:
+    teste = false # true para tema escuro e false para o tema claro 
+    if teste == true: # tema escuro 
         PRIMARY = "#2196F3"  # Azul mais vibrante
         SECONDARY = "#FFFFFF"
         VOLTAR = "#F44336"  # Vermelho mais suave
@@ -21,9 +21,9 @@ class Tema:
         CONTAINER = "#212121"  # Cinza escuro mais suave
         TEXTO = "#FFFFFF"
         IMPUT = "#424242"  # Cinza mais claro para inputs
-        Fundo = "#1a1a1a"  # Cinza escuro mais suave
+        FUNDO = "#1a1a1a"  # Cinza escuro mais suave
 
-    else:
+    else: #tema claro
         PRIMARY = "#2196F3"  # Azul mais vibrante
         SECONDARY = "#FFFFFF"
         VOLTAR = "#F44336"  # Vermelho mais suave
@@ -31,7 +31,7 @@ class Tema:
         CONTAINER = "#b9b9b9"  # Cinza escuro mais suave
         TEXTO = "#FFFFFF"
         IMPUT = "#424242"  # Cinza mais claro para inputs
-        Fundo = "#FFFFFF"  # Cinza escuro mais suave
+        FUNDO = "#FFFFFF"  # Cinza escuro mais suave
 
 
 class StyleManager:
